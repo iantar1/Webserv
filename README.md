@@ -1,7 +1,7 @@
-# <h1>Webserv :</h1> <h2>This is when you finally understand why a URL starts with HTTP</h2>
+# <h1>Webserv </h1> <h2>This is when you finally understand why a URL starts with HTTP</h2>
 
 
-* Introduction: 
+* <h3>Introduction :</h3> 
 
 -> When writing programs that communicate across a computer network, one must first invent a
 protocol, an agreement on how those programs will communicate.
