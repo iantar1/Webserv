@@ -1,4 +1,4 @@
-#  Webserv : This is when you finally understand why a URL starts with HTTP
+# <h1>Webserv :</h1> <h2>This is when you finally understand why a URL starts with HTTP</h2>
 
 
 * Introduction: 
