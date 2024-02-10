@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/08 09:59:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/10 13:08:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int main(int ac, char *av[])
 {
     
     struct sockaddr_in S_Addr;
-
+    (void)ac;
+    (void)av;
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
@@ -56,10 +57,21 @@ int main(int ac, char *av[])
         close(sockfd);
         return 1;
     }
-    char buf[1024] = {0};
-    read(newSock, buf, 1024);
-    std::cout << buf;
-    parseRequest();
+   // char buf[1024] = {0};
+    //read(newSock, buf, 1024);
+    //std::cout << buf;
+    parseRequest    parce(newSock);
+    try
+    {
+        parce.readData();
+        parce.printData();
+        
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
     close(sockfd);
     return (EXIT_SUCCESS);
 }
