@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:01:01 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/10 12:47:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/12 21:24:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 class parseRequest
 {
 private:
-	int 								Sockfd;
+	int 								clientSocket;
 	int									MethodType;
 	char								buf[BUF_SIZE];
 	int									readSize;
@@ -34,16 +34,18 @@ private:
 	std::string							Body;
 	static std::string					Methods[3];
 	std::string							BodyfileNmae;
-	
+	int									ReadingData;
+	int									ContentLength;
 
 private:
 	parseRequest();
 
-	void		storeData(const std::string&);
+	void		storeData(const std::string&, size_t);
 	void		storeHeader(const std::string&);
 	void		storeRequestLine(const std::string&);
 	void		ReadStoreBody();
 	std::string	generateRandomFileName(size_t) const;
+	std::string	CurrentDate();
 
 public:
 // parametrize constructor, copy constructor, copy assignement operator and destructor

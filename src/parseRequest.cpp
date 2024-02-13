@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:00:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/10 13:08:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/12 21:26:50 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 std::string parseRequest::Methods[] = {"POST", "GET", "DELETE"};
 
-parseRequest::parseRequest(int sockfd) : Sockfd(sockfd), MethodType(0)
+parseRequest::parseRequest(int clientSocket) : clientSocket(clientSocket), MethodType(0),ReadingData(0) 
 {
 }
 
@@ -52,8 +52,9 @@ void	parseRequest::storeRequestLine(const std::string& line)
 	}
 	throw std::runtime_error("Invalid Method");
 }
+// create getTimeOfDay() , return a strin ddmmyy
 
-std::string	parseRequest::generateRandomFileName(size_t length) const
+std::string	parseRequest::generateRandomFileName(size_t length) const// add the dtae of today
 {
     const std::string   str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     const size_t        strSize = str.size();
@@ -64,7 +65,7 @@ std::string	parseRequest::generateRandomFileName(size_t length) const
     {
         fileNmae += str[rand() % strSize];
     }
-    return (fileNmae);
+    return ("DataBase/" + fileNmae);
 }
 
 void	parseRequest::ReadStoreBody()
@@ -73,24 +74,29 @@ void	parseRequest::ReadStoreBody()
     int rdSize;
 
     BodyfileNmae = generateRandomFileName(6);
-    fd = open(BodyfileNmae.c_str(), O_RDWR | O_CREAT);
+    fd = open(BodyfileNmae.c_str(), O_RDWR | O_CREAT, 0666);
     if (fd < 0)
         throw std::runtime_error("file can't open");
     write(fd, Body.c_str(), Body.size());
-    // hardcode
-    while ((rdSize = read(Sockfd, buf, BUF_SIZE)) == BUF_SIZE)
+    ReadingData = Body.size();
+    while ((rdSize = read(clientSocket, buf, BUF_SIZE)) != 0)
     {
         write(fd, buf, rdSize);
+        ReadingData += rdSize;
+        if (ReadingData == ContentLength)
+            break;
     } 
-    write(fd, buf, rdSize);
     close(fd);
 }
 
-void	parseRequest::storeData(const std::string& dataRequest)
+void	parseRequest::storeData(const std::string& dataRequest, size_t index)
 {
 	std::istringstream iss(dataRequest);
     std::string line;
 
+    // ;
+    // std::cout << "lplplp\n";
+    
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -106,10 +112,12 @@ void	parseRequest::storeData(const std::string& dataRequest)
 			storeHeader(line);
 		}
 	}
-	while (std::getline(iss, line)) // if there is a body , mabye you need to read again
-	{
-		Body += line;
-	}
+	//storeHeader(line);
+    ContentLength = atoi((Header["Content-Length:"]).c_str());
+    Body = dataRequest.substr(index);
+	// while (std::getline(iss, line, '\n')) // if there is a body , mabye you need to read again
+	// {
+	// }
     if (MethodType == POST)
     {
         ReadStoreBody();
@@ -118,12 +126,17 @@ void	parseRequest::storeData(const std::string& dataRequest)
 
 void	parseRequest::readData(void)
 {
-	readSize = read(Sockfd, buf, BUF_SIZE);
+    int bytesRead;
+    size_t index;
+    std::string data;
 
-	if (readSize == -1)
-		throw std::runtime_error("can't read client socket");
-	storeData(std::string(buf, readSize));
-	
+    while ((bytesRead = read(clientSocket, buf, BUF_SIZE)) > 0) {
+        data.append(buf, bytesRead);
+        if ((index = data.find("\r\n\r\n")) != std::string::npos) {
+	        storeData(data, index + 4);
+            break;
+        }
+    }
 // if you don't spesifies the size to std::string's constructor, the string will stop at '\0', 
 // whish will lead you to lose a part of your body.
 }
