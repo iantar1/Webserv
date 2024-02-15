@@ -2,7 +2,9 @@ NAME = webserv
 
 CXX = c++
 
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+RM = rm -rf
+
+CXXFLAGS = -Wall -Werror -Wextra #-std=c++98
 
 SRC = main.cpp ./src/parseRequest.cpp
 
@@ -16,4 +18,10 @@ ${NAME} : ${OBJ}
 
 all : ${NAME}
 
-# RM = rm -rf
+clean :
+	${RM} ${OBJ}
+
+fclean : clean
+	${RM} ${NAME}
+
+re : fclean all

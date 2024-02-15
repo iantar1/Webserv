@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:00:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/12 21:26:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/15 11:12:44 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,59 @@ void	parseRequest::storeData(const std::string& dataRequest, size_t index)
     {
         ReadStoreBody();
     }
+    else if (MethodType == GET)
+    {
+        parseRequest::getMethode();
+        
+    }
+}
+
+
+
+void    parseRequest::getMethode()
+{
+    std::size_t fileSize;
+    const char* filename = "DataBase/video.mp4";
+    struct stat file_stat;
+    if (stat(filename, &file_stat) == 0) {
+        fileSize = file_stat.st_size;
+    }
+    else
+    {
+        throw std::runtime_error("Error");
+    }
+    std::stringstream sNum;
+    sNum << fileSize;
+    std::cout << fileSize << "\n";
+    std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Length: " + sNum.str() + "\r\n\r\n";
+    if (write(clientSocket, title.c_str(), title.size()) == -1)
+    {
+        throw std::runtime_error("send syscall failed, first");
+    }
+    int size;
+    int fd;
+    fd = open("DataBase/video.mp4", O_RDONLY, 0666);
+    if (fd < 0)
+        throw std::runtime_error("file can't open");
+    char buf[BUF_SIZE];
+    bzero(buf, BUF_SIZE);
+    while ((size = read(fd, buf, BUF_SIZE)) != 0)
+    {
+        if (size == -1)
+            throw std::runtime_error("read error\n");
+        //ssize_t sizeSend = 0;
+        //while (sizeSend != size)
+        //{
+        ssize_t tmp = write(clientSocket, buf, size);
+        if (tmp != size)
+            throw std::runtime_error("Tkshbila");
+        if (tmp == -1)
+            throw std::runtime_error("write syscall failed");
+           // sizeSend += tmp;
+        //}
+        bzero(buf, BUF_SIZE);
+    }
+    close(fd);
 }
 
 void	parseRequest::readData(void)

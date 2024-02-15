@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:01:01 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/12 21:24:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/15 09:29:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ public:
 	parseRequest& operator=(const parseRequest&);
 	~parseRequest();
 
+	void	getMethode();
 	void	readData();
 	void 	printData();
 };
