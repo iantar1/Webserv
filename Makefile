@@ -4,7 +4,9 @@ CXX = c++
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 
-SRC =	main.cpp
+SRC =	main.cpp \
+		src/Request.cpp \
+		src/Response.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
