@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/18 03:07:29 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/18 03:09:31 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void Response::theGetMethod(void)
 		std::streamsize byteRead = 1;
 		size_t len = 0;
 
-		// Dunno Why The Video Isn't Sent By The Webserv !!
+		// Dunno Why The Video Isn't Sent By The Webserv !! Need Some Research Here...
 
 		while (byteRead > 0)
 		{
