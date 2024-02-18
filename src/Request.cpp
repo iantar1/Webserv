@@ -6,11 +6,11 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/17 04:08:15 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/17 19:11:13 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Webserv.hpp"
+#include "../includes/Request.hpp"
 #include "../includes/utils.hpp"
 
 Request::RequestException::RequestException(std::string error) : error(error) {}
@@ -35,7 +35,7 @@ Request::Request(char *request)
 	while(request[i] && request[i] != ' ' && request[i] != '\n')
 		path += request[i++];
 	i++;
-	while(request[i] && request[i] != ' ' && request[i] != '\n')
+	while(request[i] && request[i] != ' ' && request[i] != '\n' && request[i] != '\r')
 		protocol += request[i++];
 	i++;
 	this->method.insert(std::make_pair("Method", method));
@@ -89,15 +89,25 @@ void	Request::checkMethod(void) const
 	std::map<std::string, std::string>::iterator	it;
 	std::map<std::string, std::string> copy = this->method;
 
-	it = easyfind(copy, "Protocol");
-	std::cout << "2" << std::endl;
-	std::cout << it->first << std::endl;
-	if (it->second != "HTTP/1.1")
-		throw (RequestException("Protocol Not Supported Right Now!"));
 	it = easyfind(copy, "Method");
 	if (it->second != "GET" && it->second != "POST" && it->second != "DELETE")
-		throw (RequestException("Method Not Supported Right Now !"));
-	std::cout << "3" << std::endl;
+		throw (RequestException(it->second + ": Method Not Supported Right Now !"));
+	it = easyfind(copy, "Protocol");
+	if (it->second != "HTTP/1.1")
+		throw (RequestException(it->second + ": Protocol Not Supported Right Now!"));
 }
 
 Request::~Request(void) {}
+
+
+std::map<std::string, std::string>::iterator	Request::easyfind(std::map<std::string, std::string> &container, std::string x) const
+{
+	std::map<std::string, std::string>::iterator	it = container.begin();
+	while (it != container.end())
+	{
+		if (it->first == x)
+			return it;
+		it++;
+	}
+	return it;
+}

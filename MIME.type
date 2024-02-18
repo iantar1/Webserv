@@ -660,7 +660,6 @@
 .mid audio/midi
 .midi audio/midi
 .rmi audio/midi
-.mp4 audio/mp4
 .m4a audio/mp4
 .m4b audio/mp4
 .m4p audio/mp4

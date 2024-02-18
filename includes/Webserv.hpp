@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:39:14 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/17 04:07:24 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/17 16:18:37 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 #include <sstream>
 #include <ctime>
 #include <map>
-#include "Response.hpp"
-#include "Request.hpp"
 
 #define	PORT 8080
 

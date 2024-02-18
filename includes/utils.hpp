@@ -6,23 +6,15 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/17 04:07:31 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/17 17:39:29 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-std::string dec_to_hex(int decimal);
-std::map<std::string, std::string>	mimeTypes(void);
+#include "Webserv.hpp"
 
-std::map<std::string, std::string>::iterator	easyfind(std::map<std::string, std::string> &container, std::string x)
-{
-	std::map<std::string, std::string>::iterator	it = container.begin();
-	while (it != container.end())
-	{
-		if (it->first == x)
-			return it;
-		it++;
-	}
-	return it;
-}
+std::string	dec_to_hex(int decimal);
+std::map<std::string, std::string>	mimeTypes(void);
+size_t	find_last_of(const std::string& str, char ch);
+std::string	getFileExtension(const std::string& fileName);
