@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:46:38 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/15 10:29:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/20 11:34:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@
 # include <fcntl.h>
 # include <sys/select.h>
 # include <sys/stat.h>
+# include <sys/epoll.h>
 
 # include "../src/parseRequest.hpp"

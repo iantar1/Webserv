@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:01:01 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/15 09:29:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/19 14:12:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ private:
 	std::string							BodyfileNmae;
 	int									ReadingData;
 	int									ContentLength;
+	int									fdFile;
+
 
 private:
 	parseRequest();
@@ -48,6 +50,8 @@ private:
 	std::string	CurrentDate();
 
 public:
+	bool								isDone;
+	bool								reading_done;
 // parametrize constructor, copy constructor, copy assignement operator and destructor
 	parseRequest(int);
 	parseRequest(const parseRequest&);

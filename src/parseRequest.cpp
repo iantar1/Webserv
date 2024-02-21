@@ -6,15 +6,20 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:00:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/15 11:12:44 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/21 09:50:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "parseRequest.hpp"
 
+//# define PATH_VEDIO "/nfs/homes/iantar/sgoinfre/Morocco_Arise.mp4"
+//# define PATH_VEDIO "DataBase/video.mp4"
+# define PATH_VEDIO "/nfs/homes/iantar/sgoinfre/Morocco_Arise.mp4"
+# define HTML_PATH "DataBase/file.html"
+
 std::string parseRequest::Methods[] = {"POST", "GET", "DELETE"};
 
-parseRequest::parseRequest(int clientSocket) : clientSocket(clientSocket), MethodType(0),ReadingData(0) 
+parseRequest::parseRequest(int clientSocket) : clientSocket(clientSocket), MethodType(0),ReadingData(0), fdFile(-2), isDone(false), reading_done(false)
 {
 }
 
@@ -85,8 +90,8 @@ void	parseRequest::ReadStoreBody()
         ReadingData += rdSize;
         if (ReadingData == ContentLength)
             break;
-    } 
-    close(fd);
+    }
+    //close(fd);
 }
 
 void	parseRequest::storeData(const std::string& dataRequest, size_t index)
@@ -96,7 +101,7 @@ void	parseRequest::storeData(const std::string& dataRequest, size_t index)
 
     // ;
     // std::cout << "lplplp\n";
-    
+    (void)index;
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -112,69 +117,87 @@ void	parseRequest::storeData(const std::string& dataRequest, size_t index)
 			storeHeader(line);
 		}
 	}
-	//storeHeader(line);
-    ContentLength = atoi((Header["Content-Length:"]).c_str());
-    Body = dataRequest.substr(index);
-	// while (std::getline(iss, line, '\n')) // if there is a body , mabye you need to read again
-	// {
-	// }
-    if (MethodType == POST)
-    {
-        ReadStoreBody();
-    }
-    else if (MethodType == GET)
-    {
-        parseRequest::getMethode();
+    reading_done = true;
+    //Body = dataRequest.substr(index);
+    // if (MethodType == POST)
+    // {
+    //     ContentLength = atoi((Header["Content-Length:"]).c_str());
+    //     ReadStoreBody();
+    // }
+    // else if (MethodType == GET)
+    // {
+    //     parseRequest::getMethode();
         
-    }
+    // }
 }
-
-
 
 void    parseRequest::getMethode()
 {
-    std::size_t fileSize;
-    const char* filename = "DataBase/video.mp4";
-    struct stat file_stat;
-    if (stat(filename, &file_stat) == 0) {
-        fileSize = file_stat.st_size;
-    }
-    else
+    // std::size_t fileSize;
+    // const char* filename = HTML_PATH;
+    // struct stat file_stat;
+    // if (stat(filename, &file_stat) == 0) {
+    //     fileSize = file_stat.st_size;
+    // }
+    // else
+    // {
+    //     throw std::runtime_error("Error");
+    // }
+    // std::stringstream sNum;
+    // sNum << fileSize;
+    // std::cout << fileSize << "\n";
+    
+    if (isDone)
+        return ;
+    std::cout << "HHHH\n";
+    if (fdFile == -2)
     {
-        throw std::runtime_error("Error");
+         std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Encoding: Chunked\r\n\r\n";
+         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Length: Chunked\r\n\r\n";
+         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:  Chunked\r\n\r\n";
+
+        if (write(clientSocket, title.c_str(), title.size()) == -1)
+        {
+            std::cout << "clientSocket : "<< clientSocket << "\n";
+            throw std::runtime_error("write syscall failed, first");
+        }
     }
-    std::stringstream sNum;
-    sNum << fileSize;
-    std::cout << fileSize << "\n";
-    std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Length: " + sNum.str() + "\r\n\r\n";
-    if (write(clientSocket, title.c_str(), title.size()) == -1)
-    {
-        throw std::runtime_error("send syscall failed, first");
-    }
+   
     int size;
-    int fd;
-    fd = open("DataBase/video.mp4", O_RDONLY, 0666);
-    if (fd < 0)
-        throw std::runtime_error("file can't open");
+    if (fdFile == -2)
+    {
+        fdFile = open(PATH_VEDIO, O_RDONLY, 0666);
+        if (fdFile < 0)
+        {
+            std::cerr << "file can't open\n";
+            exit(1);
+        }
+        
+    }
     char buf[BUF_SIZE];
     bzero(buf, BUF_SIZE);
-    while ((size = read(fd, buf, BUF_SIZE)) != 0)
+    // int wSize = 0;
+    if ((size = read(fdFile, buf, BUF_SIZE)) != 0)
     {
         if (size == -1)
             throw std::runtime_error("read error\n");
-        //ssize_t sizeSend = 0;
-        //while (sizeSend != size)
-        //{
-        ssize_t tmp = write(clientSocket, buf, size);
-        if (tmp != size)
-            throw std::runtime_error("Tkshbila");
-        if (tmp == -1)
+        // int tmp = write(clientSocket, buf, size);
+        int tmp = write(clientSocket, buf, size);
+        std::cout << "read: " << size << " write: " << tmp << "\n";
+        std::cout <<" clientSocket: " << clientSocket << "\n";
+        //exit(1);
+        if(tmp == -1)
+        {
+            std::cerr << "clientSocket: "<< clientSocket << " write syscall failed..";
+            exit(1);
             throw std::runtime_error("write syscall failed");
-           // sizeSend += tmp;
-        //}
-        bzero(buf, BUF_SIZE);
+        }
     }
-    close(fd);
+    if (size == 0)
+    {
+        close(fdFile);
+        isDone = true;
+    }
 }
 
 void	parseRequest::readData(void)
@@ -183,12 +206,14 @@ void	parseRequest::readData(void)
     size_t index;
     std::string data;
 
-    while ((bytesRead = read(clientSocket, buf, BUF_SIZE)) > 0) {
-        data.append(buf, bytesRead);
-        if ((index = data.find("\r\n\r\n")) != std::string::npos) {
-	        storeData(data, index + 4);
-            break;
-        }
+    std::cout << "cleint : " << clientSocket << std::endl;
+    bytesRead = read(clientSocket, buf, BUF_SIZE);
+    if (bytesRead < 0)
+        throw std::runtime_error("read syscall failed");
+    data.append(buf, bytesRead);
+    if ((index = data.find("\r\n\r\n")) != std::string::npos) {
+	    storeData(data, index + 4);
+        reading_done = true;
     }
 // if you don't spesifies the size to std::string's constructor, the string will stop at '\0', 
 // whish will lead you to lose a part of your body.
@@ -196,6 +221,7 @@ void	parseRequest::readData(void)
 
 parseRequest::~parseRequest()
 {
+    //close(fdFile);
 }
 
 
