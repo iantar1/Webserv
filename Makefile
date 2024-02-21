@@ -7,6 +7,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 SRC =	main.cpp \
 		src/utils.cpp \
 		src/Request.cpp \
+		src/GetResponse.cpp \
 		src/Response.cpp
 
 OBJ = $(SRC:.cpp=.o)

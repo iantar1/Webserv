@@ -6,10 +6,11 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/17 19:11:13 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/20 19:41:04 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/definitions.hpp"
 #include "../includes/Request.hpp"
 #include "../includes/utils.hpp"
 
@@ -90,7 +91,7 @@ void	Request::checkMethod(void) const
 	std::map<std::string, std::string> copy = this->method;
 
 	it = easyfind(copy, "Method");
-	if (it->second != "GET" && it->second != "POST" && it->second != "DELETE")
+	if (it->second != "GET" && it->second != "POST" && it->second != "DELETE" && it->second != "")
 		throw (RequestException(it->second + ": Method Not Supported Right Now !"));
 	it = easyfind(copy, "Protocol");
 	if (it->second != "HTTP/1.1")

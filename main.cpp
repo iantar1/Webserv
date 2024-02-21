@@ -6,42 +6,11 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/18 00:02:26 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/21 04:29:00 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/headers.hpp"
-
-std::map<std::string, std::string> mimeTypes(void)
-{
-	std::map<std::string, std::string> out;
-	std::ifstream inFile("MIME.type");
-	std::string line, key, value;
-	int i;
-
-	if (!inFile.is_open())
-		std::cout << "Couldn't open MIME.type file!" << std::cout;
-	while (std::getline(inFile, line))
-	{
-		key = "";
-		value = "";
-		i = 0;
-		while ((line.c_str())[i] && (line.c_str())[i] != ' ')
-			key += (line.c_str())[i++];
-		i++;
-		while ((line.c_str())[i] && (line.c_str())[i] != '\n')
-			value += (line.c_str())[i++];
-		out.insert(std::make_pair(key, value));
-	}
-	return out;
-}
-
-std::string dec_to_hex(int decimal)
-{
-	char buffer[50];
-	sprintf(buffer, "%X", decimal);
-	return std::string(buffer);
-}
 
 int main(void)
 {
@@ -73,7 +42,7 @@ int main(void)
 
 	std::string line, body, response;
 	std::map<std::string, std::string> dictionary;
-	std::map<std::string, std::string> mime = mimeTypes();
+	t_files files = getDataFromFiles();
 
 	while (true)
 	{
@@ -92,14 +61,18 @@ int main(void)
 		if (valread < 0)
 			std::cout << "No bytes are there to read" << std::endl;
 
-		Request request(buffer);
-		std::cout << "1" << std::endl;
-		request.checkMethod();
-		std::cout << "2" << std::endl;
-		Response response(new_socket, request, mime);
-		std::cout << "3" << std::endl;
-		std::cout << "------------------ Response sent -------------------\n"
-				  << std::endl;
-		close(new_socket);
+		try
+		{
+			Request request(buffer);
+			request.checkMethod();
+			Response response(new_socket, request, files);
+			std::cout << "------------------ Response sent -------------------\n"
+					  << std::endl;
+			close(new_socket);
+		}
+		catch (std::exception &e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 	}
 }
