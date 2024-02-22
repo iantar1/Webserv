@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:08:51 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/21 19:44:52 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@
 class Response
 {
 	private :
-		std::string 						body, response, strTime, contentType;
-		Request 							request;
-		t_files								files;
-		std::ifstream						inFile;
-		std::string							path;
-		int 								socket;
+		int 	socket;
+		t_files	files;
+		Request	request;
 
 	public :
 		Response(int socket, Request &request, t_files files);

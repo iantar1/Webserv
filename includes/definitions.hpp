@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:30:14 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/20 20:26:51 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/21 20:15:27 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,7 @@
 #define LONG_URI_REQ 414
 #define INTERNAL_ERR 500
 #define NOT_IMPLEMENTED 501
+
+#define NORMAL_POST 100
+#define CHUNKED_POST 101
+#define BOUNDRIES_POST 102

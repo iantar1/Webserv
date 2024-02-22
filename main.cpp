@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:29:00 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 03:24:12 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int main(void)
 	std::map<std::string, std::string> dictionary;
 	t_files files = getDataFromFiles();
 
+	srand(static_cast<unsigned int>(time(0)));
+
 	while (true)
 	{
 		std::cout << "\n+++++++ Waiting for a new request ++++++++\n"
@@ -64,6 +66,14 @@ int main(void)
 		try
 		{
 			Request request(buffer);
+			// std::map<std::string, std::string>	req = request.getRequest();
+			// std::map<std::string, std::string>::iterator	it = req.begin();
+			// while (it != req.end())
+			// {
+			// 	std::cout << it->first << " || " << it->second << std::endl;
+			// 	it++;
+			// }
+			// std::cout << request.getBody() << std::endl;
 			request.checkMethod();
 			Response response(new_socket, request, files);
 			std::cout << "------------------ Response sent -------------------\n"

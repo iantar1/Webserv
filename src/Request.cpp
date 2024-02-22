@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/20 19:41:04 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 04:44:53 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ Request::Request(char *request)
 	this->method.insert(std::make_pair("Method", method));
 	this->method.insert(std::make_pair("Path", path));
 	this->method.insert(std::make_pair("Protocol", protocol));
+	this->body = "";
 	while(request[i])
 	{
 		value = "";
@@ -58,32 +59,38 @@ Request::Request(char *request)
 				i += 2;
 				while(request[i] && request[i] != '\n')
 					value += request[i++];
+				value.resize(value.size() - 1);
 			}
 		}
 		i++;
 		if (key != "" && value != "")
 			this->request.insert(std::make_pair(key, value));
+		else if (key != "" && value == "")
+		{
+			key.resize(key.size() - 1);
+			if (request[i])
+				while(request[i])
+					key += request[i++];
+			this->body += key;
+		}
 	}
 }
 
-Request::Request(const Request &other) : request(other.request), method(other.method) {}
+Request::Request(const Request &other) : request(other.request), method(other.method), body(other.body) {}
 
 Request&	Request::operator=(const Request &other)
 {
 	this->request = other.request;
 	this->method = other.method;
+	this->body = other.body;
 	return (*this);
 }
 
-std::map<std::string, std::string>	Request::getRequest(void) const
-{
-	return this->request;
-}
+std::string							Request::getBody(void) const { return this->body; }
 
-std::map<std::string, std::string>	Request::getMethod(void) const
-{
-	return this->method;
-}
+std::map<std::string, std::string>	Request::getRequest(void) const { return this->request; }
+
+std::map<std::string, std::string>	Request::getMethod(void) const { return this->method; }
 
 void	Request::checkMethod(void) const
 {

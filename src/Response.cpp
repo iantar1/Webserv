@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:12:03 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 03:32:29 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,18 @@ Response::Response(int socket, Request &request, t_files files)
 	this->request = request;
 	this->files = files;
 
+	std::string		data = this->request.getBody();
+	std::cout << "==> " << data << std::endl;
+
 	std::map<std::string, std::string> method = this->request.getMethod();
 
 	if (method.find("Method")->second == "GET")
-		GetResponse	get(this->socket, this->request, this->files);
-	// else if (method.find("Method")->second == "POST")
-	// 	PostResponse	post(this->socket, this->request, this->files);
+		GetResponse		get(this->socket, this->request, this->files);
+	else if (method.find("Method")->second == "POST")
+		PostResponse	post(this->socket, this->request, this->files);
 }
 
-Response::Response(const Response &other) : request(other.request), files(other.files), socket(other.socket) {}
+Response::Response(const Response &other) : socket(other.socket), files(other.files), request(other.request) {}
 
 Response &Response::operator=(const Response &other)
 {

@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/17 16:20:30 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/21 23:41:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ class Request
 	private :
 		std::map<std::string, std::string>	request;
 		std::map<std::string, std::string>	method;
+		std::string							body;
 
 	public :
 		Request(void);
 		Request(char *request);
 		Request(const Request &other);
 		Request &operator=(const Request &other);
+		std::string							getBody(void) const;
 		std::map<std::string, std::string>	getRequest(void) const;
 		std::map<std::string, std::string>	getMethod(void) const;
 		std::map<std::string, std::string>::iterator	easyfind(std::map<std::string, std::string> &container, std::string x) const;

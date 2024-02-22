@@ -829,15 +829,6 @@
 .markdn text/markdown
 .mathml text/mathml
 .mml text/mathml
-.conf text/plain
-.def text/plain
-.diff text/plain
-.in text/plain
-.ksh text/plain
-.list text/plain
-.log text/plain
-.pl text/plain
-.text text/plain
 .txt text/plain
 .dsc text/prs.lines.tag
 .rtx text/richtext

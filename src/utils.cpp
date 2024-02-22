@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/20 23:10:09 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 05:12:43 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,48 @@ std::map<std::string, std::string> mimeTypes(void)
 		out.insert(std::make_pair(key, value));
 	}
 	return out;
+}
+
+std::string	getContentExtension(std::map<std::string, std::string> mime, std::string contentType)
+{
+	std::map<std::string, std::string>::iterator	it;
+
+	it = mime.begin();
+	while (it != mime.end())
+	{
+		// std::cout << "{" << it->second << "}" << " {" << contentType << "}" << std::endl;
+		if (it->second == contentType)
+			return it->first;
+		it++;
+	}
+	return "";
+}
+
+std::string	generateNameFile(void)
+{
+	std::string result;
+	const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	const int charsetSize = sizeof(charset) - 1;
+
+	for (int i = 0; i < 5; i++)
+		result += charset[rand() % charsetSize];
+	return result;
+}
+
+std::string	getPageContent(std::string page)
+{
+	std::ifstream	inFile(page.c_str());
+	std::string		line, pageContent = "";
+
+	if (inFile.is_open())
+	{
+		while (std::getline(inFile, line))
+		{
+			pageContent += line;
+			pageContent += "\n";
+		}
+		inFile.close();
+	}
+	return pageContent;
 }

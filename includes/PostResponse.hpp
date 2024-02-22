@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 02:15:17 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:17:54 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 03:09:35 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,13 @@
 class PostResponse
 {
 	private :
-		std::string 						body, response, strTime, contentType;
+		std::string 						resonseBody, response, strTime, contentType;
+		std::string							path, requestBody;
 		Request 							request;
 		t_files								files;
-		std::ifstream						outFile;
-		std::string							path;
+		std::ofstream						outFile;
+		int									contentLenght;
+		int									postType;
 		int 								socket;
 
 	public :
@@ -32,9 +34,9 @@ class PostResponse
 		PostResponse &operator=(const PostResponse &other);
 		~PostResponse(void);
 
-		// void	thePostErrorNotFound(void);
-		// void	thePostResponseOk(void);
-		// void	thePostMethod(void);
+		void	thePostInternalServerError(void);
+		void	thePostResponseCreated(void);
+		void	thePostMethod(void);
 
 	private :
 		class PostResponseException : public std::exception

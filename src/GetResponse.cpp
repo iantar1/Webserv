@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:09:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/22 05:12:33 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void GetResponse::theGetErrorNotFound(void)
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(NOT_FOUND)->second;
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += "text/plain";
+	header_it->second += "text/html";
 	header_it = this->files.headers.find(CONTENT_LENGHT);
-	this->body = "Error 404!\r\n\n";
+	this->body = getPageContent("defaultPages/404.htm") + "\r\n\n";
 	header_it->second += ToString(body.size());
 	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
@@ -107,8 +107,8 @@ void GetResponse::theGetResponseOk(void)
 	while (byteRead > 0)
 	{
 		signal(SIGPIPE, SIG_IGN);
-		inFile.read(buf, 1024);
-		byteRead = inFile.gcount();
+		this->inFile.read(buf, 1024);
+		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
 			break;
 		std::string str(buf, byteRead);
@@ -124,8 +124,7 @@ void GetResponse::theGetMethod(void)
 {
 	tm												*local_time;
 	time_t											now;
-	std::string										extension, line;
-	std::map<int, std::string>::iterator 			header_it;
+	std::string										extension;
 	std::map<std::string, std::string>::iterator	mime_it;
 
 	now = time(0);
@@ -146,10 +145,10 @@ void GetResponse::theGetMethod(void)
 
 	this->inFile.open(this->path.c_str() + 1);
 
-	if (!inFile.is_open())
+	if (!this->inFile.is_open())
 		theGetErrorNotFound();
 	else
 		theGetResponseOk();
 
-	inFile.close();
+	this->inFile.close();
 }

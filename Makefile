@@ -8,6 +8,7 @@ SRC =	main.cpp \
 		src/utils.cpp \
 		src/Request.cpp \
 		src/GetResponse.cpp \
+		src/PostResponse.cpp \
 		src/Response.cpp
 
 OBJ = $(SRC:.cpp=.o)
