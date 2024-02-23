@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 23:41:10 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 04:32:42 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Request
 
 	public :
 		Request(void);
-		Request(char *request);
+		Request(std::string strRequest);
 		Request(const Request &other);
 		Request &operator=(const Request &other);
 		std::string							getBody(void) const;

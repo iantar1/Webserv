@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/22 05:12:43 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 00:24:51 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,18 @@ size_t	find_last_of(const std::string& str, char ch)
 std::string dec_to_hex(int decimal)
 {
 	char buffer[50];
+
 	sprintf(buffer, "%X", decimal);
 	return std::string(buffer);
+}
+
+int	hexStringToInt(const std::string& hexStr)
+{
+	std::istringstream	iss(hexStr);
+	int					result;
+
+	iss >> std::hex >> result;
+	return result;
 }
 
 std::string	getFileExtension(const std::string& fileName)

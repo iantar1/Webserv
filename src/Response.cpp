@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/22 03:32:29 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 04:26:42 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ Response::Response(int socket, Request &request, t_files files)
 	this->request = request;
 	this->files = files;
 
-	std::string		data = this->request.getBody();
-	std::cout << "==> " << data << std::endl;
+	// std::string		data = this->request.getBody();
+	// std::cout << "==> " << data << std::endl;
 
 	std::map<std::string, std::string> method = this->request.getMethod();
 

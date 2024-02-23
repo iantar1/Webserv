@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 04:13:45 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/22 05:14:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 07:32:52 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	PostResponse::thePostMethod(void)
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
 
-	this->outFile.open(fileName.c_str());
+	this->outFile.open(fileName.c_str(), std::ios::binary);
 
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
@@ -107,10 +107,28 @@ void	PostResponse::thePostInternalServerError(void)
 
 void	PostResponse::thePostResponseCreated(void)
 {
+	// int	contentLenght;
+
 	if (this->postType == NORMAL_POST)
 	{
 		std::string		data = this->request.getBody();
-		// std::cout << "==> " << data << " <==" << data.size() << std::endl;
-		this->outFile.write(data.c_str(), data.size());
+		// std::cout << "==> " << data << " <==" << std::endl;
+		std::cout << "$*$ " << data << " $*$" << std::endl;
+		// contentLenght = std::atoi(this->request.getRequest().find("Content-Length")->second.c_str());
+		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~> " << contentLenght << std::endl;
+		this->outFile.write(data.data(), contentLenght);
+		this->outFile << data;
 	}
+	// else if (this->postType == CHUNKED_POST)
+	// {
+		// while (request[i] != '\r\n')
+		// 	chunkedContentLenght += request[i++];
+		// i++;
+		// ccl = hexStringToInt(chunkedContentLenght);
+		// while (j < ccl)
+		// {
+		// 	std::string	str(1, request[i + j++]);
+		// 	this->body.append(str);
+		// }
+	// }
 }

@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/22 04:44:53 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 05:32:04 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,58 +22,79 @@ Request::RequestException::~RequestException(void) throw() {}
 
 Request::Request(void) {}
 
-Request::Request(char *request)
+Request::Request(std::string strRequest)
 {
-	int									i = 0;
-	std::string							key, value, method, path, protocol;
+	int												i = 0;
+	std::string										key, value, method, path, protocol, chunkedContentLenght;
+	std::map<std::string, std::string>::iterator	itl, ite;
 
 	protocol = "";
 	method = "";
 	path = "";
-	while(request[i] && request[i] != ' ' && request[i] != '\n')
-		method += request[i++];
+	while(strRequest[i] && strRequest[i] != ' ')
+		method += strRequest[i++];
 	i++;
-	while(request[i] && request[i] != ' ' && request[i] != '\n')
-		path += request[i++];
+	while(strRequest[i] && strRequest[i] != ' ')
+		path += strRequest[i++];
 	i++;
-	while(request[i] && request[i] != ' ' && request[i] != '\n' && request[i] != '\r')
-		protocol += request[i++];
-	i++;
+	while(strRequest[i] && strRequest[i] != ' ' && strRequest[i] != '\r' && strRequest[i + 1] && strRequest[i + 1] != '\n')
+		protocol += strRequest[i++];
+	i += 2;
 	this->method.insert(std::make_pair("Method", method));
 	this->method.insert(std::make_pair("Path", path));
 	this->method.insert(std::make_pair("Protocol", protocol));
-	this->body = "";
-	while(request[i])
+	// this->body = "";
+	while (strRequest[i] && strRequest[i] != '\r'
+		&& strRequest[i + 1] && strRequest[i + 1] != '\n')
 	{
-		value = "";
-		key = "";
-		while(request[i] && request[i] != '\n')
-		{
-			if(request[i] != ':')
-			{
-				key += request[i++];
-				continue;
-			}
-			else
-			{
-				i += 2;
-				while(request[i] && request[i] != '\n')
-					value += request[i++];
-				value.resize(value.size() - 1);
-			}
-		}
+		key.clear();
+		value.clear();
+
+		while (strRequest[i] && strRequest[i] != ':')
+			key += strRequest[i++];
 		i++;
-		if (key != "" && value != "")
-			this->request.insert(std::make_pair(key, value));
-		else if (key != "" && value == "")
-		{
-			key.resize(key.size() - 1);
-			if (request[i])
-				while(request[i])
-					key += request[i++];
-			this->body += key;
-		}
+		while (strRequest[i] && strRequest[i] == ' ')
+			i++;
+		while (strRequest[i] && strRequest[i] != '\r'
+			&& strRequest[i + 1] && strRequest[i + 1] != '\n')
+			value += strRequest[i++];
+		i += 2;
+
+		this->request.insert(std::make_pair(key, value));
 	}
+
+	while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
+		i++;
+
+	this->body = strRequest.substr(i);
+
+	// else if (ite != this->request.end())
+	// {
+	// 	while (request[i] && request[i] != '\r'
+	// 		&& request[i + 1] && request[i + 1] != '\n')
+	// 	{
+	// 		chunkedContentLenght += request[i];
+	// 		std::string	str(1, request[i++]);
+	// 		this->body.append(str);
+	// 	}
+	// 	i++;
+	// 	this->body.append("\r\n");
+	// 	ccl = hexStringToInt(chunkedContentLenght);
+	// 	while (j < ccl)
+	// 	{
+	// 		std::string	str(1, request[i + j++]);
+	// 		this->body.append(str);
+	// 	}
+	// }
+	// std::cout << "******" << itl->second << std::endl;
+	// else if (key != "" && value == "")
+	// {
+	// key.resize(key.size() - 1);
+	// if (request[i])
+	// 	while(request[i])
+	// 		key += request[i++];
+	// this->body += key;
+	// }
 }
 
 Request::Request(const Request &other) : request(other.request), method(other.method), body(other.body) {}
