@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/28 13:35:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/29 11:10:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ calss Location;
 class VirtualServer
 {
 private:
+	// listen;
+	// server_name;
+	// max_client_body_size;
+	// error_page;
+	
 	int									port;
 	std::string							Name;
 	std::map<std::string, Location *>	locations;

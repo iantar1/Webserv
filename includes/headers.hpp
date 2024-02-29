@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:46:38 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/20 11:34:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/29 15:02:06 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,13 @@
 # include <sys/stat.h>
 # include <sys/epoll.h>
 
-# include "../src/parseRequest.hpp"
+# include "macros.hpp"
+
+# include "Server.hpp"
+# include "Client.hpp"
+# include "Location.hpp"
+# include "Request.hpp"
+# include "Response.hpp"
+# include "VirtualServer.hpp"
+
+//# include "../src/parseRequest.hpp"
