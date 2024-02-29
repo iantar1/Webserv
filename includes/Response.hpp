@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 19:44:52 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 23:29:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,19 @@ class Response
 {
 	private :
 		int 	socket;
+		std::string	responseBody, response, strTime;
 		t_files	files;
 		Request	request;
 
 	public :
-		Response(int socket, Request &request, t_files files);
+		Response(int socket, Request &request, t_files files, int error, int *mode);
 		Response(const Response &other);
 		Response &operator=(const Response &other);
 		virtual ~Response(void);
 
-		void thePostMethod(void);
-		void theDeleteMethod(void);
-
+		void	errorPage(int errorCode);
+		void	thePostMethod(void);
+		void	theDeleteMethod(void);
 
 	private :
 		class ResponseException : public std::exception

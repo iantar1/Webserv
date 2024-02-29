@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 04:13:45 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 07:32:52 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 20:22:52 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ const char *PostResponse::PostResponseException::what(void) const throw() { retu
 PostResponse::PostResponseException::~PostResponseException(void) throw() {}
 
 
-PostResponse::PostResponse(int socket, Request &request, t_files files)
+PostResponse::PostResponse(int socket, Request &request, t_files files, int *mode)
 {
 	this->request = request;
 	this->socket = socket;
 	this->files = files;
 
-	thePostMethod();
+	thePostMethod(mode);
 }
 
 PostResponse::PostResponse(const PostResponse &other) : request(other.request), files(other.files), socket(other.socket) {}
@@ -42,7 +42,7 @@ PostResponse &PostResponse::operator=(const PostResponse &other)
 
 PostResponse::~PostResponse(void) {}
 
-void	PostResponse::thePostMethod(void)
+void	PostResponse::thePostMethod(int *mode)
 {
 	tm												*local_time;
 	time_t											now;
@@ -51,15 +51,17 @@ void	PostResponse::thePostMethod(void)
 	std::map<std::string, std::string>::iterator	mime_it, req_it;
 
 	now = time(0);
-	
+
 	req = this->request.getRequest();
 	req_it = req.find("Content-Length");
-	if (req_it != req.end())
+	if (*mode == NORMAL)
+	{
 		this->postType = NORMAL_POST;
+		this->contentLenght = std::atoi((this->request.getRequest().find("Content-Length")->second).c_str());
+	}
 	else
 		this->postType = CHUNKED_POST;
 
-	this->contentLenght = std::atoi((this->request.getRequest().find("Content-Length")->second).c_str());
 	this->contentType = this->request.getRequest().find("Content-Type")->second;
 	extension = getContentExtension(this->files.mime, this->contentType);
 	fileName = "Uploads/" + generateNameFile() + extension;
@@ -73,7 +75,7 @@ void	PostResponse::thePostMethod(void)
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
 	else
-		thePostResponseCreated();
+		thePostResponseCreated(mode);
 
 	this->outFile.close();
 }
@@ -85,7 +87,7 @@ void	PostResponse::thePostInternalServerError(void)
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(INTERNAL_ERR)->second;
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += "text/plain";
+	header_it->second += "text/html";
 	header_it = this->files.headers.find(CONTENT_LENGHT);
 	this->resonseBody = getPageContent("defaultPages/500.htm") + "\r\n\n";
 	header_it->second += ToString(resonseBody.size());
@@ -103,32 +105,22 @@ void	PostResponse::thePostInternalServerError(void)
 	write(this->socket, this->response.c_str(), this->response.size());
 }
 
-//	Dunno Why I Can't Post Properly The Binary Files...
-
-void	PostResponse::thePostResponseCreated(void)
+void	PostResponse::thePostResponseCreated(int *mode)
 {
-	// int	contentLenght;
+	int	ccl;
 
 	if (this->postType == NORMAL_POST)
 	{
 		std::string		data = this->request.getBody();
-		// std::cout << "==> " << data << " <==" << std::endl;
-		std::cout << "$*$ " << data << " $*$" << std::endl;
-		// contentLenght = std::atoi(this->request.getRequest().find("Content-Length")->second.c_str());
-		std::cout << "~~~~~~~~~~~~~~~~~~~~~~~> " << contentLenght << std::endl;
-		this->outFile.write(data.data(), contentLenght);
-		this->outFile << data;
+		this->outFile.write(data.data(), data.size());
 	}
-	// else if (this->postType == CHUNKED_POST)
-	// {
-		// while (request[i] != '\r\n')
-		// 	chunkedContentLenght += request[i++];
-		// i++;
-		// ccl = hexStringToInt(chunkedContentLenght);
-		// while (j < ccl)
-		// {
-		// 	std::string	str(1, request[i + j++]);
-		// 	this->body.append(str);
-		// }
-	// }
+	else if (this->postType == CHUNKED_POST)
+	{
+		ccl = hexStringToInt(this->request.getChunkedBodySize());
+		std::cout << ccl << " || " << this->request.getChunkedBodySize() << std::endl;
+		if (ccl != 0)
+			write(this->socket, this->request.getBody().data(), ccl);
+		else
+			*mode = NORMAL;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:30:14 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 20:15:27 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 21:43:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,3 +43,6 @@
 #define NORMAL_POST 100
 #define CHUNKED_POST 101
 #define BOUNDRIES_POST 102
+
+#define NORMAL 1000
+#define CHUNKED 1001

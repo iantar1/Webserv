@@ -6,11 +6,12 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 09:07:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 21:44:16 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/headers.hpp"
+// #include <arpa/inet.h>
 
 int main(void)
 {
@@ -44,75 +45,53 @@ int main(void)
 	std::map<std::string, std::string> dictionary;
 	t_files files = getDataFromFiles();
 
-	// fd_set read_fds;
-	// FD_ZERO(&read_fds);
-	// FD_SET(new_socket, &read_fds);
-
-	// struct timeval timeout;
-	// timeout.tv_sec = 10; // Timeout of 10 seconds
-	// timeout.tv_usec = 0;
-
 	srand(static_cast<unsigned int>(time(0)));
+
+	int	mode = NORMAL;
 
 	while (true)
 	{
 		std::cout << "\n+++++++ Waiting for a new request ++++++++\n"
-				  << std::endl;
+					<< std::endl;
 		new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen);
 		if (new_socket < 0)
 			return (std::cout << "accept failed" << std::endl, -1);
 
-
-		// int ready = select(new_socket + 1, &read_fds, NULL, NULL, &timeout);
-
-		// if (ready < 0)
-		// {
-		// 	std::cout << "Error" << std::endl;
-		// 	continue;
-		// }
-		// else if (ready == 0)
-		// {
-		// 	std::cout << "Timeout" << std::endl;
-		// 	continue;
-		// }
-		// else
-		// {
-			char buffer[10000] = {0};
-			int valread;
-			while((valread = read(new_socket, buffer, 10000)) != 0)
+		char buffer[10024];
+		int valread = 1;
+		while (valread > 0)
+		{
+			valread = read(new_socket, buffer, 10024);
+			if (valread > 0)
 			{
 				std::string str(buffer, valread);
 				req.append(str);
-				// std::cout << "VALREAD :: " << valread << "\n" << str << std::endl;
-
-				if (valread < 0)
-				{
-					std::cout << "No bytes are there to read" << std::endl;
-					break;
-				}
 			}
+			else
+				break;
+		}
 
-			try
-			{
-				Request request(req);
-				// std::map<std::string, std::string>	req = request.getRequest();
-				// std::map<std::string, std::string>::iterator	it = req.begin();
-				// while (it != req.end())
-				// {
-				// 	std::cout << it->first << " || " << it->second << std::endl;
-				// 	it++;
-				// }
-				// std::cout << request.getBody() << std::endl;
-				request.checkMethod();
-				Response response(new_socket, request, files);
-				std::cout << "------------------ Response sent -------------------\n"
-						<< std::endl;
-				close(new_socket);
-			}
-			catch (std::exception &e)
-			{
-				std::cout << e.what() << std::endl;
-			}			
+		// std::cout << " VALREAD :: " << valread << "\n" << req << std::endl;
+
+		if (valread < 0)
+		{
+			std::cout << "No bytes are there to read" << std::endl;
+			break;
+		}
+
+		try
+		{
+			Request request(req, &mode);
+			Response response(new_socket, request, files, request.getError(), &mode);
+			std::cout << "------------------ Response sent -------------------\n"
+					<< std::endl;
+			close(new_socket);
+			req = "";
+		}
+		catch (std::exception &e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 		// }
 	}
 }

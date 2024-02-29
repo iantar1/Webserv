@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 00:24:51 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 23:56:56 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,4 +151,23 @@ std::string	getPageContent(std::string page)
 		inFile.close();
 	}
 	return pageContent;
+}
+
+bool	isAllowed(std::string &str)
+{
+	std::string	allowedChars("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%");
+
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (allowedChars.find(str[i]) == std::string::npos)
+			return false;
+	}
+	return true;
+}
+
+bool	isLongReq(std::string &str)
+{
+	if (str.size() > 2048)
+		return true;
+	return false;
 }

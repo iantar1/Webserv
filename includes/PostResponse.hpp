@@ -29,14 +29,14 @@ class PostResponse
 		int 								socket;
 
 	public :
-		PostResponse(int socket, Request &request, t_files files);
+		PostResponse(int socket, Request &request, t_files files, int *mode);
 		PostResponse(const PostResponse &other);
 		PostResponse &operator=(const PostResponse &other);
 		~PostResponse(void);
 
 		void	thePostInternalServerError(void);
-		void	thePostResponseCreated(void);
-		void	thePostMethod(void);
+		void	thePostResponseCreated(int *mode);
+		void	thePostMethod(int *mode);
 
 	private :
 		class PostResponseException : public std::exception

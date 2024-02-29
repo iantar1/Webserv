@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 04:32:42 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 23:29:19 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,23 @@ class Request
 		std::map<std::string, std::string>	request;
 		std::map<std::string, std::string>	method;
 		std::string							body;
+		std::string							chunkedBodySize;
+		int									errorCode;
 
 	public :
 		Request(void);
-		Request(std::string strRequest);
+		Request(std::string strRequest, int *mode);
 		Request(const Request &other);
 		Request &operator=(const Request &other);
-		std::string							getBody(void) const;
-		std::map<std::string, std::string>	getRequest(void) const;
-		std::map<std::string, std::string>	getMethod(void) const;
-		std::map<std::string, std::string>::iterator	easyfind(std::map<std::string, std::string> &container, std::string x) const;
-		void	checkMethod(void) const;
 		~Request(void);
+
+		int												getError(void) const;
+		bool											checkMethod(void);
+		std::string										getBody(void) const;
+		std::string										getChunkedBodySize(void) const;
+		std::map<std::string, std::string>				getRequest(void) const;
+		std::map<std::string, std::string>				getMethod(void) const;
+		std::map<std::string, std::string>::iterator	easyfind(std::map<std::string, std::string> &container, std::string x) const;
 
 	private :
 		class RequestException : public std::exception

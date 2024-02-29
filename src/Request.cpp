@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 05:32:04 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/28 23:36:34 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,79 +22,114 @@ Request::RequestException::~RequestException(void) throw() {}
 
 Request::Request(void) {}
 
-Request::Request(std::string strRequest)
+Request::Request(std::string strRequest, int *mode)
 {
 	int												i = 0;
 	std::string										key, value, method, path, protocol, chunkedContentLenght;
 	std::map<std::string, std::string>::iterator	itl, ite;
 
-	protocol = "";
-	method = "";
-	path = "";
-	while(strRequest[i] && strRequest[i] != ' ')
-		method += strRequest[i++];
-	i++;
-	while(strRequest[i] && strRequest[i] != ' ')
-		path += strRequest[i++];
-	i++;
-	while(strRequest[i] && strRequest[i] != ' ' && strRequest[i] != '\r' && strRequest[i + 1] && strRequest[i + 1] != '\n')
-		protocol += strRequest[i++];
-	i += 2;
-	this->method.insert(std::make_pair("Method", method));
-	this->method.insert(std::make_pair("Path", path));
-	this->method.insert(std::make_pair("Protocol", protocol));
-	// this->body = "";
-	while (strRequest[i] && strRequest[i] != '\r'
-		&& strRequest[i + 1] && strRequest[i + 1] != '\n')
-	{
-		key.clear();
-		value.clear();
+	this->errorCode = 0;
 
-		while (strRequest[i] && strRequest[i] != ':')
-			key += strRequest[i++];
+	if (*mode == NORMAL)
+	{
+		protocol = "";
+		method = "";
+		path = "";
+		while(strRequest[i] && strRequest[i] != ' ')
+			method += strRequest[i++];
 		i++;
-		while (strRequest[i] && strRequest[i] == ' ')
-			i++;
+		while(strRequest[i] && strRequest[i] != ' ')
+			path += strRequest[i++];
+		i++;
+		while(strRequest[i] && strRequest[i] != ' ' && strRequest[i] != '\r' && strRequest[i + 1] && strRequest[i + 1] != '\n')
+			protocol += strRequest[i++];
+		i += 2;
+		
+		if (!isAllowed(path))
+		{
+			this->errorCode = BAD_REQUEST;
+			return ;
+		}
+		if (isLongReq(path))
+		{
+			this->errorCode = LONG_URI_REQ;
+			return ;
+		}
+
+		this->method.insert(std::make_pair("Method", method));
+		this->method.insert(std::make_pair("Path", path));
+		this->method.insert(std::make_pair("Protocol", protocol));
+		if (!checkMethod())
+			return ;
 		while (strRequest[i] && strRequest[i] != '\r'
 			&& strRequest[i + 1] && strRequest[i + 1] != '\n')
-			value += strRequest[i++];
-		i += 2;
+		{
+			key.clear();
+			value.clear();
 
-		this->request.insert(std::make_pair(key, value));
+			while (strRequest[i] && strRequest[i] != ':')
+				key += strRequest[i++];
+			i++;
+			while (strRequest[i] && strRequest[i] == ' ')
+				i++;
+			while (strRequest[i] && strRequest[i] != '\r'
+				&& strRequest[i + 1] && strRequest[i + 1] != '\n')
+				value += strRequest[i++];
+			i += 2;
+
+			this->request.insert(std::make_pair(key, value));
+		}
+
+		itl = this->request.find("Content-Length");
+		ite = this->request.find("Transfer-Encoding");
+		if (method == "POST" && (itl == this->request.end() && ite == this->request.end()))
+		{
+			this->errorCode = BAD_REQUEST;
+			return ;
+		}
+		if (itl != this->request.end() && ite != this->request.end())
+		{
+			this->errorCode = BAD_REQUEST;
+			return ;
+		}
+		else if (ite != this->request.end() && ite->second != "chunked")
+		{
+			this->errorCode = NOT_IMPLEMENTED;
+			return ;
+		}
+
+		while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
+			i++;
+
+		if (ite != this->request.end())
+		{
+			*mode = CHUNKED;
+			while (strRequest[i] && strRequest[i] != '\r'
+				&& strRequest[i + 1] && strRequest[i + 1] != '\n')
+			{
+				std::cout << strRequest[i];
+				this->chunkedBodySize += strRequest[i++];
+			}
+
+			while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
+				i++;
+		}
+
+		this->body = strRequest.substr(i);
 	}
+	else
+	{
+		i = 0;
 
-	while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
-		i++;
+		while (strRequest[i] && strRequest[i] != '\r'
+			&& strRequest[i + 1] && strRequest[i + 1] != '\n')
+			this->chunkedBodySize += strRequest[i++];
 
-	this->body = strRequest.substr(i);
+		while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
+			i++;
 
-	// else if (ite != this->request.end())
-	// {
-	// 	while (request[i] && request[i] != '\r'
-	// 		&& request[i + 1] && request[i + 1] != '\n')
-	// 	{
-	// 		chunkedContentLenght += request[i];
-	// 		std::string	str(1, request[i++]);
-	// 		this->body.append(str);
-	// 	}
-	// 	i++;
-	// 	this->body.append("\r\n");
-	// 	ccl = hexStringToInt(chunkedContentLenght);
-	// 	while (j < ccl)
-	// 	{
-	// 		std::string	str(1, request[i + j++]);
-	// 		this->body.append(str);
-	// 	}
-	// }
-	// std::cout << "******" << itl->second << std::endl;
-	// else if (key != "" && value == "")
-	// {
-	// key.resize(key.size() - 1);
-	// if (request[i])
-	// 	while(request[i])
-	// 		key += request[i++];
-	// this->body += key;
-	// }
+		this->body = strRequest.substr(i);
+	}
 }
 
 Request::Request(const Request &other) : request(other.request), method(other.method), body(other.body) {}
@@ -109,34 +144,32 @@ Request&	Request::operator=(const Request &other)
 
 std::string							Request::getBody(void) const { return this->body; }
 
+std::string							Request::getChunkedBodySize(void) const { return this->chunkedBodySize; }
+
+int									Request::getError(void) const {	return this->errorCode; }
+
 std::map<std::string, std::string>	Request::getRequest(void) const { return this->request; }
 
 std::map<std::string, std::string>	Request::getMethod(void) const { return this->method; }
 
-void	Request::checkMethod(void) const
+bool	Request::checkMethod(void)
 {
 	std::map<std::string, std::string>::iterator	it;
 	std::map<std::string, std::string> copy = this->method;
 
-	it = easyfind(copy, "Method");
+	it = copy.find("Method");
 	if (it->second != "GET" && it->second != "POST" && it->second != "DELETE" && it->second != "")
-		throw (RequestException(it->second + ": Method Not Supported Right Now !"));
-	it = easyfind(copy, "Protocol");
+	{
+		this->errorCode = METHOD_NOT_ALLOWED;
+		return false;
+	}
+	it = copy.find("Protocol");
 	if (it->second != "HTTP/1.1")
-		throw (RequestException(it->second + ": Protocol Not Supported Right Now!"));
+	{
+		this->errorCode = METHOD_NOT_ALLOWED;
+		return false;
+	}
+	return true;
 }
 
 Request::~Request(void) {}
-
-
-std::map<std::string, std::string>::iterator	Request::easyfind(std::map<std::string, std::string> &container, std::string x) const
-{
-	std::map<std::string, std::string>::iterator	it = container.begin();
-	while (it != container.end())
-	{
-		if (it->first == x)
-			return it;
-		it++;
-	}
-	return it;
-}

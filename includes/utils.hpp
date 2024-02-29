@@ -37,6 +37,9 @@ std::map<int, std::string>	getHeaders(void);
 std::map<int, std::string>	getStatus(void);
 std::map<std::string, std::string> mimeTypes(void);
 
+bool	isAllowed(std::string &str);
+bool	isLongReq(std::string &str);
+
 template <typename T>
 std::string toStr(const T& value) {
 	std::stringstream ss;

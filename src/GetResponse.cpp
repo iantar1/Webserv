@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/22 05:12:33 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/02/23 22:00:58 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ GetResponse::~GetResponse(void) {}
 
 void GetResponse::theGetErrorNotFound(void)
 {
-	std::map<int, std::string>::iterator header_it;
+	std::map<int, std::string>::iterator	header_it;
 
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(NOT_FOUND)->second;
 	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += "text/html";
 	header_it = this->files.headers.find(CONTENT_LENGHT);
-	this->body = getPageContent("defaultPages/404.htm") + "\r\n\n";
+	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
 	header_it->second += ToString(body.size());
 	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
@@ -85,9 +85,9 @@ void GetResponse::theGetResponseOk(void)
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(OK)->second;
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += contentType;
+	header_it->second += this->contentType;
 	header_it = this->files.headers.find(DATE);
-	header_it->second += strTime;
+	header_it->second += this->strTime;
 
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
@@ -149,6 +149,8 @@ void GetResponse::theGetMethod(void)
 		theGetErrorNotFound();
 	else
 		theGetResponseOk();
+
+	std::cout << this->response << std::endl;
 
 	this->inFile.close();
 }
