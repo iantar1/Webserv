@@ -1,17 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   macros.hpp                                         :+:      :+:    :+:   */
+/*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/26 15:44:05 by iantar           ###   ########.fr       */
+/*   Created: 2024/02/28 15:14:10 by iantar            #+#    #+#             */
+/*   Updated: 2024/02/28 15:14:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
- 
-# define POST 1
-# define GET 2
-# define DELETE 3 
+
+class Response
+{
+private:
+    /* data */
+public:
+    Response(/* args */);
+    ~Response();
+};
+
+Response::Response(/* args */)
+{
+}
+
+Response::~Response()
+{
+}

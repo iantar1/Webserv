@@ -39,3 +39,5 @@ TCP and IP protocols are normally part of the protocol stack within the kernel.
 
 * why epoll not select() ? :
   
+
+  * socket():

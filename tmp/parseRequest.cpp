@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:00:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/21 09:50:00 by iantar           ###   ########.fr       */
+/*   Updated: 2024/02/27 09:53:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,6 @@ void	parseRequest::storeData(const std::string& dataRequest, size_t index)
 	std::istringstream iss(dataRequest);
     std::string line;
 
-    // ;
-    // std::cout << "lplplp\n";
     (void)index;
 	for (int i = 0; std::getline(iss, line); i++)
 	{
@@ -118,43 +116,50 @@ void	parseRequest::storeData(const std::string& dataRequest, size_t index)
 		}
 	}
     reading_done = true;
-    //Body = dataRequest.substr(index);
-    // if (MethodType == POST)
-    // {
-    //     ContentLength = atoi((Header["Content-Length:"]).c_str());
-    //     ReadStoreBody();
-    // }
-    // else if (MethodType == GET)
-    // {
-    //     parseRequest::getMethode();
+    Body = dataRequest.substr(index);
+    if (MethodType == POST)
+    {
+        ContentLength = atoi((Header["Content-Length:"]).c_str());
+        ReadStoreBody();
+    }
+    else if (MethodType == GET)
+    {
+        parseRequest::getMethode();
         
-    // }
+    }
+}
+
+std::string intToString(int num) {
+    std::stringstream ss;
+    ss << num;
+    return ss.str();
 }
 
 void    parseRequest::getMethode()
 {
-    // std::size_t fileSize;
-    // const char* filename = HTML_PATH;
-    // struct stat file_stat;
-    // if (stat(filename, &file_stat) == 0) {
-    //     fileSize = file_stat.st_size;
-    // }
-    // else
-    // {
-    //     throw std::runtime_error("Error");
-    // }
-    // std::stringstream sNum;
-    // sNum << fileSize;
-    // std::cout << fileSize << "\n";
+    std::size_t fileSize;
+    const char* filename = PATH_VEDIO;
+    struct stat file_stat;
+    if (stat(filename, &file_stat) == 0) {
+        fileSize = file_stat.st_size;
+    }
+    else
+    {
+        throw std::runtime_error("Error");
+    }
+    std::stringstream sNum;
+    sNum << fileSize;
+    std::cout << fileSize << "\n";
     
     if (isDone)
         return ;
     std::cout << "HHHH\n";
     if (fdFile == -2)
     {
-         std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Encoding: Chunked\r\n\r\n";
-         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Length: Chunked\r\n\r\n";
-         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:  Chunked\r\n\r\n";
+         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Encoding: Chunked\r\n\r\n";
+         std::string title = "HTTP/1.1 200 OK\r\nContent-Type: video/mp4\r\nContent-Length: " +  intToString(fileSize) + "\r\n\r\n";
+         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Encoding:  Chunked\r\n\r\n";
+         //std::string title = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: " +  intToString(fileSize) + "\r\n\r\n";
 
         if (write(clientSocket, title.c_str(), title.size()) == -1)
         {
@@ -177,7 +182,8 @@ void    parseRequest::getMethode()
     char buf[BUF_SIZE];
     bzero(buf, BUF_SIZE);
     // int wSize = 0;
-    if ((size = read(fdFile, buf, BUF_SIZE)) != 0)
+    size = read(fdFile, buf, BUF_SIZE);
+    if (size != 0)
     {
         if (size == -1)
             throw std::runtime_error("read error\n");
@@ -193,6 +199,7 @@ void    parseRequest::getMethode()
             throw std::runtime_error("write syscall failed");
         }
     }
+    //close(fdFile);
     if (size == 0)
     {
         close(fdFile);
@@ -248,3 +255,12 @@ void parseRequest::printData()
         std::cout << "No Body" << " redsize: "<< readSize << std::endl;
     }
 }
+
+
+/*
+HEADERS (chunked)
+
+08
+oussamakhi
+0
+*/
