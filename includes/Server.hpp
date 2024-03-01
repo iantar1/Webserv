@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 11:16:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 15:07:06 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Server
 private:	
 	int									serverFd;
 	std::map<int, Client*>				clients;
-	std::vector<VirtualServer*>  		Vservers;
+	const std::vector<VirtualServer*>&  		Vservers;
 	struct sockaddr_in					S_Addr;
 
 	int domain;
@@ -44,9 +44,10 @@ private:
 private:
 	Server& operator=(const Server&);
 	Server(const Server&);
+	Server();
 
 public:
-	Server();
+	Server(const std::vector<VirtualServer*>&);
 	~Server();
 
 	int launchServer();    

@@ -1,5 +1,7 @@
 
-# include "ConfigFileParser.hpp"
+# include "../includes/ConfigFileParser.hpp"
+# include "../includes/ParsingHelpers.hpp"
+
 
 // ******************* CONSTRUCTOR & DESTRUCTOR *******************
 
@@ -75,7 +77,7 @@ void	ConfigFileParser::display_extracted_infos() const
 	for (std::vector<VirtualServer *>::const_iterator it = _VServers.begin(); it != _VServers.end(); it++)
 	{
 		std::cout << "(*) SERVER NO " << server_no++ << std::endl;
-		(*it)->display_server_informations();
+		//(*it)->display_server_informations();
 	}
 }
 
@@ -83,20 +85,20 @@ void	ConfigFileParser::check_extracted_infos() const
 {
 	for (std::vector<VirtualServer *>::const_iterator it = _VServers.begin(); it != _VServers.end(); it++)
 	{
-		if ((*it)->get_port_number() == -1)
-			throw std::runtime_error("Listen infos must be provided inside every server block!");
-		if ((*it)->is_there_an_invalid_location())
-			throw std::runtime_error("Invliad Location!");
+		// ! if ((*it)->get_port_number() == -1)
+		// ! 	throw std::runtime_error("Listen infos must be provided inside every server block!");
+		// ! if ((*it)->is_there_an_invalid_location())
+		// ! 	throw std::runtime_error("Invliad Location!");
 	}
 
 	for (std::vector<VirtualServer *>::const_iterator it = _VServers.begin(); it != _VServers.end(); it++)
 	{
 		for (std::vector<VirtualServer *>::const_iterator it1 = it + 1; it1 != _VServers.end(); it1++)
 		{
-			if ((*it)->get_port_number() == (*it1)->get_port_number()
-				&& (*it)->get_server_name() == (*it1)->get_server_name()
-				&& (*it)->get_host_address() == (*it1)->get_host_address())
-					throw std::runtime_error("Two servers have the same name, port and address!");
+			// ! if ((*it)->get_port_number() == (*it1)->get_port_number()
+			// ! 	&& (*it)->get_server_name() == (*it1)->get_server_name()
+			// ! 	&& (*it)->get_host_address() == (*it1)->get_host_address())
+			// ! 		throw std::runtime_error("Two servers have the same name, port and address!");
 		}
 	}
 }
@@ -344,8 +346,9 @@ int	ConfigFileParser::extract_server_token_value(VirtualServer *vs, const char *
 	{
 		if (!strncmp(ptr + index, it->first.c_str(), it->second))
 		{
-			vs->set_server_info(it->first, _buffer.substr(index + it->second, end - index - it->second));
+			// ! vs->set_server_info(it->first, _buffer.substr(index + it->second, end - index - it->second));
 			return (end);
+			(void)vs;
 		}
 	}
 	if (ptr[index] == '#')
@@ -358,7 +361,7 @@ int	ConfigFileParser::extract_server_token_value(VirtualServer *vs, const char *
 int ConfigFileParser::extract_location_infos(VirtualServer *vs, int index)
 {
 	int			key_end;
-	Location	*loc;
+	// ! Location	*loc;
 
 	index = ParsingHelpers::skip_spaces(_buffer.c_str(), index);
 	key_end = _buffer.find('{', index);
@@ -370,9 +373,9 @@ int ConfigFileParser::extract_location_infos(VirtualServer *vs, int index)
 		throw invalid_syntax();
 
 	key = key.substr(0, end);
-	loc = vs->new_location(key);
+	// ! loc = vs->new_location(key);
 	index = key_end + 1;
-	index = extract_location_token_values(vs, loc, index);
+	index = extract_location_token_values(vs, NULL/*loc*/, index);
 	return (index + 1);
 }
 
@@ -400,8 +403,10 @@ int	ConfigFileParser::extract_location_token_value(VirtualServer *vs, Location *
 	{
 		if (!strncmp(ptr + index, it->first.c_str(), it->second))
 		{
-			vs->set_server_info(it->first, _buffer.substr(index + it->second, end - index - it->second), loc);
+			// ! vs->set_server_info(it->first, _buffer.substr(index + it->second, end - index - it->second), loc);
 			return (end);
+			(void)loc;
+			(void)vs;
 		}
 	}
 	if (ptr[index] == '#')
