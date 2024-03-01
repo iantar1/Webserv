@@ -75,37 +75,61 @@ void	PostResponse::thePostMethod(int *mode)
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
 	else
-		thePostResponseCreated(mode);
+		thePostResponseCreate(mode);
 
 	this->outFile.close();
 }
 
-void	PostResponse::thePostInternalServerError(void)
+void		PostResponse::thePostHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
 	header_it = this->files.headers.find(RESPONSE_STATUS);
-	header_it->second += this->files.status.find(INTERNAL_ERR)->second;
-	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += "text/html";
-	header_it = this->files.headers.find(CONTENT_LENGHT);
-	this->resonseBody = getPageContent("defaultPages/500.htm") + "\r\n\n";
-	header_it->second += ToString(resonseBody.size());
+	header_it->second += this->files.status.find(code)->second;
+
 	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
+
+	header_it = this->files.headers.find(CONTENT_TYPE);
+	header_it->second += this->contentType;
+
+	if (transferType == CONTENT_LENGHT)
+	{
+		header_it = this->files.headers.find(CONTENT_LENGHT);
+		header_it->second += ToString(this->body.size());
+	}
 
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if (header_it->first != TRANSFER_ENCODING)
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
+			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 			this->response += header_it->second + "\r\n";
 		header_it++;
 	}
-	this->response += "\n" + this->resonseBody;
+
+	this->response += "\r\n";
+}
+
+void	PostResponse::thePostInternalServerError(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/500.htm") + "\r\n\r\n";
+	thePostHeaderResponse(INTERNAL_ERR, CONTENT_LENGHT);
+	this->response += this->body;
 	write(this->socket, this->response.c_str(), this->response.size());
 }
 
-void	PostResponse::thePostResponseCreated(int *mode)
+void	PostResponse::thePostResponseCreatedPage(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/201.htm") + "\r\n\r\n";
+	thePostHeaderResponse(CREATED, CONTENT_LENGHT);
+	this->response += this->body;
+	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void	PostResponse::thePostResponseCreate(int *mode)
 {
 	int	ccl;
 
@@ -116,11 +140,14 @@ void	PostResponse::thePostResponseCreated(int *mode)
 	}
 	else if (this->postType == CHUNKED_POST)
 	{
+		std::string		data = this->request.getBody();
 		ccl = hexStringToInt(this->request.getChunkedBodySize());
 		std::cout << ccl << " || " << this->request.getChunkedBodySize() << std::endl;
 		if (ccl != 0)
-			write(this->socket, this->request.getBody().data(), ccl);
+			this->outFile.write(data.data(), ccl);
+			// write(this->socket, this->request.getBody().data(), ccl);
 		else
 			*mode = NORMAL;
 	}
+	thePostResponseCreatedPage();
 }

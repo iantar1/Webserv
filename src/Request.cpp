@@ -29,7 +29,7 @@ Request::Request(std::string strRequest, int *mode)
 	std::map<std::string, std::string>::iterator	itl, ite;
 
 	this->errorCode = 0;
-
+	this->body = "";
 	if (*mode == NORMAL)
 	{
 		protocol = "";
@@ -127,8 +127,9 @@ Request::Request(std::string strRequest, int *mode)
 
 		while (strRequest[i] && (strRequest[i] == '\r' || strRequest[i] == '\n'))
 			i++;
-
+		std::cout << "********" << std::endl;
 		this->body = strRequest.substr(i);
+		std::cout << "****()****" << std::endl;
 	}
 }
 

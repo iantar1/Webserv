@@ -19,11 +19,10 @@
 class GetResponse
 {
 	private :
-		std::string 						body, response, strTime, contentType;
+		std::string 						header, body, response, strTime, contentType, path;
 		Request 							request;
 		t_files								files;
 		std::ifstream						inFile;
-		std::string							path;
 		int 								socket;
 
 	public :
@@ -32,8 +31,13 @@ class GetResponse
 		GetResponse &operator=(const GetResponse &other);
 		~GetResponse(void);
 
+		void	theGetHeaderResponse(int code, int transferType);
+		void	theGetErrorBadRequest(void);
+		void	theGetErrorForbidden(void);
 		void	theGetErrorNotFound(void);
 		void	theGetResponseOk(void);
+		void	directoryListing(void);
+		void	regularFileGet(void);
 		void	theGetMethod(void);
 
 	private :

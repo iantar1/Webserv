@@ -57,11 +57,11 @@ int main(void)
 		if (new_socket < 0)
 			return (std::cout << "accept failed" << std::endl, -1);
 
-		char buffer[10024];
+		char buffer[1024];
 		int valread = 1;
 		while (valread > 0)
 		{
-			valread = read(new_socket, buffer, 10024);
+			valread = read(new_socket, buffer, 1024);
 			if (valread > 0)
 			{
 				std::string str(buffer, valread);
@@ -69,6 +69,9 @@ int main(void)
 			}
 			else
 				break;
+			// std::cout << "====================================================" << std::endl;
+			// std::cout << req << std::endl;
+			// std::cout << "====================================================" << std::endl;
 		}
 
 		// std::cout << " VALREAD :: " << valread << "\n" << req << std::endl;
@@ -94,4 +97,5 @@ int main(void)
 		}
 		// }
 	}
+	return 0;
 }

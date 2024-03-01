@@ -42,62 +42,67 @@ GetResponse &GetResponse::operator=(const GetResponse &other)
 
 GetResponse::~GetResponse(void) {}
 
-void GetResponse::theGetErrorNotFound(void)
-{
-	std::map<int, std::string>::iterator	header_it;
-
-	header_it = this->files.headers.find(RESPONSE_STATUS);
-	header_it->second += this->files.status.find(NOT_FOUND)->second;
-	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += "text/html";
-	header_it = this->files.headers.find(CONTENT_LENGHT);
-	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
-	header_it->second += ToString(body.size());
-	header_it = this->files.headers.find(DATE);
-	header_it->second += this->strTime;
-
-	header_it = this->files.headers.begin();
-	while (header_it != this->files.headers.end())
-	{
-		if (header_it->first != TRANSFER_ENCODING)
-			this->response += header_it->second + "\r\n";
-		header_it++;
-	}
-	this->response += "\n" + this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
-}
-
-void GetResponse::theGetResponseOk(void)
+void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
-	struct stat fileStat;
-	if (stat(this->path.c_str() + 1, &fileStat) != 0)
-		throw(GetResponseException((this->path + "Error getting file stats")));
-
-	// if (S_ISDIR(fileStat.st_mode))
-	// 	std::cout << path << " is a directory, and its size is : " << fileStat.st_size << std::endl;
-	// else if (S_ISREG(fileStat.st_mode))
-	// 	std::cout << path << " is a regular file, and its size is : " << fileStat.st_size << std::endl;
-	// else
-	// 	std::cout << path << " is neither a directory nor a regular file, and its size is : " << fileStat.st_size << std::endl;
-
 	header_it = this->files.headers.find(RESPONSE_STATUS);
-	header_it->second += this->files.status.find(OK)->second;
-	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += this->contentType;
+	header_it->second += this->files.status.find(code)->second;
+
 	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
+
+	header_it = this->files.headers.find(CONTENT_TYPE);
+	header_it->second += this->contentType;
+
+	if (transferType == CONTENT_LENGHT)
+	{
+		header_it = this->files.headers.find(CONTENT_LENGHT);
+		header_it->second += ToString(this->body.size());
+	}
 
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if (header_it->first != CONTENT_LENGHT)
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
+			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 			this->response += header_it->second + "\r\n";
 		header_it++;
 	}
 
 	this->response += "\r\n";
+}
+
+void GetResponse::theGetErrorBadRequest(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/400.htm") + "\r\n\r\n";
+	theGetHeaderResponse(BAD_REQUEST, CONTENT_LENGHT);
+	this->response += this->body;
+	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void GetResponse::theGetErrorNotFound(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
+	theGetHeaderResponse(NOT_FOUND, CONTENT_LENGHT);
+	this->response += this->body;
+	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void GetResponse::theGetErrorForbidden(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/403.htm") + "\r\n\r\n";
+	theGetHeaderResponse(FORBIDDEN, CONTENT_LENGHT);
+	this->response += this->body;
+	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void GetResponse::theGetResponseOk(void)
+{
+	theGetHeaderResponse(OK, TRANSFER_ENCODING);
 	write(this->socket, this->response.c_str(), this->response.size());
 
 	this->body = "";
@@ -120,37 +125,83 @@ void GetResponse::theGetResponseOk(void)
 	write(this->socket, "0\r\n\r\n", 5);
 }
 
+void			GetResponse::directoryListing(void)
+{
+	DIR*				dir;
+	struct dirent*		entry;
+	std::ostringstream	listing;
+
+	listing << "<html><head><title>Index of " << this->path << "</title></head><body>";
+	listing << "<h1>Index of " << this->path << "</h1><hr><ul>";
+
+	if ((dir = opendir(this->path.c_str() + 1)) != NULL) {
+		while ((entry = readdir(dir)) != NULL) {
+			listing << "<li><a href=\"" << this->path + "/" + entry->d_name << "\">" << entry->d_name << "</a></li>";
+		}
+		closedir(dir);
+	}
+
+	listing << "</ul><hr></body></html>";
+
+	this->body = listing.str();
+	this->contentType = "text/html";
+	theGetHeaderResponse(OK, CONTENT_LENGHT);
+	this->response += this->body;
+
+	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void			GetResponse::regularFileGet(void)
+{
+		std::string										extension;
+		std::map<std::string, std::string>::iterator	mime_it;
+
+		extension = getFileExtension(this->path);
+		if (extension != "")
+		{
+			mime_it = this->files.mime.find(extension);
+			if (mime_it != this->files.mime.end())
+				this->contentType = mime_it->second;
+		}
+		else
+			this->contentType = "applocation/octet-stream";
+
+		this->inFile.open(this->path.c_str() + 1);
+
+		if (!this->inFile.is_open())
+			theGetErrorNotFound();
+		else
+			theGetResponseOk();
+
+		std::cout << this->response << std::endl;
+
+		this->inFile.close();
+}
+
 void GetResponse::theGetMethod(void)
 {
-	tm												*local_time;
-	time_t											now;
-	std::string										extension;
-	std::map<std::string, std::string>::iterator	mime_it;
+	tm				*local_time;
+	time_t			now;
+	struct stat		buffer;
 
 	now = time(0);
 	this->path = this->request.getMethod().find("Path")->second;
-	extension = getFileExtension(this->path);
-	if (extension != "")
-	{
-		mime_it = this->files.mime.find(extension);
-		if (mime_it != this->files.mime.end())
-			this->contentType = mime_it->second;
-	}
-	else
-		this->contentType = "applocation/octet-stream";
 
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
 
-	this->inFile.open(this->path.c_str() + 1);
-
-	if (!this->inFile.is_open())
+	if (this->request.getBody() != "")
+		theGetErrorBadRequest();
+	else if (stat(this->path.c_str() + 1, &buffer))
 		theGetErrorNotFound();
 	else
-		theGetResponseOk();
-
-	std::cout << this->response << std::endl;
-
-	this->inFile.close();
+	{
+		if (S_ISDIR(buffer.st_mode))
+			directoryListing();
+		else if (!(buffer.st_mode & S_IRUSR))
+			theGetErrorForbidden();
+		else
+			regularFileGet();
+	}
 }

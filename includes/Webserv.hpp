@@ -16,6 +16,7 @@
 #include <netinet/in.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <iostream>
 #include <cstring>
 #include <cstdlib>

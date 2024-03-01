@@ -19,7 +19,7 @@
 class PostResponse
 {
 	private :
-		std::string 						resonseBody, response, strTime, contentType;
+		std::string 						body, response, strTime, contentType;
 		std::string							path, requestBody;
 		Request 							request;
 		t_files								files;
@@ -34,8 +34,10 @@ class PostResponse
 		PostResponse &operator=(const PostResponse &other);
 		~PostResponse(void);
 
+		void	thePostHeaderResponse(int code, int transferType);
+		void	thePostResponseCreate(int *mode);
 		void	thePostInternalServerError(void);
-		void	thePostResponseCreated(int *mode);
+		void	thePostResponseCreatedPage(void);
 		void	thePostMethod(int *mode);
 
 	private :
