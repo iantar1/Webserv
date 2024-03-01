@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 11:42:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 18:56:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,25 @@ private:
 	// max_client_body_size;
 	// error_page;
 
+	int									fdSocket;
 	std::string							Name;
+	int									Port;
+	in_addr_t							HostAddress;
 	std::map<std::string, Location *>	locations;
-
-	int					fdSocket;
 
 public:
 	VirtualServer();
 	~VirtualServer();
 
 	void	setFdSocket(int);
-	int		getFdSocket() const;
 
+// getters
+	int					getFdSocket() const;
+	const std::string&	getVServerName() const;
+	in_addr_t			getHostAddress() const;
+	int					getPort() const;
+	
+	void	setVserverINfo(const std::string& name, );
 public://Methods
 	
 };

@@ -85,8 +85,8 @@ void	ConfigFileParser::check_extracted_infos() const
 {
 	for (std::vector<VirtualServer *>::const_iterator it = _VServers.begin(); it != _VServers.end(); it++)
 	{
-		// ! if ((*it)->get_port_number() == -1)
-		// ! 	throw std::runtime_error("Listen infos must be provided inside every server block!");
+		if ((*it)->getPort() == -1)
+			throw std::runtime_error("Listen infos must be provided inside every server block!");
 		// ! if ((*it)->is_there_an_invalid_location())
 		// ! 	throw std::runtime_error("Invliad Location!");
 	}
@@ -95,10 +95,10 @@ void	ConfigFileParser::check_extracted_infos() const
 	{
 		for (std::vector<VirtualServer *>::const_iterator it1 = it + 1; it1 != _VServers.end(); it1++)
 		{
-			// ! if ((*it)->get_port_number() == (*it1)->get_port_number()
-			// ! 	&& (*it)->get_server_name() == (*it1)->get_server_name()
-			// ! 	&& (*it)->get_host_address() == (*it1)->get_host_address())
-			// ! 		throw std::runtime_error("Two servers have the same name, port and address!");
+			if ((*it)->getPort() == (*it1)->getPort()
+			 	&& (*it)->getVServerName() == (*it1)->getVServerName()
+			 	&& (*it)->getHostAddress() == (*it1)->getHostAddress())
+			 		throw std::runtime_error("Two servers have the same name, port and address!");
 		}
 	}
 }

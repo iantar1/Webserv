@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 15:07:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 18:55:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@ int	main(int ac, char **av)
 	{
 		if (ac != 2)
 			throw std::runtime_error("Invalid number of arguments!");
-		ConfigFileParser parser(*(av + 1));
+		//ConfigFileParser parser(*(av + 1));
 
-		parser.config_file_parsing();
+		//parser.config_file_parsing();
+		VirtualServer	Vser1;
+		
+		std::vector<VirtualServer*>	Ververs = {&Vser1};
+		Server webserv(Ververs);
+		
 
-
-		Server webserv(parser.get_parsing_result());
 		webserv.launchServer();
 	}
 	catch (std::exception &e)
