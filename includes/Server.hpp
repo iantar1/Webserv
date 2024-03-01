@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 10:38:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:16:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 # include "../includes/headers.hpp"
 # include "../includes/macros.hpp"
+# include "../includes/VirtualServer.hpp"
 
 class VirtualServer;
 class Client;
@@ -23,8 +24,9 @@ class Server
 {
 private:	
 	int									serverFd;
-	std::map<int, Client>				clients;
-	const std::vector<VirtualServer*>  Vservers;
+	std::map<int, Client*>				clients;
+	std::vector<VirtualServer*>  		Vservers;
+	struct sockaddr_in					S_Addr;
 
 	int domain;
 	int type;
@@ -37,7 +39,7 @@ private:
 private:
 	int		socketCreate(const VirtualServer* vSer);
 	void    addServersToEpoll();
-	void    addCleintToEpoll();
+	void    addCleintToEpoll(int);
 
 private:
 	Server& operator=(const Server&);

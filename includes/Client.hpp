@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 10:40:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:46:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ public:
 	Client(VirtualServer*);
 	~Client();
 
-	bool    DoneServing;
-	bool    DoneHeaderReading;
+	bool    	DoneServing;
+	bool    	DoneHeaderReading;
+	VirtualServer*	Vserver;
 
 // Request and Respose classes
 	Request		request;
@@ -52,14 +53,3 @@ public:
 
 };
 
-Client::Client()
-{
-}
-
-Client::Client(int fd): sockeFd(fd)
-{
-}
-
-Client::~Client()
-{
-}

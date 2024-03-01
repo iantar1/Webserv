@@ -6,9 +6,17 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 10:27:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:46:44 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 
+
+Client::Client(VirtualServer* Vser) : Vserver(Vser)
+{
+}
+
+Client::~Client()
+{
+}

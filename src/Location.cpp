@@ -6,9 +6,16 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:45 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/27 10:57:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:43:57 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Location.hpp"
+# include "../includes/Location.hpp"
 
+Location::Location()
+{
+}
+
+Location::~Location()
+{
+}

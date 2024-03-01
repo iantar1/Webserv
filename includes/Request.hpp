@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 10:29:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:48:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ private:
 	std::vector<std::string>			RequestLine;
 	bool								reading_done;
 
+private:
 // useless Constructor , copy constructor and assingment operator
     Request(const Request&);
     Request& operator=(const Request&);
 
 public:
-    Request();
     Request(int);
+    Request();
     ~Request();
 
     void    readHeader(const std::string&, size_t);

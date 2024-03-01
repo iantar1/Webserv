@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 15:29:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:49:12 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,6 @@
 # include "../includes/Request.hpp"
 
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
-
-void    Request::storeHeader(const std::string& line)
-{
-    std::string	key;
-	std::string	value;
-	size_t		index;
-
-	index = line.find(":");
-	key = line.substr(0, index + 1);
-	value = line.substr(index + 1);
-	Header[key] = value;
-}
 
 void	Request::storeHeader(const std::string& line)
 {
@@ -83,19 +71,12 @@ void	Request::storeData(const std::string& dataRequest, size_t index)
     reading_done = true;
 }
 
-void    Request::storeHeader(const std::string& line)
-{
-	std::string	key;
-	std::string	value;
-	size_t		index;
-
-	index = line.find(":");
-	key = line.substr(0, index + 1);
-	value = line.substr(index + 1);
-	Header[key] = value;
-}
 
 Request::Request(int fd) : SocketFd(fd), errorFlag(0), reading_done(0)
+{
+}
+
+Request::Request()
 {
 }
 

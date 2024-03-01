@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 11:10:58 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:43:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 class Location
 {
 private:
+    Location(const Location&);
+    Location& operator=(const Location&);
 
     // root:
 	// allowed_methods:
@@ -30,14 +32,6 @@ private:
 public:
     Location();
     ~Location();
-    Location(const Location&);
-    Location& operator=(const Location&);
 };
 
-Location::Location()
-{
-}
 
-Location::~Location()
-{
-}

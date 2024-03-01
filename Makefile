@@ -26,3 +26,9 @@ fclean : clean
 	${RM} ${NAME}
 
 re : fclean all
+
+COM = "to save"
+git : 
+	git add .
+	git commit -m COM
+	git push origin iantar1

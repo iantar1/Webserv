@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 10:39:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:39:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ Server::Server()
 // use getaddrinfo()
 int Server::socketCreate(const VirtualServer* vSer)
 {
-	struct sockaddr_in  S_Addr;
+	// struct sockaddr_in  S_Addr;
 	int                 sockfd;
 	
-
+	(void)(vSer);
 	bzero(&S_Addr, sizeof(S_Addr));
 	S_Addr.sin_family = AF_INET;// * we use ipv4
 	S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
@@ -57,7 +57,7 @@ int Server::socketCreate(const VirtualServer* vSer)
 
 void    Server::addServersToEpoll()
 {
-	for (int i = 0; i < Vservers.size(); i++)
+	for (size_t i = 0; i < Vservers.size(); i++)
 	{
 //		bzero(&event, sizeof(event));
 		serverFd = socketCreate(Vservers[i]);
@@ -70,10 +70,13 @@ void    Server::addServersToEpoll()
 
 void    Server::addCleintToEpoll(int index)
 {
-	events[index].data.fd = accept(serverFd, );
+	struct sockaddr_in clientAddr;
+	socklen_t clientAddrLen = sizeof(clientAddr);
+
+	events[index].data.fd = accept(serverFd, (struct sockaddr*)(&clientAddr), &clientAddrLen);
 	if (events[index].data.fd < 0)
 		throw std::runtime_error("accept\n");
-	clients[event[i].data.fd] = new Client(Vservers[index]);
+	clients[events[index].data.fd] = new Client(Vservers[index]);
 	events[index].events = EPOLLIN;
 	epoll_ctl(epollFd, EPOLL_CTL_ADD, serverFd, &event);
 }
@@ -93,9 +96,9 @@ int Server::launchServer()
 		{
 			for (int i = 0; i < readyFd; i++)
 			{
-				for (int j = 0; j < Vservers.size(); j++)
+				for (size_t j = 0; j < Vservers.size(); j++)
 				{
-					if (events[i].data.fd == Vservers[j].getFdSocket())
+					if (events[i].data.fd == Vservers[j]->getFdSocket())
 					{
 						Server::addCleintToEpoll(j);
 						break ;

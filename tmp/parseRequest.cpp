@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 10:00:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/27 09:53:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:02:06 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ void parseRequest::printData()
     }
 }
 
-
+// accept
 /*
 HEADERS (chunked)
 

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 15:14:10 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/28 15:14:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 11:45:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,11 @@
 class Response
 {
 private:
-    /* data */
+    Response(const Response&);
+    Response& operator=(const Response&);
 public:
     Response(/* args */);
     ~Response();
 };
 
-Response::Response(/* args */)
-{
-}
 
-Response::~Response()
-{
-}
