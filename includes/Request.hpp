@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 15:26:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 10:29:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ private:
 	bool								reading_done;
 
 // useless Constructor , copy constructor and assingment operator
-    Request();
     Request(const Request&);
     Request& operator=(const Request&);
 
 public:
+    Request();
     Request(int);
     ~Request();
 

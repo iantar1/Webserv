@@ -6,20 +6,20 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 14:58:17 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 10:39:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "Server.hpp"
+# include "../includes/headers.hpp"
+# include "../includes/Server.hpp"
 
 
 Server::Server()
 {
-	serverFd = socket();
 }
 // ?
 // !
-
+# define PORT 8080
 
 // use getaddrinfo()
 int Server::socketCreate(const VirtualServer* vSer)
@@ -28,10 +28,10 @@ int Server::socketCreate(const VirtualServer* vSer)
 	int                 sockfd;
 	
 
-	bzero(S_Addr, sizeof(struct sockaddr_in));
+	bzero(&S_Addr, sizeof(S_Addr));
 	S_Addr.sin_family = AF_INET;// * we use ipv4
 	S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
-	S_Addr.sin_port = htons(port); //* host to network short (little endian / big endian problem)
+	S_Addr.sin_port = htons(PORT); //* host to network short (little endian / big endian problem)
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
@@ -43,7 +43,7 @@ int Server::socketCreate(const VirtualServer* vSer)
 		throw std::runtime_error("setsockopt() failed\n");
 		
 	
-	if (bind(sockfd, (struct sockaddr*)(S_Addr), sizeof(*S_Addr)) < 0)
+	if (bind(sockfd, (struct sockaddr*)(&S_Addr), sizeof(S_Addr)) < 0)
 	{
 		throw std::runtime_error("bind failed");
 	}
@@ -51,7 +51,7 @@ int Server::socketCreate(const VirtualServer* vSer)
 	{
 		throw std::runtime_error("lisen sys_call failed");
 	}
-	vSer->setFdSocket(sockfd);
+	//vSer.setFdSocket(sockfd);
 	return (sockfd);
 }
 
@@ -59,7 +59,7 @@ void    Server::addServersToEpoll()
 {
 	for (int i = 0; i < Vservers.size(); i++)
 	{
-		bzero(event, sizeof(event));
+//		bzero(&event, sizeof(event));
 		serverFd = socketCreate(Vservers[i]);
 		event.data.fd = serverFd;
 		event.events = EPOLLIN;
@@ -70,11 +70,11 @@ void    Server::addServersToEpoll()
 
 void    Server::addCleintToEpoll(int index)
 {
-	event[index].data.fd = accept(serverFd);
-	if (event[index].data.fd < 0)
+	events[index].data.fd = accept(serverFd, );
+	if (events[index].data.fd < 0)
 		throw std::runtime_error("accept\n");
 	clients[event[i].data.fd] = new Client(Vservers[index]);
-	event[index].events = EPOLLIN;
+	events[index].events = EPOLLIN;
 	epoll_ctl(epollFd, EPOLL_CTL_ADD, serverFd, &event);
 }
 

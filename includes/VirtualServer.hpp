@@ -6,17 +6,18 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 11:10:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 10:42:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
-calss Location;
-
 # include "../includes/headers.hpp"
 # include "../includes/macros.hpp"
+# include "../includes/Location.hpp"
 
+//class Location;
+vector<VirtualServer*>
 class VirtualServer
 {
 private:
@@ -24,8 +25,7 @@ private:
 	// server_name;
 	// max_client_body_size;
 	// error_page;
-	
-	int									port;
+
 	std::string							Name;
 	std::map<std::string, Location *>	locations;
 

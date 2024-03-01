@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/29 14:58:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 10:38:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../includes/macros.hpp"
 
 class VirtualServer;
+class Client;
 
 # define MAX_EVENTS 100
 class Server
@@ -23,7 +24,7 @@ class Server
 private:	
 	int									serverFd;
 	std::map<int, Client>				clients;
-	const std::vector<VirtualServer*>&  Vservers;
+	const std::vector<VirtualServer*>  Vservers;
 
 	int domain;
 	int type;
@@ -32,10 +33,9 @@ private:
 // epoll structure
 	struct epoll_event  event;
 	struct epoll_event  events[100];
-	int					epollFd;
 
 private:
-	int		socketCreate(const VirtualServer& vSer);
+	int		socketCreate(const VirtualServer* vSer);
 	void    addServersToEpoll();
 	void    addCleintToEpoll();
 
