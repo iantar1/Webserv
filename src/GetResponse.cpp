@@ -55,6 +55,12 @@ void		GetResponse::theGetHeaderResponse(int code, int transferType)
 	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
 
+	if (this->redirection != "")
+	{
+		header_it = this->files.headers.find(LOCATION);
+		header_it->second += this->redirection;
+	}
+
 	if (transferType == CONTENT_LENGHT)
 	{
 		header_it = this->files.headers.find(CONTENT_LENGHT);
@@ -71,6 +77,16 @@ void		GetResponse::theGetHeaderResponse(int code, int transferType)
 	}
 
 	this->response += "\r\n";
+}
+
+void GetResponse::theGetRedirectionRequest(void)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
+	this->redirection = this->path + "/";
+	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
+	this->response += this->body;
+	write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetErrorBadRequest(void)
@@ -136,7 +152,7 @@ void			GetResponse::directoryListing(void)
 
 	if ((dir = opendir(this->path.c_str() + 1)) != NULL) {
 		while ((entry = readdir(dir)) != NULL) {
-			listing << "<li><a href=\"" << this->path + "/" + entry->d_name << "\">" << entry->d_name << "</a></li>";
+			listing << "<li><a href=\"" << this->path << entry->d_name << "\">" << entry->d_name << "</a></li>";
 		}
 		closedir(dir);
 	}
@@ -190,6 +206,7 @@ void GetResponse::theGetMethod(void)
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
+	this->redirection = "";
 
 	if (this->request.getBody() != "")
 		theGetErrorBadRequest();
@@ -198,7 +215,12 @@ void GetResponse::theGetMethod(void)
 	else
 	{
 		if (S_ISDIR(buffer.st_mode))
-			directoryListing();
+		{
+			if (this->path[this->path.size() - 1] != '/')
+				theGetRedirectionRequest();
+			else
+				directoryListing();
+		}
 		else if (!(buffer.st_mode & S_IRUSR))
 			theGetErrorForbidden();
 		else

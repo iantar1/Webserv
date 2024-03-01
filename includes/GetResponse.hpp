@@ -19,7 +19,7 @@
 class GetResponse
 {
 	private :
-		std::string 						header, body, response, strTime, contentType, path;
+		std::string 						header, body, response, strTime, contentType, path, redirection;
 		Request 							request;
 		t_files								files;
 		std::ifstream						inFile;
@@ -32,6 +32,7 @@ class GetResponse
 		~GetResponse(void);
 
 		void	theGetHeaderResponse(int code, int transferType);
+		void	theGetRedirectionRequest(void);
 		void	theGetErrorBadRequest(void);
 		void	theGetErrorForbidden(void);
 		void	theGetErrorNotFound(void);
