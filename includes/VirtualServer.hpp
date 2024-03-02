@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 18:56:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/01 21:35:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ private:
 
 public:
 	VirtualServer();
+	// VirtualServer();
 	~VirtualServer();
 
 	void	setFdSocket(int);
@@ -44,7 +45,7 @@ public:
 	in_addr_t			getHostAddress() const;
 	int					getPort() const;
 	
-	void	setVserverINfo(const std::string& name, );
+	//void	setVserverINfo(const std::string& name, );
 public://Methods
 	
 };

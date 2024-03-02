@@ -11,12 +11,17 @@
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
+# include "../includes/Client.hpp"
 
-
-Client::Client(VirtualServer* Vser) : Vserver(Vser)
+Client::Client(const VirtualServer* Vser, int sockeFd) : Vserver(Vser), request(sockeFd)
 {
 }
 
 Client::~Client()
 {
+}
+
+void	Client::ReadParseReqHeader()
+{
+    request.ParseRequest();
 }

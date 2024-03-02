@@ -37,7 +37,7 @@ private:
 	struct epoll_event  events[100];
 
 private:
-	int		socketCreate(const VirtualServer* vSer);
+	int		socketCreate(VirtualServer* vSer);
 	void    addServersToEpoll();
 	void    addCleintToEpoll(int);
 

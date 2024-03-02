@@ -38,18 +38,21 @@ private:
 	Client();
 
 public:
-	Client(VirtualServer*);
+	Client(const VirtualServer*, int);
 	~Client();
 
-	bool    	DoneServing;
-	bool    	DoneHeaderReading;
-	VirtualServer*	Vserver;
+	bool    		DoneServing;
+	bool    		DoneHeaderReading;
+	const VirtualServer*	Vserver;
 
 // Request and Respose classes
 	Request		request;
 	Response	response;
 // parce the request
- void   ReadReqHeader();
+ 	void	ReadParseReqHeader();
 
 };
+
+
+
 

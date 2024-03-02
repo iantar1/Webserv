@@ -48,5 +48,7 @@ public:
 	void	storeHeader(const std::string&);
 	void	storeRequestLine(const std::string&);
 	void	storeData(const std::string&, size_t);
-};
 
+    void    ParseRequest();
+
+};

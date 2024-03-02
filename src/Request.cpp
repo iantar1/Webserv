@@ -13,6 +13,22 @@
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
 
+
+
+Request::Request(int fd) : SocketFd(fd), errorFlag(0), reading_done(0)
+{
+}
+
+Request::Request()
+{
+}
+
+Request::~Request()
+{
+}
+
+
+
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 
 void	Request::storeHeader(const std::string& line)
@@ -71,15 +87,21 @@ void	Request::storeData(const std::string& dataRequest, size_t index)
     reading_done = true;
 }
 
+// main Method
 
-Request::Request(int fd) : SocketFd(fd), errorFlag(0), reading_done(0)
+void	Request::ParseRequest()
 {
-}
+	int bytesRead;
+    size_t index;
+    std::string data;
 
-Request::Request()
-{
-}
-
-Request::~Request()
-{
+    std::cout << "cleint : " << clientSocket << std::endl;
+    bytesRead = read(clientSocket, buf, BUF_SIZE);
+    if (bytesRead < 0)
+        throw std::runtime_error("read syscall failed");
+    data.append(buf, bytesRead);
+    if ((index = data.find("\r\n\r\n")) != std::string::npos) {
+	    storeData(data, index + 4);
+        reading_done = true;
+    }
 }

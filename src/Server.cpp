@@ -18,12 +18,11 @@
 # define PORT 8080
 
 // use getaddrinfo()
-int Server::socketCreate(const VirtualServer* vSer)
+int Server::socketCreate(VirtualServer* vSer)
 {
 	// struct sockaddr_in  S_Addr;
 	int                 sockfd;
 	
-	(void)(vSer);
 	bzero(&S_Addr, sizeof(S_Addr));
 	S_Addr.sin_family = AF_INET;// * we use ipv4
 	S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
@@ -47,7 +46,7 @@ int Server::socketCreate(const VirtualServer* vSer)
 	{
 		throw std::runtime_error("lisen sys_call failed");
 	}
-	//vSer.setFdSocket(sockfd);
+	vSer->setFdSocket(sockfd);
 	return (sockfd);
 }
 
@@ -59,8 +58,10 @@ void    Server::addServersToEpoll()
 		serverFd = socketCreate(Vservers[i]);
 		event.data.fd = serverFd;
 		event.events = EPOLLIN;
-		epoll_ctl(epollFd, EPOLL_CTL_ADD, serverFd, &event);// * add an fd to the intrest list
-		// chweck error 
+		if (epoll_ctl(epollFd, EPOLL_CTL_ADD, serverFd, &event) == -1)// * add an fd to the intrest list
+		{
+			throw std::runtime_error("epoll_ctl [Server]");
+		}
 	}
 }
 
@@ -72,9 +73,12 @@ void    Server::addCleintToEpoll(int index)
 	events[index].data.fd = accept(serverFd, (struct sockaddr*)(&clientAddr), &clientAddrLen);
 	if (events[index].data.fd < 0)
 		throw std::runtime_error("accept\n");
-	clients[events[index].data.fd] = new Client(Vservers[index]);
-	events[index].events = EPOLLIN;
-	epoll_ctl(epollFd, EPOLL_CTL_ADD, serverFd, &event);
+	clients[events[index].data.fd] = new Client(Vservers[index], events[index].data.fd);
+	event.data.fd = events[index].data.fd;
+	event.events = EPOLLIN;
+	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, events[index].data.fd, &event) == -1)
+		throw std::runtime_error("epoll_ctl [Cleint]");
+	std::cout << RED << "done\n" << RESET << std::endl;
 }
 
 
@@ -92,7 +96,7 @@ int Server::launchServer()
 		{
 			for (int i = 0; i < readyFd; i++)
 			{
-				for (size_t j = 0; j < Vservers.size(); j++)
+				for (size_t j = 0; j < Vservers.size(); j++) // add the new Cleint to epoll
 				{
 					if (events[i].data.fd == Vservers[j]->getFdSocket())
 					{
@@ -100,18 +104,22 @@ int Server::launchServer()
 						break ;
 					}
 				}
-				if (clients[events[i].data.fd]->DoneHeaderReading == false)
+			/*
+			*/
+				if (clients[events[i].data.fd]->DoneHeaderReading == false) // read the header request
 				{
 					// read the header
+					clients[events[i].data.fd]->ReadParseReqHeader();
+					std::cout << BLUE << "Ready TO READ MY HEADER\n" << RESET << std::endl;
 				}
 				else
 				{
-					if (clients[events[i].data.fd]->DoneHeaderReading == false)
+					if (clients[events[i].data.fd]->DoneHeaderReading == false) // serve the client
 					{
 					// serve (Get, Post, delete)
 						
 					}
-					else
+					else 
 					{
 					// delete the fdSoketCleint from the poll , and delete the cleint from the map
 					}
