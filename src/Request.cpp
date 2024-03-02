@@ -6,13 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 11:49:12 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 15:16:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
 
+std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 
 
 Request::Request(int fd) : SocketFd(fd), errorFlag(0), reading_done(0)
@@ -27,9 +28,6 @@ Request::~Request()
 {
 }
 
-
-
-std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 
 void	Request::storeHeader(const std::string& line)
 {
@@ -95,8 +93,9 @@ void	Request::ParseRequest()
     size_t index;
     std::string data;
 
-    std::cout << "cleint : " << clientSocket << std::endl;
-    bytesRead = read(clientSocket, buf, BUF_SIZE);
+	checkAllowedMethods();
+    std::cout << "cleint : " << SocketFd << std::endl;
+    bytesRead = read(SocketFd, buf, BUF_SIZE);
     if (bytesRead < 0)
         throw std::runtime_error("read syscall failed");
     data.append(buf, bytesRead);

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 11:46:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 15:22:32 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ private:
 	static std::string  Methods[3];
 	int					MethodType;
 
+
 //Pravite  Methodes
 private:
 	//void	Client::storeReqHeader(const std::string&);
@@ -46,10 +47,11 @@ public:
 	const VirtualServer*	Vserver;
 
 // Request and Respose classes
-	Request		request;
-	Response	response;
+	Request		*request;
+	Response	*response;
 // parce the request
  	void	ReadParseReqHeader();
+	void	ServingClient();
 
 };
 

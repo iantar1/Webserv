@@ -114,13 +114,15 @@ int Server::launchServer()
 				}
 				else
 				{
-					if (clients[events[i].data.fd]->DoneHeaderReading == false) // serve the client
+					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
 					{
+						clients[events[i].data.fd]->ServingClient();
 					// serve (Get, Post, delete)
 						
 					}
 					else 
 					{
+						//DropCleint(events[i].data.fd);
 					// delete the fdSoketCleint from the poll , and delete the cleint from the map
 					}
 				}

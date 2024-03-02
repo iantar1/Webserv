@@ -1,34 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   AMethod.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 15:33:56 by iantar           ###   ########.fr       */
+/*   Created: 2024/03/02 13:00:28 by iantar            #+#    #+#             */
+/*   Updated: 2024/03/02 13:09:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# pragma once
+
 # include "../includes/headers.hpp"
-# include "../includes/Client.hpp"
+# include "../includes/macros.hpp"
 
-Client::Client(const VirtualServer* Vser, int sockeFd) : Vserver(Vser), request(sockeFd), DoneServing(false), DoneHeaderReading(false) 
+class AMethod
 {
-}
 
-Client::~Client()
-{
-}
+private:
+    AMethod();
 
-void	Client::ReadParseReqHeader()
-{
-    request.ParseRequest();
-    DoneHeaderReading = true;
-}
-
-void	Client::ServingClient()
-{
-    // allwoed Methode , so you need to constuct Respose with Vserver
+public:
+    virtual ~AMethod();
     
 }
