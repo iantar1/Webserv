@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 15:22:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 18:11:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
 # include "../includes/Response.hpp"
+# include "../nabboneWork/includes/Request.hpp"
+
 
 class Request;
 class Response;
@@ -42,13 +44,13 @@ public:
 	Client(const VirtualServer*, int);
 	~Client();
 
+	const VirtualServer*	Vserver;
+// Request and Respose classes
+	Request		request;
+	Response	response;
+
 	bool    		DoneServing;
 	bool    		DoneHeaderReading;
-	const VirtualServer*	Vserver;
-
-// Request and Respose classes
-	Request		*request;
-	Response	*response;
 // parce the request
  	void	ReadParseReqHeader();
 	void	ServingClient();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 23:56:56 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 20:35:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,12 @@ t_files	getDataFromFiles(void)
 std::map<int, std::string>	getHeaders(void)
 {
 	std::map<int, std::string>	headers;
-	std::ifstream				inFile("Ressources/Headers");
+	std::ifstream				inFile("/nfs/homes/iantar/Desktop/Webserv/nabboneWork/Ressources/Headers");
 	std::string					line;
 	int							i = 0;
 
+	if (!inFile.is_open())
+		throw std::runtime_error("Couldn't open Headers file!");
 	while (std::getline(inFile, line))
 		headers.insert(std::make_pair(i++, line));
 	return headers;
@@ -73,10 +75,12 @@ std::map<int, std::string>	getHeaders(void)
 std::map<int, std::string>	getStatus(void)
 {
 	std::map<int, std::string>	status;
-	std::ifstream				inFile("Ressources/Status");
+	std::ifstream				inFile("/nfs/homes/iantar/Desktop/Webserv/nabboneWork/Ressources/Status");
 	std::string					line;
 	int							nb;
 
+	if (!inFile.is_open())
+		throw std::runtime_error("Couldn't open Status file!");
 	while (std::getline(inFile, line))
 	{
 		nb = std::atoi(line.c_str());
@@ -88,12 +92,12 @@ std::map<int, std::string>	getStatus(void)
 std::map<std::string, std::string> mimeTypes(void)
 {
 	std::map<std::string, std::string> out;
-	std::ifstream inFile("Ressources/MIME.type");
+	std::ifstream inFile("/nfs/homes/iantar/Desktop/Webserv/nabboneWork/Ressources/MIME.type", std::ios::in);
 	std::string line, key, value;
 	int i;
 
 	if (!inFile.is_open())
-		std::cout << "Couldn't open MIME.type file!" << std::endl;
+		throw std::runtime_error("Couldn't open MIME.type file!");
 	while (std::getline(inFile, line))
 	{
 		key = "";

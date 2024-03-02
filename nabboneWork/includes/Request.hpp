@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/01 21:45:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 18:20:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 class Request
 {
 	private :
+        // int fdSocket;
 		std::map<std::string, std::string>	request;
 		std::map<std::string, std::string>	method;
 		std::string							body;
@@ -25,6 +26,7 @@ class Request
 
 	public :
 		Request(void);
+       // Request(int fd);
 		Request(std::string strRequest, int *mode);
 		Request(const Request &other);
 		Request &operator=(const Request &other);

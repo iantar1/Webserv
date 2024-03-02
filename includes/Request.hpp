@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 11:48:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 18:09:51 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,35 +20,35 @@
 # define REQ_ENTITY_TOO_LONG 413  
 
 
-class Request
-{
-private:
-	char								buf[BUF_SIZE];
-    int                                 SocketFd;
-    int                                 bytesRead;
-    int                                 errorFlag;
-    std::string                         RequestHeader;
-    static std::string					Methods[3];
-    std::map<std::string, std::string>	Header;
-	int									MethodType;
-	std::vector<std::string>			RequestLine;
-	bool								reading_done;
+// class Request
+// {
+// private:
+// 	char								buf[BUF_SIZE];
+//     int                                 SocketFd;
+//     int                                 bytesRead;
+//     int                                 errorFlag;
+//     std::string                         RequestHeader;
+//     static std::string					Methods[3];
+//     std::map<std::string, std::string>	Header;
+// 	int									MethodType;
+// 	std::vector<std::string>			RequestLine;
+// 	bool								reading_done;
 
-private:
-// useless Constructor , copy constructor and assingment operator
-    Request(const Request&);
-    Request& operator=(const Request&);
+// private:
+// // useless Constructor , copy constructor and assingment operator
+//     Request(const Request&);
+//     Request& operator=(const Request&);
 
-public:
-    Request(int);
-    Request();
-    ~Request();
+// public:
+//     Request(int);
+//     Request();
+//     ~Request();
 
-    void    readHeader(const std::string&, size_t);
-	void	storeHeader(const std::string&);
-	void	storeRequestLine(const std::string&);
-	void	storeData(const std::string&, size_t);
+//     void    readHeader(const std::string&, size_t);
+// 	void	storeHeader(const std::string&);
+// 	void	storeRequestLine(const std::string&);
+// 	void	storeData(const std::string&, size_t);
 
-    void    ParseRequest();
+//     void    ParseRequest();
 
-};
+// };

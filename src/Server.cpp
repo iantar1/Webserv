@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 15:21:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 20:37:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int Server::launchServer()
 					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
 					{
 						clients[events[i].data.fd]->ServingClient();
+						// std::cout << YELLOW << "HERE" << RESET << std::endl;
 					// serve (Get, Post, delete)
 						
 					}

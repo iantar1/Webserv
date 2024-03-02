@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 21:38:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 18:32:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int ac, char **av)
 
 		//parser.config_file_parsing();
 		VirtualServer	Vser1;
-		//
+
 		// std::vector<VirtualServer*>	Ververs = {&Vser1};
 		std::vector<VirtualServer*> Ververs;
 		Ververs.push_back(&Vser1);

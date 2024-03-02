@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 23:36:34 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 18:20:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ const char*	Request::RequestException::what(void) const throw() { return this->e
 
 Request::RequestException::~RequestException(void) throw() {}
 
-Request::Request(void) {}
+Request::Request() {}
+// Request::Request(int fd) : fdSocket(fd) {}
 
 Request::Request(std::string strRequest, int *mode)
 {

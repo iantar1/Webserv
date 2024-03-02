@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:47:10 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:01:46 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 18:05:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Webserv.hpp"
 #include "Request.hpp"
 #include "utils.hpp"
+# include "../../includes/Request.hpp"
 
 class GetResponse
 {
