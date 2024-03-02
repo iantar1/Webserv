@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserv.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:39:14 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/20 20:13:57 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 07:31:13 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@
 #include <csignal>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <ctime>
 #include <map>
+#include <algorithm>
 #include "definitions.hpp"
 
 template <typename T>

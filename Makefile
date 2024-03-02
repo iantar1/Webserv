@@ -7,6 +7,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 SRC =	main.cpp \
 		src/utils.cpp \
 		src/Request.cpp \
+		src/Location.cpp \
 		src/GetResponse.cpp \
 		src/PostResponse.cpp \
 		src/Response.cpp

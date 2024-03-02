@@ -5,6 +5,8 @@
 		"fstream": "cpp",
 		"ostream": "cpp",
 		"map": "cpp",
-		"*.tcc": "cpp"
+		"*.tcc": "cpp",
+		"stdexcept": "cpp",
+		"algorithm": "cpp"
 	}
 }

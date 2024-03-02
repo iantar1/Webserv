@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 21:44:16 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 06:23:51 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int main(void)
 	srand(static_cast<unsigned int>(time(0)));
 
 	int	mode = NORMAL;
+	Location	local;
 
 	while (true)
 	{
@@ -59,20 +60,20 @@ int main(void)
 
 		char buffer[1024];
 		int valread = 1;
-		while (valread > 0)
-		{
+		// while (valread > 0)
+		// {
 			valread = read(new_socket, buffer, 1024);
 			if (valread > 0)
 			{
 				std::string str(buffer, valread);
 				req.append(str);
 			}
-			else
-				break;
-			// std::cout << "====================================================" << std::endl;
-			// std::cout << req << std::endl;
-			// std::cout << "====================================================" << std::endl;
-		}
+		// 	else
+		// 		break;
+		// 	// std::cout << "====================================================" << std::endl;
+		// 	// std::cout << req << std::endl;
+		// 	// std::cout << "====================================================" << std::endl;
+		// }
 
 		// std::cout << " VALREAD :: " << valread << "\n" << req << std::endl;
 
@@ -84,7 +85,7 @@ int main(void)
 
 		try
 		{
-			Request request(req, &mode);
+			Request request(req, &mode, local);
 			Response response(new_socket, request, files, request.getError(), &mode);
 			std::cout << "------------------ Response sent -------------------\n"
 					<< std::endl;

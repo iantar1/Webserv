@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 23:36:34 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 07:52:22 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Request::RequestException::~RequestException(void) throw() {}
 
 Request::Request(void) {}
 
-Request::Request(std::string strRequest, int *mode)
+Request::Request(std::string strRequest, int *mode, Location local) : local(local)
 {
 	int												i = 0;
 	std::string										key, value, method, path, protocol, chunkedContentLenght;
@@ -55,6 +55,36 @@ Request::Request(std::string strRequest, int *mode)
 			this->errorCode = LONG_URI_REQ;
 			return ;
 		}
+
+		if (std::find(this->local.getAllowedMethods().begin(), this->local.getAllowedMethods().end(), method) != this->local.getAllowedMethods().end())
+		{
+			this->errorCode = METHOD_NOT_ALLOWED;
+			return ;
+		}
+
+		std::map<int, std::map<std::string, std::string> > redirectMap = this->local.getRedirect();
+		std::map<int, std::map<std::string, std::string> >::iterator redirectIter = redirectMap.find(errorCode);
+		if (redirectIter != redirectMap.end())
+		{
+			std::map<std::string, std::string> innerMap = redirectIter->second;
+			std::map<std::string, std::string>::iterator innerIter = innerMap.find(path);
+			if (innerIter != innerMap.end())
+			{
+				this->errorCode = this->local.getRedirect().begin()->first;
+				path = innerIter->second;
+			}
+		}
+
+		if (startsWith(path, this->local.getLocation()))
+			path = replacePath(path, this->local.getLocation());
+		else
+		{
+			this->errorCode = NOT_FOUND;
+			return ;
+		}
+
+
+		// Check What Happens with the Path in the request !!!
 
 		this->method.insert(std::make_pair("Method", method));
 		this->method.insert(std::make_pair("Path", path));
@@ -116,6 +146,8 @@ Request::Request(std::string strRequest, int *mode)
 		}
 
 		this->body = strRequest.substr(i);
+		if (this->body.size() > this->local.getMaxBodySize())
+			this->errorCode = LARGE_REQ;
 	}
 	else
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 23:56:56 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 06:54:13 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,4 +170,20 @@ bool	isLongReq(std::string &str)
 	if (str.size() > 2048)
 		return true;
 	return false;
+}
+
+bool	startsWith(std::string full, std::string start)
+{
+	if (!full.compare(0, start.size(), start))
+		return true;
+	return false;
+}
+
+std::string	replacePath(std::string path, std::string location)
+{
+	if (path.size() >= location.size())
+		path.replace(0, location.size(), location);
+	else
+		path = location + path.substr(location.size());
+	return path;
 }

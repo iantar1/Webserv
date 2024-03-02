@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 00:25:42 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 06:54:27 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	hexStringToInt(const std::string& hexStr);
 
 std::string	getPageContent(std::string page);
 std::string	getFileExtension(const std::string& fileName);
+std::string	replacePath(std::string path, std::string location);
 std::string	getContentExtension(std::map<std::string, std::string> mime, std::string contentType);
 
 t_files	getDataFromFiles(void);
@@ -39,6 +40,7 @@ std::map<std::string, std::string> mimeTypes(void);
 
 bool	isAllowed(std::string &str);
 bool	isLongReq(std::string &str);
+bool	startsWith(std::string full, std::string start);
 
 template <typename T>
 std::string toStr(const T& value) {

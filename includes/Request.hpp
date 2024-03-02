@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/28 23:29:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/02 06:25:14 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Webserv.hpp"
+#include "Location.hpp"
 
 class Request
 {
@@ -22,10 +23,11 @@ class Request
 		std::string							body;
 		std::string							chunkedBodySize;
 		int									errorCode;
+		Location							local;
 
 	public :
 		Request(void);
-		Request(std::string strRequest, int *mode);
+		Request(std::string strRequest, int *mode, Location local);
 		Request(const Request &other);
 		Request &operator=(const Request &other);
 		~Request(void);
