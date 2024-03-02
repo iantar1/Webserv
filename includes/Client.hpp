@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 18:11:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 21:57:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ public:
 
 	const VirtualServer*	Vserver;
 // Request and Respose classes
-	Request		request;
-	Response	response;
+	Request		*request;
+	// std::map<std::string , AMethod*> respose;
 
 	bool    		DoneServing;
 	bool    		DoneHeaderReading;
@@ -56,7 +56,6 @@ public:
 	void	ServingClient();
 
 };
-
 
 
 

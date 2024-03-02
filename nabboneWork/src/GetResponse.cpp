@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 20:48:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 21:47:53 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,8 +202,8 @@ void GetResponse::theGetMethod(void)
 	struct stat		buffer;
 
 	now = time(0);
-	this->path = this->request.getMethod().find("Path")->second;// ! what is this
-
+	// this->path = this->request.getMethod().find("Path")->second;// ! what is this
+	this->path = "";
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";

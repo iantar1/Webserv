@@ -3,7 +3,8 @@
         "iostream": "cpp",
         "ostream": "cpp",
         "stdexcept": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "fstream": "cpp"
     },
     "editor.codeActionsOnSave": {
         

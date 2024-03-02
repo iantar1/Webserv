@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 20:37:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/02 21:53:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@ void	Client::ServingClient()
 {
     t_files file;
     file = getDataFromFiles();
-    // allwoed Methode , so you need to constuct Respose with Vserver
     
-    GetResponse GetResponse1(sockeFd, request, file);
+    // allwoed Methode , so you need to constuct Respose with Vserver
+    Request     req();
+    Response    response();
     DoneServing = true;
 }
