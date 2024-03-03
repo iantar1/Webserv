@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 07:52:22 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 06:31:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Request::RequestException::~RequestException(void) throw() {}
 
 Request::Request(void) {}
 
-Request::Request(std::string strRequest, int *mode, Location local) : local(local)
+Request::Request(std::string strRequest, int *mode, Location *local) : local(local)
 {
 	int												i = 0;
 	std::string										key, value, method, path, protocol, chunkedContentLenght;
@@ -56,13 +56,21 @@ Request::Request(std::string strRequest, int *mode, Location local) : local(loca
 			return ;
 		}
 
-		if (std::find(this->local.getAllowedMethods().begin(), this->local.getAllowedMethods().end(), method) != this->local.getAllowedMethods().end())
+		std::vector<std::string>	vecMethod = this->local->getAllowedMethods();
+		std::vector<std::string>::iterator	itMethod = vecMethod.begin();
+		while (itMethod != vecMethod.end())
+		{
+			if (!method.compare(itMethod->data()))
+				break;
+			itMethod++;
+		}
+		if (itMethod == vecMethod.end())
 		{
 			this->errorCode = METHOD_NOT_ALLOWED;
 			return ;
 		}
 
-		std::map<int, std::map<std::string, std::string> > redirectMap = this->local.getRedirect();
+		std::map<int, std::map<std::string, std::string> > redirectMap = this->local->getRedirect();
 		std::map<int, std::map<std::string, std::string> >::iterator redirectIter = redirectMap.find(errorCode);
 		if (redirectIter != redirectMap.end())
 		{
@@ -70,25 +78,27 @@ Request::Request(std::string strRequest, int *mode, Location local) : local(loca
 			std::map<std::string, std::string>::iterator innerIter = innerMap.find(path);
 			if (innerIter != innerMap.end())
 			{
-				this->errorCode = this->local.getRedirect().begin()->first;
+				this->errorCode = this->local->getRedirect().begin()->first;
 				path = innerIter->second;
 			}
 		}
 
-		if (startsWith(path, this->local.getLocation()))
-			path = replacePath(path, this->local.getLocation());
+		std::string	oldPath = path;
+		if (startsWith(path, this->local->getLocation())) {
+			path = replacePath(path, this->local->getLocation(), this->local->getRoot());
+		}
 		else
 		{
 			this->errorCode = NOT_FOUND;
 			return ;
 		}
 
-
 		// Check What Happens with the Path in the request !!!
 
 		this->method.insert(std::make_pair("Method", method));
 		this->method.insert(std::make_pair("Path", path));
 		this->method.insert(std::make_pair("Protocol", protocol));
+		this->method.insert(std::make_pair("Old Path", oldPath));
 		if (!checkMethod())
 			return ;
 		while (strRequest[i] && strRequest[i] != '\r'
@@ -146,7 +156,8 @@ Request::Request(std::string strRequest, int *mode, Location local) : local(loca
 		}
 
 		this->body = strRequest.substr(i);
-		if (this->body.size() > this->local.getMaxBodySize())
+		if ((itl != this->request.end() && static_cast<size_t>(std::atoi((itl->second).c_str())) > this->local->getMaxBodySize())
+			|| (this->body.size() > this->local->getMaxBodySize()))
 			this->errorCode = LARGE_REQ;
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 06:54:27 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 05:33:57 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	hexStringToInt(const std::string& hexStr);
 
 std::string	getPageContent(std::string page);
 std::string	getFileExtension(const std::string& fileName);
-std::string	replacePath(std::string path, std::string location);
+std::string	replacePath(std::string path, std::string location, std::string root);
 std::string	getContentExtension(std::map<std::string, std::string> mime, std::string contentType);
 
 t_files	getDataFromFiles(void);

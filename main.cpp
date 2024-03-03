@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 06:23:51 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 04:51:25 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int main(void)
 
 	int	mode = NORMAL;
 	Location	local;
+	local.loadConfig();
 
 	while (true)
 	{
@@ -85,7 +86,7 @@ int main(void)
 
 		try
 		{
-			Request request(req, &mode, local);
+			Request request(req, &mode, &local);
 			Response response(new_socket, request, files, request.getError(), &mode);
 			std::cout << "------------------ Response sent -------------------\n"
 					<< std::endl;

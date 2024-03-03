@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 06:54:13 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 05:34:48 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,11 +179,8 @@ bool	startsWith(std::string full, std::string start)
 	return false;
 }
 
-std::string	replacePath(std::string path, std::string location)
+std::string	replacePath(std::string path, std::string location, std::string root)
 {
-	if (path.size() >= location.size())
-		path.replace(0, location.size(), location);
-	else
-		path = location + path.substr(location.size());
+	path = root + path.substr(location.size());
 	return path;
 }

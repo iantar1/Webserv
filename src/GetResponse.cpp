@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/23 22:00:58 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 06:34:57 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,12 +147,13 @@ void			GetResponse::directoryListing(void)
 	struct dirent*		entry;
 	std::ostringstream	listing;
 
-	listing << "<html><head><title>Index of " << this->path << "</title></head><body>";
-	listing << "<h1>Index of " << this->path << "</h1><hr><ul>";
+	listing << "<html><head><title>Index of " << this->oldPath << "</title></head><body>";
+	listing << "<h1>Index of " << this->oldPath << "</h1><hr><ul>";
 
-	if ((dir = opendir(this->path.c_str() + 1)) != NULL) {
+	if ((dir = opendir(this->path.c_str())) != NULL) {
 		while ((entry = readdir(dir)) != NULL) {
-			listing << "<li><a href=\"" << this->path << entry->d_name << "\">" << entry->d_name << "</a></li>";
+			std::cout << this->oldPath << std::endl;
+			listing << "<li><a href=\"" << this->oldPath << entry->d_name << "\">" << entry->d_name << "</a></li>";
 		}
 		closedir(dir);
 	}
@@ -160,6 +161,7 @@ void			GetResponse::directoryListing(void)
 	listing << "</ul><hr></body></html>";
 
 	this->body = listing.str();
+	std::cout << this->body << std::endl;
 	this->contentType = "text/html";
 	theGetHeaderResponse(OK, CONTENT_LENGHT);
 	this->response += this->body;
@@ -182,7 +184,7 @@ void			GetResponse::regularFileGet(void)
 		else
 			this->contentType = "applocation/octet-stream";
 
-		this->inFile.open(this->path.c_str() + 1);
+		this->inFile.open(this->path.c_str());
 
 		if (!this->inFile.is_open())
 			theGetErrorNotFound();
@@ -202,6 +204,7 @@ void GetResponse::theGetMethod(void)
 
 	now = time(0);
 	this->path = this->request.getMethod().find("Path")->second;
+	this->oldPath = this->request.getMethod().find("Old Path")->second;
 
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
@@ -210,7 +213,7 @@ void GetResponse::theGetMethod(void)
 
 	if (this->request.getBody() != "")
 		theGetErrorBadRequest();
-	else if (stat(this->path.c_str() + 1, &buffer))
+	else if (stat(this->path.c_str(), &buffer))
 		theGetErrorNotFound();
 	else
 	{

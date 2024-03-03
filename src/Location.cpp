@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/02 03:33:31 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 07:37:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 04:26:36 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Location::~Location(void) {}
 void	Location::loadConfig(void)
 {
 	std::string							line, word, key, value;
-	std::ifstream						inFile("../server.conf");
+	std::ifstream						inFile("server.conf");
 	std::stringstream					ss;
 	std::map<std::string, std::string>	innerMap;
 
@@ -36,6 +36,7 @@ void	Location::loadConfig(void)
 
 	while (std::getline(inFile, line))
 	{
+		ss.clear();
 		ss << line;
 		while (ss >> word)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:47:10 by nabboune          #+#    #+#             */
-/*   Updated: 2024/02/21 04:01:46 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 06:21:02 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class GetResponse
 {
 	private :
-		std::string 						header, body, response, strTime, contentType, path, redirection;
+		std::string 						header, body, response, strTime, contentType, path, oldPath, redirection;
 		Request 							request;
 		t_files								files;
 		std::ifstream						inFile;

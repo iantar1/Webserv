@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 16:49:40 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/02 06:25:14 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/03 06:30:04 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include "Webserv.hpp"
 #include "Location.hpp"
 
+class Location;
+
 class Request
 {
 	private :
@@ -22,12 +24,12 @@ class Request
 		std::map<std::string, std::string>	method;
 		std::string							body;
 		std::string							chunkedBodySize;
+		Location							*local;
 		int									errorCode;
-		Location							local;
 
 	public :
 		Request(void);
-		Request(std::string strRequest, int *mode, Location local);
+		Request(std::string strRequest, int *mode, Location *local);
 		Request(const Request &other);
 		Request &operator=(const Request &other);
 		~Request(void);
