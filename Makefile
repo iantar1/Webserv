@@ -8,7 +8,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
 
 SRC = ./src/main.cpp  ./src/Server.cpp ./src/VirtualServer.cpp ./src/Response.cpp \
 		./src/Location.cpp ./src/Client.cpp ./src/ConfigFileParser.cpp ./src/ParsingHelpers.cpp \
-		./nabboneWork/src/GetResponse.cpp ./nabboneWork/src/Request.cpp ./nabboneWork/src/utils.cpp
+		 ./src/Request.cpp
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
 

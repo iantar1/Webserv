@@ -434,4 +434,5 @@ void	ConfigFileParser::config_file_parsing()
 	display_extracted_infos(); // debugging
 	check_extracted_infos();
 	std::cout << "*********** PARSING DONE ************" << std::endl; // debuggin
+	display_extracted_infos();
 }

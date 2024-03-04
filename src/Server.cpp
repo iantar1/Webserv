@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 20:37:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 10:32:17 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,9 @@ void    Server::addCleintToEpoll(int index)
 	events[index].data.fd = accept(serverFd, (struct sockaddr*)(&clientAddr), &clientAddrLen);
 	if (events[index].data.fd < 0)
 		throw std::runtime_error("accept\n");
+// accept connection , add client to epoll, parse request
 	clients[events[index].data.fd] = new Client(Vservers[index], events[index].data.fd);
+	
 	event.data.fd = events[index].data.fd;
 	event.events = EPOLLIN;
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, events[index].data.fd, &event) == -1)

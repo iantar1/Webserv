@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/02 16:24:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 16:11:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,4 +103,9 @@ void	Request::ParseRequest()
 	    storeData(data, index + 4);
         reading_done = true;
     }
+}
+
+int Request::getMethdType() const
+{
+	return (MethodType);
 }

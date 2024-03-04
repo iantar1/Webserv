@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/01 21:35:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 18:20:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,18 @@
 # include "../includes/Location.hpp"
 
 class Location;
-// vector<VirtualServer*>
+
 class VirtualServer
 {
 private:
-	// listen;
-	// server_name;
-	// max_client_body_size;
-	// error_page;
+
 
 	int									fdSocket;
-	std::string							Name;
+	std::string							ServerName;
 	int									Port;
 	in_addr_t							HostAddress;
+	size_t								maxCleintBodySize;
+
 	std::map<std::string, Location *>	locations;
 
 public:
@@ -45,9 +44,13 @@ public:
 	in_addr_t			getHostAddress() const;
 	int					getPort() const;
 	
+	void	SetLocation(Location*, std::string);
 	//void	setVserverINfo(const std::string& name, );
 public://Methods
 	
 };
 
-
+void	VirtualServer::SetLocation(Location* Objloca, std::string strLocat)
+{
+	locations[strLocat] = Objloca;
+}
