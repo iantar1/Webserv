@@ -6,12 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 18:47:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 22:52:56 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/macros.hpp"
+# include "../includes/VirtualServer.hpp"
+
 # include "../includes/ConfigFileParser.hpp"
 # include <iostream>
 # define PORT 8080
@@ -71,13 +73,15 @@ Location*	getLocation2()
 
 void fillVector(std::vector<VirtualServer*>& Vser)
 {
-	VirtualServer	*Vser1 = new VirtualServer();
 	VirtualServer	*Vser2 = new VirtualServer();
-
-	Vser1->SetLocation(getLocation1(), "/");
 	Vser2->SetLocation(getLocation2(), "/");
-	Vser.push_back(Vser1);
+	Vser2->Port = 8080;
 	Vser.push_back(Vser2);
+
+	VirtualServer	*Vser1 = new VirtualServer();
+	Vser1->SetLocation(getLocation1(), "/");
+	Vser1->Port = 8081;
+	Vser.push_back(Vser1);
 }
 
 int	main(int ac, char **av)
@@ -85,7 +89,6 @@ int	main(int ac, char **av)
 	
 	try
 	{
-
 		std::vector<VirtualServer*> Vserv;
 
 		fillVector(Vserv);

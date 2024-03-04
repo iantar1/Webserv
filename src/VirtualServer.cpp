@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 17:58:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 22:09:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,14 @@ void	VirtualServer::setFdSocket(int fd)
 	fdSocket = fd;
 }
 
-const std::string&	VirtualServer::getVServerName() const
+// const std::string&	VirtualServer::getVServerName() const
+// {
+// 	return (N);
+// }
+
+void	VirtualServer::SetLocation(Location* loc, std::string strLocation)
 {
-	return (Name);
+	locations[strLocation] = loc;
 }
 
 in_addr_t			VirtualServer::getHostAddress() const

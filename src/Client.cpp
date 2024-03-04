@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 16:10:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/04 21:55:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,15 @@
 # include "../includes/Client.hpp"
 # include "../includes/Request.hpp"
 
-Client::Client(const VirtualServer* Vser, int fd) : sockeFd(fd), Vserver(Vser)
+Client::Client(const VirtualServer* Vser, int fd) : sockeFd(fd), Vserver(Vser), request(fd)
 {
 }
 
 Client::~Client()
+{
+}
+
+void    Client::PrintRequest() const
 {
 }
 
