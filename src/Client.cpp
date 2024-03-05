@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 21:55:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 11:17:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 # include "../includes/Client.hpp"
 # include "../includes/Request.hpp"
 
-Client::Client(const VirtualServer* Vser, int fd) : sockeFd(fd), Vserver(Vser), request(fd)
+Client::Client(const VirtualServer* Vser, int fd, t_files* files) : sockeFd(fd), Vserver(Vser), request(fd)
 {
+    Response    response(request, files);
 }
 
 Client::~Client()

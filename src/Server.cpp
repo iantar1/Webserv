@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 22:47:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 11:19:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,10 @@ void    Server::addCleintToEpoll(int index)
 
 int Server::launchServer()
 {
+	t_files	files;
+
 	epollFd = epoll_create1(0);
+	files = getDataFromFiles();
 	if (epollFd < 0)
 		throw std::runtime_error("epoll_create1 failed");
 // add fd_servers to the epoll

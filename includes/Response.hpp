@@ -5,50 +5,44 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/28 15:14:10 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 16:08:48 by iantar           ###   ########.fr       */
+/*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
+/*   Updated: 2024/03/05 11:12:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# pragma once
+#pragma once
 
-// # include "../nabboneWork/includes/Request.hpp"
-
-// # define POST 
-// # define GET
-// # define DELETE
+#include "Webserv.hpp"
+#include "Request.hpp"
+#include "utils.hpp"
 
 class Response
 {
-private: // Attributes
-    int fdSocket;
-    int MethodType;
+	private :
+		int 	socket;
+		std::string	responseBody, response, strTime;
+		t_files	files;
+		Request	request;
 
-    //std::map<std::string, AMethod&> methods;
-    Request*        request;
-    //const VirtualServer   *Vserver;
-    //const Location        *location;
+	public :
+		Response(int socket, Request &request, t_files files, int error, int *mode);
+		Response(const Response &other);
+		Response &operator=(const Response &other);
+		virtual ~Response(void);
 
-private:
-    Response();
-    Response(const Response&);
-    Response& operator=(const Response&);
+		void	errorPage(int errorCode);
+		void	thePostMethod(void);
+		void	theDeleteMethod(void);
 
-// MEthode (private)
-    // void GET();
-    // void POST();
-    // void DELETE();
-    
+	private :
+		class ResponseException : public std::exception
+		{
+		private:
+			std::string error;
 
-public:
-    Response(const Request&); // Request will have all infos you need 
-    // you will use getters to extract them
-    ~Response();
-
-// main function , find a good name 
-    void serverCleint();
+		public:
+			ResponseException(std::string error);
+			virtual ~ResponseException(void) throw();
+			const char *what(void) const throw();
+		};
 };
-
-// Response::Response(int fd, const Request& _req) : fdSocket(fd), request(_req)
-// {
-// }

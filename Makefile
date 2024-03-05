@@ -29,6 +29,7 @@ re : fclean all
 
 COM = to save
 git : 
+	make fclean
 	git add .
 	git commit -m "${COM}"
 	git push origin iantar1
