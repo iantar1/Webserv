@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 16:43:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 22:13:53 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ Response::ResponseException::~ResponseException(void) throw() {}
 
 Response::Response(Request* request, t_files* files)
 {
+
 	this->request = request;
 	this->socket = request->getFdSocket();
 	this->files = files;
@@ -31,20 +32,23 @@ Response::Response(Request* request, t_files* files)
 	// std::string		data = this->request->getBody();
 	// std::cout << "==> " << data << std::endl;
 
-	tm		*local_time;
-	time_t	now;
+	// tm		*local_time;
+	// time_t	now;
 
-	local_time = localtime(&now);
-	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+	// local_time = localtime(&now);
+	// this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 
-	if (request->getError() != 0)
-	{
-		errorPage(request->getError());
-		return ;
-	}
-
+	// * if (request->getError() != 0)
+	// * {
+	// * 	errorPage(request->getError());
+	// * 	return ;
+	// * }
+	std::cout << "getMethosd : " << request->getMethdType() << "\n";
 	if (request->getMethdType() == GET)
+	{
+		std::cout << GREEN << " GET " << RESET << "\n"; 
 		GetResponse		get(this->socket, this->request, this->files);
+	}
 	// else if (request->getMethdType() == POST)
 	// 	PostResponse	post(this->socket, this->request, this->files);
     //else Delete

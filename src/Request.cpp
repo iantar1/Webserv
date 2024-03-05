@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 16:45:00 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 22:21:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 
 Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), errorFlag(0), reading_done(0), Vserver(_Vserver) 
 {
+	MethodType = 0;
 }
 
 
@@ -42,6 +43,7 @@ void	Request::storeRequestLine(const std::string& line)
 {
 	std::stringstream	sstr(line);
 	std::string			word;
+
 
 	while (sstr >> word)
 	{
@@ -94,18 +96,20 @@ void	Request::SetNewPath()
 void	Request::ParseRequest()
 {
 	int bytesRead;
-    size_t index;
-    std::string data;
+    // size_t index;
+    // std::string data;
 
     std::cout << "cleint : " << SocketFd << std::endl;
     bytesRead = read(SocketFd, buf, BUF_SIZE);
     if (bytesRead < 0)
+	{
         throw std::runtime_error("read syscall failed");
-    data.append(buf, bytesRead);
-    if ((index = data.find("\r\n\r\n")) != std::string::npos) {
-	    storeData(data, index + 4);
-        reading_done = true;
-    }
+	}
+    // data.append(buf, bytesRead);
+	storeData(std::string(buf), 4); // useless 4
+    reading_done = true;
+    // if ((index = data.find("\r\n\r\n")) != std::string::npos) {
+    // }
 	
 }
 
@@ -113,7 +117,7 @@ void	Request::ParseRequest()
 
 int Request::getMethdType() const
 {
-	return (MethodType);
+	return (this->MethodType);
 }
 
 int	Request::getFdSocket() const
