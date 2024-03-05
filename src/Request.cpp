@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/15 17:23:35 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/03 06:31:30 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/04 20:27:05 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ Request::Request(std::string strRequest, int *mode, Location *local) : local(loc
 			this->errorCode = NOT_FOUND;
 			return ;
 		}
+		std::cout << oldPath << " || " << path << std::endl;
 
 		// Check What Happens with the Path in the request !!!
 

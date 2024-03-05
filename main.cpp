@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/12 15:07:55 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/03 04:51:25 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/04 19:30:22 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int main(void)
 		// 	// std::cout << "====================================================" << std::endl;
 		// }
 
-		// std::cout << " VALREAD :: " << valread << "\n" << req << std::endl;
+		std::cout << " VALREAD :: " << valread << "\n" << req << std::endl;
 
 		if (valread < 0)
 		{

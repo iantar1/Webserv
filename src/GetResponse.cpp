@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/03 06:34:57 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/05 10:37:05 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void GetResponse::theGetRedirectionRequest(void)
 {
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
-	this->redirection = this->path + "/";
+	this->redirection = this->oldPath + "/";
+	std::cout << this->redirection << "ooooo\n";
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
 	write(this->socket, this->response.c_str(), this->response.size());
