@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 13:28:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:43:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ Response::Response(Request* request, t_files* files)
 
 	if (request->getMethdType() == GET)
 		GetResponse		get(this->socket, this->request, this->files);
-	else if (request->getMethdType() == POST)
-		PostResponse	post(this->socket, this->request, this->files);
+	// else if (request->getMethdType() == POST)
+	// 	PostResponse	post(this->socket, this->request, this->files);
     //else Delete
 }
 

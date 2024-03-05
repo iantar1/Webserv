@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:47:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:45:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,10 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 
 
-Request::Request(int fd) : SocketFd(fd), errorFlag(0), reading_done(0)
+Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), errorFlag(0), reading_done(0), Vserver(_Vserver) 
 {
 }
 
-Request::Request()
-{
-}
 
 Request::~Request()
 {
@@ -50,6 +47,8 @@ void	Request::storeRequestLine(const std::string& line)
 	{
 		RequestLine.push_back(word);
 	}
+	oldPath = RequestLine[1]; // /hello.htmn for example
+	SetNewPath(); // set new Path
 	for (int i = 0; i < 3; i++)
 	{
 		if (Methods[i] == RequestLine[0])
@@ -87,13 +86,17 @@ void	Request::storeData(const std::string& dataRequest, size_t index)
 
 // main Method
 
+void	Request::SetNewPath()
+{
+	newPath = oldPath + Vserver->getRootLocatin(oldPath);
+}
+
 void	Request::ParseRequest()
 {
 	int bytesRead;
     size_t index;
     std::string data;
 
-	//checkAllowedMethods();
     std::cout << "cleint : " << SocketFd << std::endl;
     bytesRead = read(SocketFd, buf, BUF_SIZE);
     if (bytesRead < 0)
@@ -103,7 +106,9 @@ void	Request::ParseRequest()
 	    storeData(data, index + 4);
         reading_done = true;
     }
+	
 }
+
 // ************ Getters **************
 
 int Request::getMethdType() const
@@ -134,4 +139,14 @@ std::string	Request::getBody(void) const
 std::string	Request::getChunkedBodySize(void) const
 {
 	return this->chunkedBodySize;
+}
+
+const std::string&  Request::getOldPath() const
+{
+	return (newPath);
+}
+
+const std::string&  Request::getNewPath() const
+{
+	return (oldPath);
 }

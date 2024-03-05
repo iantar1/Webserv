@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:37:12 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:36:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Client
 {
 private:
 	int                 sockeFd;
-	const VirtualServer*	Vserver;
+	VirtualServer*		Vserver;
 	t_files*				files;
 	char                buf[BUF_SIZE];
 	int					MethodType;
@@ -48,7 +48,7 @@ private:
 	Client();
 
 public:
-	Client(int, const VirtualServer*, t_files*);
+	Client(int, VirtualServer*, t_files*);
 	~Client();
 
 // Request and Respose classes

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 18:23:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 15:49:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class Location
 private:
     Location(const Location&);
     Location& operator=(const Location&);
+
 public: // you will change this later to private
 	std::vector<std::string>	allowedMethods;
 	bool	autoIndex;
@@ -44,6 +45,8 @@ public: // you will change this later to private
 public:
     Location();
     ~Location();
+
+	const std::string& getRoot() const;
 
 // setters 
 };

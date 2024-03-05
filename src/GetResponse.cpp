@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 12:43:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:42:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ const char *GetResponse::GetResponseException::what(void) const throw() { return
 GetResponse::GetResponseException::~GetResponseException(void) throw() {}
 
 
-GetResponse::GetResponse(int socket, Request &request, t_files* files)
+GetResponse::GetResponse(int socket, Request *request, t_files* files)
 {
 	this->request = request;
 	this->socket = socket;
@@ -36,29 +36,29 @@ void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
-	header_it = this->files.headers.find(RESPONSE_STATUS);
-	header_it->second += this->files.status.find(code)->second;
+	header_it = this->files->headers.find(RESPONSE_STATUS);
+	header_it->second += this->files->status.find(code)->second;
 
-	header_it = this->files.headers.find(DATE);
+	header_it = this->files->headers.find(DATE);
 	header_it->second += this->strTime;
 
-	header_it = this->files.headers.find(CONTENT_TYPE);
+	header_it = this->files->headers.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
 
 	if (this->redirection != "")
 	{
-		header_it = this->files.headers.find(LOCATION);
+		header_it = this->files->headers.find(LOCATION);
 		header_it->second += this->redirection;
 	}
 
 	if (transferType == CONTENT_LENGHT)
 	{
-		header_it = this->files.headers.find(CONTENT_LENGHT);
+		header_it = this->files->headers.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
 
-	header_it = this->files.headers.begin();
-	while (header_it != this->files.headers.end())
+	header_it = this->files->headers.begin();
+	while (header_it != this->files->headers.end())
 	{
 		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
 			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
@@ -168,8 +168,8 @@ void			GetResponse::regularFileGet(void)
 		extension = getFileExtension(this->path);
 		if (extension != "")
 		{
-			mime_it = this->files.mime.find(extension);
-			if (mime_it != this->files.mime.end())
+			mime_it = this->files->mime.find(extension);
+			if (mime_it != this->files->mime.end())
 				this->contentType = mime_it->second;
 		}
 		else
@@ -194,15 +194,15 @@ void GetResponse::theGetMethod(void)
 	struct stat		buffer;
 
 	now = time(0);
-	this->path = this->request.getMethod().find("Path")->second;
-	this->oldPath = this->request.getMethod().find("Old Path")->second;
+	this->path = this->request->getNewPath();
+	this->oldPath = this->request->getOldPath();
 
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
 	this->redirection = "";
 
-	if (this->request.getBody() != "")
+	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
 		theGetErrorNotFound();

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:42:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:38:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ int Server::launchServer()
 	}
 }
 
-Server::Server(const std::vector<VirtualServer*>& Vser) : Vservers(Vser)
+Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser)
 {
 	files = getDataFromFiles();
 }

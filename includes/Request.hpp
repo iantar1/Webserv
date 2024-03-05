@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:48:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 16:46:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 # include "headers.hpp"
 # include "macros.hpp"
+# include "VirtualServer.hpp"
 
 # define BAD_REQ 400 
 # define NOT_IMPLEMENTED 501
@@ -24,6 +25,12 @@
 class Request
 {
 private:
+// useless Constructor , copy constructor and assingment operator
+    Request();
+    Request(const Request&);
+    Request& operator=(const Request&);
+
+private:
 	char								buf[BUF_SIZE];
     int                                 SocketFd;
     int                                 bytesRead;
@@ -32,28 +39,35 @@ private:
     static std::string					Methods[3];
     std::map<std::string, std::string>	Header;
 	int									MethodType;
-	std::vector<std::string>			RequestLine;
+	std::vector<std::string>			RequestLine;// this line: GET /hello.htm HTTP/1.1
 	bool								reading_done;
     int                                 TransferMode; // Chuncked or normal
     int                                 ErrorCode;
+    std::string                         chunkedBodySize;
+    std::string                         body;
+    VirtualServer                       *Vserver;
+    std::string                         newPath;
+    std::string                         oldPath;
 
+// ***************** Private Methodes **************
 private:
-// useless Constructor , copy constructor and assingment operator
-    Request(const Request&);
-    Request& operator=(const Request&);
+    void	SetNewPath();
 
 public:
-    Request(int);
-    Request();
+// ************ Constructor destructor
+    Request(int,  VirtualServer *);
     ~Request();
 
+// ******** Public Methods
     void    readHeader(const std::string&, size_t);
 	void	storeHeader(const std::string&);
 	void	storeRequestLine(const std::string&);
 	void	storeData(const std::string&, size_t);
 
     void    ParseRequest();
-// Getters
+    
+// ************** Getters *******************
+
     int getMethdType() const;
     int getFdSocket() const;
     int getError() const;
@@ -62,6 +76,9 @@ public:
     std::string	getBody(void) const;
 
     std::string	getChunkedBodySize(void) const;
+    const std::string&  getOldPath() const;
+    const std::string&  getNewPath() const;
+        
 private :
 		class RequestException : public std::exception
 		{
