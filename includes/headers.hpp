@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:46:38 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:17:06 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 17:56:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include <sys/select.h>
 # include <sys/stat.h>
 # include <sys/epoll.h>
+# include <netdb.h>
+# include <sys/types.h>
 
 // # include "macros.hpp"
 

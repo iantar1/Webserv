@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 16:38:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 18:13:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,31 @@
 
 # define PORT 8080
 
+
+	
 // use getaddrinfo()
+	// bzero(&S_Addr, sizeof(S_Addr));
+	// S_Addr.sin_family = AF_INET;// * we use ipv4
+	// S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
+	// std::cout << "here: " << vSer->getPort() << "\n";
+	// S_Addr.sin_port = htons(vSer->getPort()); //* host to network short (little endian / big endian problem)
 int Server::socketCreate(VirtualServer* vSer)
 {
 	// struct sockaddr_in  S_Addr;
 	int                 sockfd;
 	
-	bzero(&S_Addr, sizeof(S_Addr));
-	S_Addr.sin_family = AF_INET;// * we use ipv4
-	S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
-	std::cout << "here: " << vSer->getPort() << "\n";
-	S_Addr.sin_port = htons(vSer->getPort()); //* host to network short (little endian / big endian problem)
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	struct addrinfo	hints;
+	struct addrinfo *res;
+
+	memset(&hints, 0, sizeof(struct addrinfo));
+	hints.ai_family = PF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = AI_PASSIVE;
+	hints.ai_protocol = IPPROTO_TCP;
+
+	std::cout << "check : " << vSer->getHost() << " " << vSer->getPort() << "\n";
+	getaddrinfo((vSer->getHost()).c_str(), (vSer->getPort()).c_str(), &hints, &res);
+	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
 	std::cout << "server: " << sockfd << " created\n";
@@ -37,7 +50,7 @@ int Server::socketCreate(VirtualServer* vSer)
 		throw std::runtime_error("setsockopt() failed\n");
 		
 	
-	if (bind(sockfd, (struct sockaddr*)(&S_Addr), sizeof(S_Addr)) < 0)
+	if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 	{
 		throw std::runtime_error("bind failed");
 	}
@@ -98,9 +111,9 @@ int Server::launchServer()
 	while (true)
 	{
 		int readyFd;
-		std::cout << "***************** wiating for a new connection *******************\n";
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
+			std::cout << "***************** wiating for a new connection *******************\n";
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
@@ -118,8 +131,8 @@ int Server::launchServer()
 				if (clients[events[i].data.fd]->DoneHeaderReading == false) // read the header request
 				{
 					// read the header
-					clients[events[i].data.fd]->ReadParseReqHeader();
 					std::cout << BLUE << "Ready TO READ MY HEADER\n" << RESET << std::endl;
+					clients[events[i].data.fd]->ReadParseReqHeader();
 				}
 				else
 				{

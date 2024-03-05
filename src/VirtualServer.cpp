@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 15:58:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 18:02:32 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void	VirtualServer::SetLocation(Location* loc, std::string strLocation)
 	locations[strLocation] = loc;
 }
 
-in_addr_t			VirtualServer::getHostAddress() const
+const std::string&	VirtualServer::getHost() const
 {
 	return (HostAddress);
 }
 
-int					VirtualServer::getPort() const
+const std::string&	VirtualServer::getPort() const
 {
 	return (Port);
 }
