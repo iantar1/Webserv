@@ -6,28 +6,32 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 11:12:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:23:19 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "Webserv.hpp"
-#include "Request.hpp"
+// #include "Webserv.hpp"
+# include "Request.hpp"
 #include "utils.hpp"
+
+
 
 class Response
 {
+private:
+	Response(const Response&);
+	Response &operator=(const Response&);
+
 	private :
 		int 	socket;
 		std::string	responseBody, response, strTime;
-		t_files	files;
-		Request	request;
+		t_files*	files;
+		Request*	request;
 
 	public :
-		Response(int socket, Request &request, t_files files, int error, int *mode);
-		Response(const Response &other);
-		Response &operator=(const Response &other);
+		Response(Request* request, t_files* files);
 		virtual ~Response(void);
 
 		void	errorPage(int errorCode);

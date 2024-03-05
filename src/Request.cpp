@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 16:11:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:47:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,34 @@ void	Request::ParseRequest()
         reading_done = true;
     }
 }
+// ************ Getters **************
 
 int Request::getMethdType() const
 {
 	return (MethodType);
+}
+
+int	Request::getFdSocket() const
+{
+	return (SocketFd);
+}
+
+int	Request::getTransferMode() const
+{
+	return (TransferMode);
+}
+
+int	Request::getError(void) const
+{
+	return this->ErrorCode;
+}
+
+std::string	Request::getBody(void) const
+{
+	return this->body;
+}
+
+std::string	Request::getChunkedBodySize(void) const
+{
+	return this->chunkedBodySize;
 }

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 11:19:02 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:42:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void    Server::addCleintToEpoll(int index)
 		throw std::runtime_error("accept\n");
 	std::cout << events[index].data.fd << "accepted\n";
 // accept connection , add client to epoll, parse request
-	clients[events[index].data.fd] = new Client(Vservers[index], events[index].data.fd);
+	clients[events[index].data.fd] = new Client(events[index].data.fd, Vservers[index], &files);
 	
 	event.data.fd = events[index].data.fd;
 	event.events = EPOLLIN;
@@ -88,10 +88,8 @@ void    Server::addCleintToEpoll(int index)
 
 int Server::launchServer()
 {
-	t_files	files;
 
 	epollFd = epoll_create1(0);
-	files = getDataFromFiles();
 	if (epollFd < 0)
 		throw std::runtime_error("epoll_create1 failed");
 // add fd_servers to the epoll
@@ -100,9 +98,9 @@ int Server::launchServer()
 	while (true)
 	{
 		int readyFd;
+		std::cout << "***************** wiating for a new connection *******************\n";
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
-			std::cout << "***************** wiating for a new connection *******************\n";
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
@@ -146,7 +144,7 @@ int Server::launchServer()
 
 Server::Server(const std::vector<VirtualServer*>& Vser) : Vservers(Vser)
 {
-	
+	files = getDataFromFiles();
 }
 
 

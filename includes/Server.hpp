@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 22:28:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:40:56 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 # include "../includes/headers.hpp"
 # include "../includes/macros.hpp"
 # include "../includes/VirtualServer.hpp"
+# include "../includes/Client.hpp"
 
-class VirtualServer;
-class Client;
 
 # define MAX_EVENTS 100
 class Server
@@ -28,6 +27,7 @@ private:
 	const std::vector<VirtualServer*>&  		Vservers;
 	struct sockaddr_in					S_Addr;
 
+	t_files	files;
 	int domain;
 	int type;
 	int protocol;

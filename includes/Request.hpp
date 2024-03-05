@@ -6,13 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/04 10:34:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:48:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
 
-# include "../includes/headers.hpp"
+# include "headers.hpp"
+# include "macros.hpp"
 
 # define BAD_REQ 400 
 # define NOT_IMPLEMENTED 501
@@ -30,9 +31,12 @@ private:
     std::string                         RequestHeader;
     static std::string					Methods[3];
     std::map<std::string, std::string>	Header;
-	int									MethodType;// here 
+	int									MethodType;
 	std::vector<std::string>			RequestLine;
 	bool								reading_done;
+    int                                 TransferMode; // Chuncked or normal
+    int                                 ErrorCode;
+
 private:
 // useless Constructor , copy constructor and assingment operator
     Request(const Request&);
@@ -51,5 +55,23 @@ public:
     void    ParseRequest();
 // Getters
     int getMethdType() const;
+    int getFdSocket() const;
+    int getError() const;
+    int	getTransferMode() const;
+
+    std::string	getBody(void) const;
+
+    std::string	getChunkedBodySize(void) const;
+private :
+		class RequestException : public std::exception
+		{
+			private :
+				std::string	error;
+
+			public :
+				RequestException(std::string error);
+				virtual ~RequestException(void) throw();
+				const char *what(void) const throw();
+		};
 
 };

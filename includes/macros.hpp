@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/26 15:44:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:14:15 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 // Reset
 #define RESET   "\033[0m"         // Reset color to default
-
+#define BUF_SIZE 1024
 // Regular Colors
 #define BLACK   "\033[0;30m"      // Black
 #define RED     "\033[0;31m"      // Red
@@ -39,3 +39,37 @@
 #define BOLDMAGENTA "\033[1;35m"  // Bold Magenta
 #define BOLDCYAN    "\033[1;36m"  // Bold Cyan
 #define BOLDWHITE   "\033[1;37m"  // Bold White
+
+
+#define RESPONSE_STATUS 0
+#define CONTENT_TYPE 1
+#define CONTENT_LENGHT 2
+#define DATE 3
+#define SERVER 4
+#define TRANSFER_ENCODING 5
+#define LOCATION 6
+#define SET_COOKIE 7
+#define CACHE_CONTROL 8
+
+#define OK 200
+#define CREATED 201
+#define NO_CONTENT 204
+#define MOVED_PERMA 301
+#define FOUND 302
+#define BAD_REQUEST 400
+#define UNAUTHORIZED 401
+#define FORBIDDEN 403
+#define NOT_FOUND 404
+#define METHOD_NOT_ALLOWED 405
+#define CONFLICT 409
+#define LARGE_REQ 413
+#define LONG_URI_REQ 414
+#define INTERNAL_ERR 500
+#define NOT_IMPLEMENTED 501
+
+#define NORMAL_POST 100
+#define CHUNKED_POST 101
+#define BOUNDRIES_POST 102
+
+#define NORMAL 1000
+#define CHUNKED 1001

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 11:01:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/05 13:37:12 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,28 @@
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
 # include "../includes/Response.hpp"
+# include "../includes/VirtualServer.hpp"
+
 
 # define POST 1
 # define GET 2
 # define DELETE 3 
 
-class Request;
-class Response;
+// class Request;
+// class Response;
 
 class Client
 {
 private:
 	int                 sockeFd;
 	const VirtualServer*	Vserver;
+	t_files*				files;
 	char                buf[BUF_SIZE];
 	int					MethodType;
 	Request				request;
 	
 	
-	AMethod*			method;
+	// AMethod*			method;
 
 	
 //Pravite  Methodes
@@ -45,7 +48,7 @@ private:
 	Client();
 
 public:
-	Client(const VirtualServer*, int);
+	Client(int, const VirtualServer*, t_files*);
 	~Client();
 
 // Request and Respose classes
