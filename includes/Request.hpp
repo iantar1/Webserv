@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:39:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:59:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ public:
     void    readHeader(const std::string&, size_t);
 	void	storeHeader(const std::string&);
 	void	storeRequestLine(const std::string&);
-	void	storeData(const std::string&, size_t);
+	void	storeData(const std::string&);
 
     void    ParseRequest();
     

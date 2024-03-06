@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:47:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 11:08:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), errorFlag(0), reading_done(0), Vserver(_Vserver) 
 {
 	MethodType = 0;
+	std::cout << RED << "Requset Constructred\n" << RESET;
 }
 
 
@@ -64,12 +65,11 @@ void	Request::storeRequestLine(const std::string& line)
 	throw std::runtime_error("Invalid Method");
 }
 
-void	Request::storeData(const std::string& dataRequest, size_t index)
+void	Request::storeData(const std::string& dataRequest)
 {
 	std::istringstream iss(dataRequest);
     std::string line;
 
-    (void)index;
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -110,9 +110,8 @@ void	Request::ParseRequest()
 			break ;
 		HeaderReq += buf[i];
 	}
-	storeData(HeaderReq, 4); // useless 4
+	storeData(HeaderReq); // useless 4
     reading_done = true;
-	std::cout << "*************** HEADER **************\n" << HeaderReq << "\n";
 
 }
 

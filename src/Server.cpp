@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:32:40 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 11:53:51 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 	// S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
 	// std::cout << "here: " << vSer->getPort() << "\n";
 	// S_Addr.sin_port = htons(vSer->getPort()); //* host to network short (little endian / big endian problem)
+
 int Server::socketCreate(VirtualServer* vSer)
 {
 	// struct sockaddr_in  S_Addr;
@@ -78,23 +79,28 @@ void    Server::addServersToEpoll()
 	}
 }
 
+// accept connection and add them to epoll
+
 void    Server::addCleintToEpoll(int index)
 {
 	struct sockaddr_in clientAddr;
 	socklen_t clientAddrLen = sizeof(clientAddr);
 
-	std::cout << "wait for a cleint\n";
-	events[index].data.fd = accept(serverFd, NULL, &clientAddrLen);
+	std::cout << "waiting for a cleint" << "on : " << serverFd << "\n";
+	events[index].data.fd = accept(Vservers[index]->getFdSocket(), NULL, &clientAddrLen);
 	if (events[index].data.fd < 0)
 		throw std::runtime_error("accept\n");
 	std::cout << "Cleint fd: " << events[index].data.fd << " accepted\n";
-// accept connection , add client to epoll, parse request
+
 	clients[events[index].data.fd] = new Client(events[index].data.fd, Vservers[index], &files);
+	std::cout << "fd: " << events[index].data.fd << "Client accepeted\n";
 	event.data.fd = events[index].data.fd;
-	event.events = EPOLLIN;
+	event.events = EPOLLIN | EPOLLOUT;
+	
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, events[index].data.fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
 	std::cout << RED << "done\n" << RESET << std::endl;
+	clients[events[index].data.fd]->ReadParseReqHeader();
 
 }
 
@@ -105,6 +111,7 @@ bool	Server::NewClient(int index)
 		if (events[index].data.fd == Vservers[j]->getFdSocket())
 		{
 			Server::addCleintToEpoll(j);
+			
 			return (1);
 		}
 	}
@@ -132,30 +139,21 @@ int Server::launchServer()
 			{
 				if (NewClient(i))
 				{
-					std::cout << "add new Cleint\n";
-				}
-				else if (clients[events[i].data.fd]->DoneHeaderReading == false) // read the header request
-				{
-					// read the header
-					clients[events[i].data.fd]->ReadParseReqHeader();
-					std::cout << YELLOW << "READ HEADER\n" << RESET << std::endl;
+					std::cout << "new Cleint added \n";
 				}
 				else
 				{
+					std::cout << "HEHEHE\n";
 					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
 					{
 						std::cout << YELLOW << "SERVING Client" << RESET << std::endl;
 						clients[events[i].data.fd]->ServingClient();
-					// serve (Get, Post, delete)
-						
 					}
 					else 
 					{
 						//DropCleint(events[i].data.fd);
-					// delete the fdSoketCleint from the poll , and delete the cleint from the map
 					}
 				}
-				// serve cleint
 			}
 		}
 	}

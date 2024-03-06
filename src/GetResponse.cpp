@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 16:42:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 11:34:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void GetResponse::theGetRedirectionRequest(void)
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
 	this->redirection = this->oldPath + "/";
-	std::cout << this->redirection << "ooooo\n";
+	// std::cout << this->redirection << "ooooo\n";
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
 	write(this->socket, this->response.c_str(), this->response.size());
@@ -143,7 +143,7 @@ void			GetResponse::directoryListing(void)
 
 	if ((dir = opendir(this->path.c_str())) != NULL) {
 		while ((entry = readdir(dir)) != NULL) {
-			std::cout << this->oldPath << std::endl;
+			// std::cout << this->oldPath << std::endl;
 			listing << "<li><a href=\"" << this->oldPath << entry->d_name << "\">" << entry->d_name << "</a></li>";
 		}
 		closedir(dir);
@@ -152,7 +152,7 @@ void			GetResponse::directoryListing(void)
 	listing << "</ul><hr></body></html>";
 
 	this->body = listing.str();
-	std::cout << this->body << std::endl;
+	// std::cout << this->body << std::endl;
 	this->contentType = "text/html";
 	theGetHeaderResponse(OK, CONTENT_LENGHT);
 	this->response += this->body;
@@ -182,7 +182,7 @@ void			GetResponse::regularFileGet(void)
 		else
 			theGetResponseOk();
 
-		std::cout << this->response << std::endl;
+		// std::cout << this->response << std::endl;
 
 		this->inFile.close();
 }

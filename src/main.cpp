@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 18:16:28 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 11:43:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void fillVector(std::vector<VirtualServer*>& Vser)
 {
 	VirtualServer	*Vser2 = new VirtualServer();
 	Vser2->SetLocation(getLocation2(), "/");
-	Vser2->Port = "8080";
+	Vser2->Port = "8082";
 	Vser2->HostAddress = "localhost";
 	Vser.push_back(Vser2);
 

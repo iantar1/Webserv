@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/06 10:29:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 11:30:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Response::Response(Request* request, t_files* files)
 	this->request = request;
 	this->socket = request->getFdSocket();
 	this->files = files;
-
+	std::cout << RED << "Response Constructor\n" << RESET;
 	// std::string		data = this->request->getBody();
 	// std::cout << "==> " << data << std::endl;
 
