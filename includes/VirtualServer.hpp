@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 18:53:40 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 20:48:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 
 class Location;
 
+typedef	std::map<std::string, Location *>::const_iterator	mapIterType;
+
 class VirtualServer
 {
 private:
-
 
 	int									fdSocket;
 	std::string							ServerName;
@@ -41,10 +42,11 @@ public:
 // getters
 	int					getFdSocket() const;
 	const std::string&	getVServerName() const;
-	const std::string& getPort() const;
-	const std::string& getHost() const;
-	const std::string& getRootLocatin(const std::string&);
-	const	getLocationsMap()
+	const std::string&	getPort() const;
+	const std::string&	getHost() const;
+	const std::string&	getRootLocatin(const std::string&);
+	mapIterType			getLocationsIterMap() const;
+	mapIterType			getEndIterMap() const;
 	
 	void	SetLocation(Location*, std::string);
 	// void	setVserverINfo(const std::string& name, );

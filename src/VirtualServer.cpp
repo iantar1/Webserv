@@ -6,31 +6,47 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 16:14:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 20:50:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/VirtualServer.hpp"
 
-int		VirtualServer::getFdSocket() const
+// ***************** Constructors , Destructors *****************
+
+VirtualServer::VirtualServer()
 {
-	return (fdSocket);
 }
+
+VirtualServer::~VirtualServer()
+{
+}
+
+// ********************** Setters **************************
 
 void	VirtualServer::setFdSocket(int fd)
 {
 	fdSocket = fd;
 }
 
+
+void	VirtualServer::SetLocation(Location* loc, std::string strLocation)
+{
+	locations[strLocation] = loc;
+}
+
+
+// ***************** Getters *********************
+
 // const std::string&	VirtualServer::getVServerName() const
 // {
 // 	return (N);
 // }
 
-void	VirtualServer::SetLocation(Location* loc, std::string strLocation)
+int		VirtualServer::getFdSocket() const
 {
-	locations[strLocation] = loc;
+	return (fdSocket);
 }
 
 const std::string&	VirtualServer::getHost() const
@@ -43,16 +59,19 @@ const std::string&	VirtualServer::getPort() const
 	return (Port);
 }
 	
-VirtualServer::VirtualServer()
-{
-}
-
-VirtualServer::~VirtualServer()
-{
-}
 
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
 	std::cout << "look\t" << _locStr << "\n";
 	return (locations[_locStr]->getRoot());
+}
+
+mapIterType	VirtualServer::getLocationsIterMap() const
+{
+	return (locations.begin());
+}
+
+mapIterType	VirtualServer::getEndIterMap() const
+{
+	return (locations.end());
 }

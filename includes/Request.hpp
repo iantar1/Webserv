@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 18:16:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 20:44:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # define REQ_URI_TOO_LONG 414
 # define REQ_ENTITY_TOO_LONG 413  
 
+
+typedef	std::map<std::string, Location *>::const_iterator	mapIterType;
 
 class Request
 {

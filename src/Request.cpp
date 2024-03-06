@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 18:52:40 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 20:45:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,12 @@ bool	Request::URI_ValidChar(const std::string& uri) const
 	return (0);
 }
 
+
 bool	Request::URI_ValidLocation(const std::string& uri) const
 {
-	std::map<std::string, Location *>::const_iterator	it = Vserver->getLocationsIterMap();
+	mapIterType	it = Vserver->getLocationsIterMap();
 
-	it = 
+	
 }
 
 void	Request::URI_Checking(const std::string& uri)
@@ -101,7 +102,7 @@ void	Request::storeRequestLine(const std::string& line)
 	{
 		RequestLine.push_back(word);
 	}
-	CheckURI(RequestLine[1]);
+	URI_Checking(RequestLine[1]);
 	oldPath = RequestLine[1]; // /hello.htmn for example
 	SetNewPath(); // set new Path
 	for (int i = 0; i < 3; i++)
@@ -140,7 +141,6 @@ void	Request::storeData(const std::string& dataRequest)
     reading_done = true;
 }
 
-// main Method
 
 void	Request::SetNewPath()
 {
@@ -210,6 +210,6 @@ void	Request::ParseRequest()
 		HeaderReq += buf[i];
 	}
 
-	storeData(HeaderReq); // useless 4
+	storeData(HeaderReq);
     reading_done = true;
 }
