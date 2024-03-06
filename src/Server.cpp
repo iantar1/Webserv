@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 11:53:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 12:42:57 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,11 @@ bool	Server::NewClient(int index)
 	return (0);
 }
 
+int Server::DropCleint(int ClientFd)
+{
+	clients.erase(ClientFd);
+}
+
 int Server::launchServer()
 {
 
@@ -132,6 +137,7 @@ int Server::launchServer()
 		int readyFd;
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
+			std::cout << "readyFd: " << readyFd << "\n";
 			std::cout << "***************** wiating for a new connection *******************\n";
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
@@ -143,7 +149,6 @@ int Server::launchServer()
 				}
 				else
 				{
-					std::cout << "HEHEHE\n";
 					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
 					{
 						std::cout << YELLOW << "SERVING Client" << RESET << std::endl;
@@ -151,10 +156,12 @@ int Server::launchServer()
 					}
 					else 
 					{
-						//DropCleint(events[i].data.fd);
+						std::cout << "HEHEHE\n";
+						DropCleint(events[i].data.fd);
 					}
 				}
 			}
+			bzero(events, sizeof(events));
 		}
 	}
 }
