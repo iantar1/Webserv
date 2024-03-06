@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:17:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 15:41:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ private:
 	void    addServersToEpoll();
 	void    addCleintToEpoll(int);
 	bool	NewClient(int);
+	void	DropCleint(int);
 
 private:
 	Server& operator=(const Server&);

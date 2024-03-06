@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 11:08:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 16:57:19 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,31 @@ void	Request::storeHeader(const std::string& line)
 	Header[key] = value;
 }
 
+bool	Request::URI_ValidLength(const std::string& uri) const
+{
+	return (uri.size() > MAX_URI_CHAR_SIZE);
+}
+
+bool	Request::URI_ValidChar(const std::string& uri) const
+{
+	for (size_t i = 0; i < uri.size(); i++)
+	{
+		if 
+	}
+}
+
+bool	Request::URI_ValidLocation(const std::string& uri) const
+{
+
+}
+
+void	Request::URI_Checking(const std::string& uri) const
+{
+	// valid chara
+	// valid Size
+	// valid Location
+}
+
 void	Request::storeRequestLine(const std::string& line)
 {
 	std::stringstream	sstr(line);
@@ -50,6 +75,7 @@ void	Request::storeRequestLine(const std::string& line)
 	{
 		RequestLine.push_back(word);
 	}
+	CheckURI(RequestLine[1]);
 	oldPath = RequestLine[1]; // /hello.htmn for example
 	SetNewPath(); // set new Path
 	for (int i = 0; i < 3; i++)
@@ -69,7 +95,7 @@ void	Request::storeData(const std::string& dataRequest)
 {
 	std::istringstream iss(dataRequest);
     std::string line;
-
+	
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -95,25 +121,6 @@ void	Request::SetNewPath()
 	newPath = oldPath + Vserver->getRootLocatin(oldPath);
 }
 
-void	Request::ParseRequest()
-{
-	int bytesRead;
-
-    bytesRead = read(SocketFd, buf, BUF_SIZE);
-    if (bytesRead < 0)
-	{
-        throw std::runtime_error("read syscall failed");
-	}
-	for (int i = 0; i < bytesRead; i++)
-	{
-		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))	
-			break ;
-		HeaderReq += buf[i];
-	}
-	storeData(HeaderReq); // useless 4
-    reading_done = true;
-
-}
 
 // ************ Getters **************
 
@@ -149,10 +156,34 @@ std::string	Request::getChunkedBodySize(void) const
 
 const std::string&  Request::getOldPath() const
 {
-	return (newPath);
+	return (oldPath);
 }
 
 const std::string&  Request::getNewPath() const
 {
-	return (oldPath);
+	return (newPath);
+}
+
+// ************** Main Method *******************
+
+
+
+void	Request::ParseRequest()
+{
+	int bytesRead;
+
+    bytesRead = read(SocketFd, buf, BUF_SIZE);
+    if (bytesRead < 0)
+	{
+        throw std::runtime_error("read syscall failed");
+	}
+	for (int i = 0; i < bytesRead; i++)
+	{
+		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))	
+			break ;
+		HeaderReq += buf[i];
+	}
+
+	storeData(HeaderReq); // useless 4
+    reading_done = true;
 }

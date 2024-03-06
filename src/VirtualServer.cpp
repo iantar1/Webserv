@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 18:02:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 16:14:50 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@ VirtualServer::~VirtualServer()
 
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
+	std::cout << "look\t" << _locStr << "\n";
 	return (locations[_locStr]->getRoot());
 }

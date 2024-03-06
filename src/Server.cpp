@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 12:42:57 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 16:06:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 int Server::socketCreate(VirtualServer* vSer)
 {
-	// struct sockaddr_in  S_Addr;
 	int                 sockfd;
 	
 	struct addrinfo	hints;
@@ -101,7 +100,6 @@ void    Server::addCleintToEpoll(int index)
 		throw std::runtime_error("epoll_ctl [Cleint]");
 	std::cout << RED << "done\n" << RESET << std::endl;
 	clients[events[index].data.fd]->ReadParseReqHeader();
-
 }
 
 bool	Server::NewClient(int index)
@@ -118,9 +116,13 @@ bool	Server::NewClient(int index)
 	return (0);
 }
 
-int Server::DropCleint(int ClientFd)
+void Server::DropCleint(int ClientFd)
 {
-	clients.erase(ClientFd);
+
+	epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL);
+	// delete[] clients[ClientFd];
+	// clients.erase(ClientFd);
+	(void)ClientFd;
 }
 
 int Server::launchServer()

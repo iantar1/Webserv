@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 13:14:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 16:54:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,12 @@
 #define NO_CONTENT 204
 #define MOVED_PERMA 301
 #define FOUND 302
-#define BAD_REQUEST 400
 #define UNAUTHORIZED 401
 #define FORBIDDEN 403
-#define NOT_FOUND 404
 #define METHOD_NOT_ALLOWED 405
 #define CONFLICT 409
-#define LARGE_REQ 413
-#define LONG_URI_REQ 414
+#define NOT_FOUND 404
 #define INTERNAL_ERR 500
-#define NOT_IMPLEMENTED 501
 
 #define NORMAL_POST 100
 #define CHUNKED_POST 101
@@ -73,3 +69,11 @@
 
 #define NORMAL 1000
 #define CHUNKED 1001
+
+// Request macros
+
+#define NOT_IMPLEMENTED 501
+#define BAD_REQUEST 400
+#define LONG_URI_REQ 414
+#define LARGE_REQ 413
+# define MAX_URI_CHAR_SIZE 2048

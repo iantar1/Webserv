@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:59:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 16:52:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ private:
 	char								buf[BUF_SIZE];
     int                                 SocketFd;
     int                                 bytesRead;
-    int                                 errorFlag;
+    int                                 errorFlag; // when you face an error , set a Macro to it 
     std::string                         RequestHeader;
     static std::string					Methods[3];
     std::map<std::string, std::string>	Header;
@@ -53,6 +53,11 @@ private:
 // ***************** Private Methodes **************
 private:
     void	SetNewPath();
+
+    void	URI_Checking(const std::string&) const;
+    bool	URI_ValidLength(const std::string&) const;
+    bool    URI_ValidChar(const std::string&) const;
+    bool	URI_ValidLocation(const std::string&) const;
 
 public:
 // ************ Constructor destructor
