@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 16:57:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 18:52:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,48 @@ bool	Request::URI_ValidLength(const std::string& uri) const
 
 bool	Request::URI_ValidChar(const std::string& uri) const
 {
+	std::string	str = "-_.~";
+	int	checker;
+
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		if 
+		checker = 0;
+		if (std::isdigit(uri[i]) == false)
+			checker++;
+		if (std::isalpha(uri[i]) == false)
+			checker++;
+		if (str.find(uri[i]) == std::string::npos)
+			checker++;
+		if (checker == 3)
+			return (1);
 	}
+	return (0);
 }
 
 bool	Request::URI_ValidLocation(const std::string& uri) const
 {
+	std::map<std::string, Location *>::const_iterator	it = Vserver->getLocationsIterMap();
 
+	it = 
 }
 
-void	Request::URI_Checking(const std::string& uri) const
+void	Request::URI_Checking(const std::string& uri)
 {
-	// valid chara
-	// valid Size
-	// valid Location
+	if (URI_ValidChar(uri))
+	{
+		ErrorFlag = BAD_REQ;
+		return ;
+	}
+	if (URI_ValidLength(uri))
+	{
+		ErrorFlag = REQ_URI_TOO_LONG;
+		return ;	
+	}
+	if (URI_ValidLocation)
+	{
+		ErrorFlag = NOT_FOUND;
+		return ;
+	}
 }
 
 void	Request::storeRequestLine(const std::string& line)
