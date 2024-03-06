@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 22:26:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:32:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,21 @@ void    Server::addCleintToEpoll(int index)
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, events[index].data.fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
 	std::cout << RED << "done\n" << RESET << std::endl;
+
 }
 
+bool	Server::NewClient(int index)
+{
+	for (size_t j = 0; j < Vservers.size(); j++) // add the new Cleint to epoll
+	{
+		if (events[index].data.fd == Vservers[j]->getFdSocket())
+		{
+			Server::addCleintToEpoll(j);
+			return (1);
+		}
+	}
+	return (0);
+}
 
 int Server::launchServer()
 {
@@ -110,7 +123,6 @@ int Server::launchServer()
 	while (true)
 	{
 		int readyFd;
-		bool tmp = 0;
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
 			std::cout << "***************** wiating for a new connection *******************\n";
@@ -118,32 +130,22 @@ int Server::launchServer()
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
 			{
-				for (size_t j = 0; j < Vservers.size(); j++) // add the new Cleint to epoll
+				if (NewClient(i))
 				{
-					if (events[i].data.fd == Vservers[j]->getFdSocket())
-					{
-						Server::addCleintToEpoll(j);
-						tmp = 1;
-						break ;
-					}
+					std::cout << "add new Cleint\n";
 				}
-			/*
-			*/
-				std::cout << "fd here: " << events[i].data.fd << "\n";
-				if (!tmp && clients[events[i].data.fd]->DoneHeaderReading == false) // read the header request
+				else if (clients[events[i].data.fd]->DoneHeaderReading == false) // read the header request
 				{
 					// read the header
-					std::cout << YELLOW << "Ready TO READ MY HEADER\n" << RESET << std::endl;
 					clients[events[i].data.fd]->ReadParseReqHeader();
-					tmp = 0;
+					std::cout << YELLOW << "READ HEADER\n" << RESET << std::endl;
 				}
-				else if (!tmp)
+				else
 				{
-					tmp = 0;
 					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
 					{
+						std::cout << YELLOW << "SERVING Client" << RESET << std::endl;
 						clients[events[i].data.fd]->ServingClient();
-						// std::cout << YELLOW << "HERE" << RESET << std::endl;
 					// serve (Get, Post, delete)
 						
 					}

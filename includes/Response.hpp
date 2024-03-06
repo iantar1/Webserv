@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 13:23:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:23:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ private:
 		void	errorPage(int errorCode);
 		void	thePostMethod(void);
 		void	theDeleteMethod(void);
-
+		void	StartResponse();
 	private :
 		class ResponseException : public std::exception
 		{

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 16:46:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:39:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ private:
     VirtualServer                       *Vserver;
     std::string                         newPath;
     std::string                         oldPath;
+    std::string                         HeaderReq;
 
 // ***************** Private Methodes **************
 private:

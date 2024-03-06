@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 22:13:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:29:56 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ Response::Response(Request* request, t_files* files)
 	// * 	errorPage(request->getError());
 	// * 	return ;
 	// * }
-	std::cout << "getMethosd : " << request->getMethdType() << "\n";
-	if (request->getMethdType() == GET)
-	{
-		std::cout << GREEN << " GET " << RESET << "\n"; 
-		GetResponse		get(this->socket, this->request, this->files);
-	}
+	// std::cout << "getMethosd : " << request->getMethdType() << "\n";
+	// if (request->getMethdType() == GET)
+	// {
+	// 	std::cout << GREEN << " GET " << RESET << "\n"; 
+	// 	GetResponse		get(this->socket, this->request, this->files);
+	// }
 	// else if (request->getMethdType() == POST)
 	// 	PostResponse	post(this->socket, this->request, this->files);
     //else Delete
@@ -83,4 +83,17 @@ void	Response::errorPage(int errorCode)
 	}
 	this->response += "\r\n" + this->responseBody;
 	write(this->socket, this->response.c_str(), this->response.size());
+}
+
+void	Response::StartResponse()
+{
+	std::cout << "Satrt Response\n";
+	if (request->getMethdType() == GET)
+	{
+		std::cout << GREEN << " GET " << RESET << "\n"; 
+		GetResponse		get(this->socket, this->request, this->files);
+	}
+	// else if (request->getMethdType() == POST)
+	// 	PostResponse	post(this->socket, this->request, this->files);
+    //else Delete
 }

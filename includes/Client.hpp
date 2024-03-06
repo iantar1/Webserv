@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 16:36:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:39:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ private:
 	char                buf[BUF_SIZE];
 	int					MethodType;
 	Request				request;
-	
+	Response			*response;
+
 	
 	// AMethod*			method;
 

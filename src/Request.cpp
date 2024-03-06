@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 22:21:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/06 10:47:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,11 @@ void	Request::storeRequestLine(const std::string& line)
 	SetNewPath(); // set new Path
 	for (int i = 0; i < 3; i++)
 	{
-		if (Methods[i] == RequestLine[0])
+		if (Methods[i].compare(RequestLine[0]) == 0)
 		{
 			MethodType = i + 1;
+			std::cout << "Req." << MethodType << " "<< RequestLine[0] << Methods[1] <<  ".\n";
+			// std::cout << "CONSTRUCTOR\n";
 			return ;
 		}
 	}
@@ -96,21 +98,22 @@ void	Request::SetNewPath()
 void	Request::ParseRequest()
 {
 	int bytesRead;
-    // size_t index;
-    // std::string data;
 
-    std::cout << "cleint : " << SocketFd << std::endl;
     bytesRead = read(SocketFd, buf, BUF_SIZE);
     if (bytesRead < 0)
 	{
         throw std::runtime_error("read syscall failed");
 	}
-    // data.append(buf, bytesRead);
-	storeData(std::string(buf), 4); // useless 4
+	for (int i = 0; i < bytesRead; i++)
+	{
+		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))	
+			break ;
+		HeaderReq += buf[i];
+	}
+	storeData(HeaderReq, 4); // useless 4
     reading_done = true;
-    // if ((index = data.find("\r\n\r\n")) != std::string::npos) {
-    // }
-	
+	std::cout << "*************** HEADER **************\n" << HeaderReq << "\n";
+
 }
 
 // ************ Getters **************
