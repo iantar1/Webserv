@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 10:46:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 15:59:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,18 @@ const std::string&	VirtualServer::getPort() const
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
 	std::cout << "look\t" << _locStr << "\n";
-	return (locations[_locStr]->getRoot());
+	mapIterType	 it = getLocationsBeginIterMap();
+	mapIterType	 it_end = getLocationsEndIterMap();
+
+	for (;it != it_end;++it)
+	{
+		if (_locStr.compare(0, (it->first).size(), it->first) == 0)
+		{
+			break ;
+			// return (locations[it->first]->getRoot());
+		}
+	}
+	return (locations[it->first]->getRoot());
 }
 
 mapIterType	VirtualServer::getLocationsBeginIterMap() const

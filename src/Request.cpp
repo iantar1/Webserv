@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 11:12:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 14:57:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), errorFlag(0), reading_done(0), Vserver(_Vserver) 
+Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), ErrorFlag(0), reading_done(0), Vserver(_Vserver) 
 {
 	MethodType = 0;
 	std::cout << RED << "Requset Constructred\n" << RESET;
@@ -85,7 +85,7 @@ void	Request::URI_Checking(const std::string& uri)
 		ErrorFlag = REQ_URI_TOO_LONG;
 		return ;	
 	}
-	if (URI_ValidLocation)
+	if (URI_ValidLocation(uri))
 	{
 		ErrorFlag = NOT_FOUND;
 		return ;
@@ -142,7 +142,7 @@ void	Request::storeData(const std::string& dataRequest)
 
 void	Request::SetNewPath()
 {
-	newPath = oldPath + Vserver->getRootLocatin(oldPath);
+	newPath = Vserver->getRootLocatin(oldPath) + oldPath;
 }
 
 
@@ -158,9 +158,9 @@ int	Request::getFdSocket() const
 	return (SocketFd);
 }
 
-int*	Request::getTransferMode() const
+int*	Request::getTransferMode()
 {
-	return (TransferMode);
+	return (&TransferMode);
 }
 
 int	Request::getError(void) const
@@ -210,4 +210,16 @@ void	Request::ParseRequest()
 
 	storeData(HeaderReq);
     reading_done = true;
+}
+
+// ************ Debug *****************
+
+void	Request::printRequest()
+{
+	std::cout << "||************REQUEST************||\n";
+	std::cout << RequestHeader << "\n";
+	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
+	{
+		std::cout << it->second << "\n";
+	}
 }

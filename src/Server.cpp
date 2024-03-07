@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 09:48:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 15:37:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int Server::socketCreate(VirtualServer* vSer)
 	struct addrinfo *res;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = PF_INET;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
-	hints.ai_protocol = IPPROTO_TCP;
+	hints.ai_family = AF_INET;// IP4
+	hints.ai_socktype = SOCK_STREAM; // stream TCP
+	hints.ai_flags = AI_PASSIVE; // 
+	hints.ai_protocol = IPPROTO_TCP; 
 
-	std::cout << "check : " << vSer->getHost() << " " << vSer->getPort() << "\n";
+	std::cout << "Host : " << vSer->getHost() << " Port" << vSer->getPort() << "\n";
 	getaddrinfo((vSer->getHost()).c_str(), (vSer->getPort()).c_str(), &hints, &res);
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (sockfd < 0)
@@ -46,14 +46,13 @@ int Server::socketCreate(VirtualServer* vSer)
 	int on = 1;
 // SO_REUSEADDR is used to enable the reusing of local addresses in the bind() function.
 // setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) //* so you can reuse port num
-		throw std::runtime_error("setsockopt() failed\n");
 		
-	
 	if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 	{
 		throw std::runtime_error("bind failed");
 	}
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) //* so you can reuse port num
+		throw std::runtime_error("setsockopt() failed\n");
 	if (listen(sockfd, 100) == -1)
 	{
 		throw std::runtime_error("lisen sys_call failed");

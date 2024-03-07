@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 11:15:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 14:51:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,20 @@ public:
     
 // ************** Getters *******************
 
-    int getMethdType() const;
-    int getFdSocket() const;
-    int getError() const;
-    int*	getTransferMode() const;
+    int     getMethdType() const;
+    int     getFdSocket() const;
+    int     getError() const;
+    int 	*getTransferMode();
 
     std::string	getBody(void) const;
 
     std::string	getChunkedBodySize(void) const;
     const std::string&  getOldPath() const;
     const std::string&  getNewPath() const;
-        
+
+// ************* Debug ****************
+    void    printRequest();
+
 private :
 		class RequestException : public std::exception
 		{

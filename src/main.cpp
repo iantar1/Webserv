@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 10:54:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 15:42:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ Location*	getLocation1(std::string location)
 	loc->uploadPath = "/Users/iantar/Desktop/Webserv/";
 	loc->uploadPost = "/Users/iantar/Desktop/Webserv/DataBase";
 	loc->index = "page.html";
-	loc->root = "/Users/iantar/Desktop/Webserv/";
+	loc->root = "/Users/iantar/Desktop/Webserv";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
@@ -58,7 +58,7 @@ Location*	getLocation2(std::string location)
 	loc->uploadPath = "/Users/iantar/Desktop/Webserv/";
 	loc->uploadPost = "/Users/iantar/Desktop/Webserv/DataBase";
 	loc->index = "page.html";
-	loc->root = "/Users/iantar/Desktop/Webserv/";
+	loc->root = "/Users/iantar/Desktop/Webserv";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
@@ -77,15 +77,15 @@ void fillVector(std::vector<VirtualServer*>& Vser)
 {
 	VirtualServer	*Vser2 = new VirtualServer();
 	Vser2->SetLocation(getLocation2("/"), "/");
-	Vser2->Port = "8082";
+	Vser2->Port = "8080";
 	Vser2->HostAddress = "localhost";
 	Vser.push_back(Vser2);
 
-	VirtualServer	*Vser1 = new VirtualServer();
-	Vser1->SetLocation(getLocation1("/"), "/");
-	Vser1->Port = "8081";
-	Vser1->HostAddress = "localhost";
-	Vser.push_back(Vser1);
+	// VirtualServer	*Vser1 = new VirtualServer();
+	// Vser1->SetLocation(getLocation1("/"), "/");
+	// Vser1->Port = "8081";
+	// Vser1->HostAddress = "localhost";
+	// Vser.push_back(Vser1);
 }
 
 int	main(int ac, char **av)

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/07 09:41:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 15:45:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,13 +196,16 @@ void GetResponse::theGetMethod(void)
 
 	now = time(0);
 	this->path = this->request->getNewPath();
+	std::cout << "getNewPath: " << request->getNewPath() << "\n";
 	this->oldPath = this->request->getOldPath();
+	std::cout << "getOldPath: " << request->getOldPath() << "\n";
 
 	local_time = localtime(&now);
 	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
 	this->redirection = "";
 
+	std::cout << "body: " << this->request->getBody() << "\n";
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
