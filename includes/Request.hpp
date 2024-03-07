@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 20:44:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:15:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,11 @@ private:
     int                                 bytesRead;
     int                                 ErrorFlag; // when you face an error , set a Macro to it 
     std::string                         RequestHeader;
-    static std::string					Methods[3];
     std::map<std::string, std::string>	Header;
 	int									MethodType;
 	std::vector<std::string>			RequestLine;// this line: GET /hello.htm HTTP/1.1
 	bool								reading_done;
-    int                                 TransferMode; // Chuncked or normal
+    int                                 TransferMode;  // Chuncked() or normal(content length)
     int                                 ErrorCode;
     std::string                         chunkedBodySize;
     std::string                         body;
@@ -51,6 +50,11 @@ private:
     std::string                         newPath;
     std::string                         oldPath;
     std::string                         HeaderReq;
+
+// static attrebuites
+
+    static std::string					Methods[3];
+	static std::string					validChars;
 
 // ***************** Private Methodes **************
 private:
@@ -79,7 +83,7 @@ public:
     int getMethdType() const;
     int getFdSocket() const;
     int getError() const;
-    int	getTransferMode() const;
+    int*	getTransferMode() const;
 
     std::string	getBody(void) const;
 

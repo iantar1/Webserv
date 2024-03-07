@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 20:48:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:25:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ public:
 	const std::string&	getPort() const;
 	const std::string&	getHost() const;
 	const std::string&	getRootLocatin(const std::string&);
-	mapIterType			getLocationsIterMap() const;
-	mapIterType			getEndIterMap() const;
+	mapIterType			getLocationsBeginIterMap() const;
+	mapIterType			getLocationsEndIterMap() const;
 	
 	void	SetLocation(Location*, std::string);
 	// void	setVserverINfo(const std::string& name, );

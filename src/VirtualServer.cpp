@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 20:50:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:46:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 	return (locations[_locStr]->getRoot());
 }
 
-mapIterType	VirtualServer::getLocationsIterMap() const
+mapIterType	VirtualServer::getLocationsBeginIterMap() const
 {
 	return (locations.begin());
 }
 
-mapIterType	VirtualServer::getEndIterMap() const
+mapIterType	VirtualServer::getLocationsEndIterMap() const
 {
 	return (locations.end());
 }

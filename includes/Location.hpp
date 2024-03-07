@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 15:49:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:46:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,17 @@ public: // you will change this later to private
 	std::vector<std::pair<std::string, std::string> >	redirectLocations;
 
 public:
+	Location(std::string);
     Location();
     ~Location();
 
-	const std::string& getRoot() const;
+// ************* Setters *****************
 
-// setters 
+	
+// ************* Getters *****************
+	const std::string& getRoot() const;
+	const std::string& getLocation() const;
+		
 };
 
 

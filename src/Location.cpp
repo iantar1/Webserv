@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:45 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/05 15:49:12 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:44:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,9 @@ Location::~Location()
 const std::string& Location::getRoot() const
 {
     return (root);
+}
+
+const std::string& Location::getLocation() const
+{
+    return (location);
 }

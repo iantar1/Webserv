@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 11:43:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 10:54:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 
 # include "../includes/Server.hpp"
 
-Location*	getLocation1()
+Location*	getLocation1(std::string location)
 {
-	Location* loc = new Location();
+	Location* loc = new Location(location);
 
 	loc->allowedMethods.push_back("POST");
 	loc->allowedMethods.push_back("GET");
@@ -47,9 +47,9 @@ Location*	getLocation1()
 	return (loc);
 }
 
-Location*	getLocation2()
+Location*	getLocation2(std::string location)
 {
-	Location* loc = new Location();
+	Location* loc = new Location(location);
 
 	loc->allowedMethods.push_back("POST");
 	loc->allowedMethods.push_back("GET");
@@ -76,13 +76,13 @@ Location*	getLocation2()
 void fillVector(std::vector<VirtualServer*>& Vser)
 {
 	VirtualServer	*Vser2 = new VirtualServer();
-	Vser2->SetLocation(getLocation2(), "/");
+	Vser2->SetLocation(getLocation2("/"), "/");
 	Vser2->Port = "8082";
 	Vser2->HostAddress = "localhost";
 	Vser.push_back(Vser2);
 
 	VirtualServer	*Vser1 = new VirtualServer();
-	Vser1->SetLocation(getLocation1(), "/");
+	Vser1->SetLocation(getLocation1("/"), "/");
 	Vser1->Port = "8081";
 	Vser1->HostAddress = "localhost";
 	Vser.push_back(Vser1);

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 20:45:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 11:12:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # include "../includes/Request.hpp"
 
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
-
+std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), errorFlag(0), reading_done(0), Vserver(_Vserver) 
 {
@@ -47,30 +47,30 @@ bool	Request::URI_ValidLength(const std::string& uri) const
 
 bool	Request::URI_ValidChar(const std::string& uri) const
 {
-	std::string	str = "-_.~";
-	int	checker;
-
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		checker = 0;
-		if (std::isdigit(uri[i]) == false)
-			checker++;
-		if (std::isalpha(uri[i]) == false)
-			checker++;
-		if (str.find(uri[i]) == std::string::npos)
-			checker++;
-		if (checker == 3)
+		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i])
+			&& validChars.find(uri[i]) == std::string::npos)
+		{
 			return (1);
+		}
 	}
 	return (0);
 }
 
-
 bool	Request::URI_ValidLocation(const std::string& uri) const
 {
-	mapIterType	it = Vserver->getLocationsIterMap();
+	mapIterType	it = Vserver->getLocationsBeginIterMap();
+	mapIterType	it_end = Vserver->getLocationsEndIterMap();
 
-	
+	for (;it != it_end; ++it)
+	{
+		if (uri.compare(0, (it->first).size(), it->first))
+			return (1);
+		if ((it->first).size() < uri.size() && uri[(it->first).size()] != '/')
+			return (1);
+	}
+	return (0);
 }
 
 void	Request::URI_Checking(const std::string& uri)
@@ -110,8 +110,6 @@ void	Request::storeRequestLine(const std::string& line)
 		if (Methods[i].compare(RequestLine[0]) == 0)
 		{
 			MethodType = i + 1;
-			std::cout << "Req." << MethodType << " "<< RequestLine[0] << Methods[1] <<  ".\n";
-			// std::cout << "CONSTRUCTOR\n";
 			return ;
 		}
 	}
@@ -160,7 +158,7 @@ int	Request::getFdSocket() const
 	return (SocketFd);
 }
 
-int	Request::getTransferMode() const
+int*	Request::getTransferMode() const
 {
 	return (TransferMode);
 }
