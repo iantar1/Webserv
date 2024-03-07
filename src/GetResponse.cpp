@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/07 15:45:40 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 17:43:15 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ GetResponse::~GetResponse(void) {}
 void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
+
+	std::cout << "Code: " << code << " || " << transferType << std::endl;
 
 	header_it = this->files->headers.find(RESPONSE_STATUS);
 	header_it->second += this->files->status.find(code)->second;
@@ -78,7 +80,7 @@ void GetResponse::theGetRedirectionRequest(void)
 	// std::cout << this->redirection << "ooooo\n";
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetErrorBadRequest(void)

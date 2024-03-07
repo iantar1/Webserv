@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 15:42:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 18:26:48 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ Location*	getLocation1(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 	
-	loc->uploadPath = "/Users/iantar/Desktop/Webserv/";
-	loc->uploadPost = "/Users/iantar/Desktop/Webserv/DataBase";
+	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/www/DataBase";
+	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
 	loc->index = "page.html";
-	loc->root = "/Users/iantar/Desktop/Webserv";
+	loc->root = "/nfs/homes/nabboune/Desktop/Projects/www";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
@@ -55,10 +55,10 @@ Location*	getLocation2(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 	
-	loc->uploadPath = "/Users/iantar/Desktop/Webserv/";
-	loc->uploadPost = "/Users/iantar/Desktop/Webserv/DataBase";
+	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/www/DataBase";
+	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/www/";
 	loc->index = "page.html";
-	loc->root = "/Users/iantar/Desktop/Webserv";
+	loc->root = "/nfs/homes/nabboune/Desktop/Projects/www";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";

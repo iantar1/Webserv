@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 16:57:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/07 16:07:50 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_files	getDataFromFiles(void)
 std::map<int, std::string>	getHeaders(void)
 {
 	std::map<int, std::string>	headers;
-	std::ifstream				inFile("/nfs/homes/iantar/Desktop/Webserv/Ressources/Headers");
+	std::ifstream				inFile("Ressources/Headers");
 	std::string					line;
 	int							i = 0;
 
@@ -75,7 +75,7 @@ std::map<int, std::string>	getHeaders(void)
 std::map<int, std::string>	getStatus(void)
 {
 	std::map<int, std::string>	status;
-	std::ifstream				inFile("/nfs/homes/iantar/Desktop/Webserv/Ressources/Status");
+	std::ifstream				inFile("Ressources/Status");
 	std::string					line;
 	int							nb;
 
@@ -92,7 +92,7 @@ std::map<int, std::string>	getStatus(void)
 std::map<std::string, std::string> mimeTypes(void)
 {
 	std::map<std::string, std::string> out;
-	std::ifstream inFile("/nfs/homes/iantar/Desktop/Webserv/Ressources/MIME.type");
+	std::ifstream inFile("Ressources/MIME.type");
 	std::string line, key, value;
 	int i;
 
