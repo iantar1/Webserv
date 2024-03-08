@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 11:56:32 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/08 18:45:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef	std::map<std::string, Location *>::const_iterator	mapIterType;
 class Request
 {
 private:
-// useless Constructor , copy constructor and assingment operator
+// *** useless Constructor , copy constructor and assingment operator
     Request();
     Request(const Request&);
     Request& operator=(const Request&);
@@ -43,7 +43,6 @@ private:
 	std::vector<std::string>			RequestLine;// this line: GET /hello.htm HTTP/1.1
 	bool								reading_done;
     int                                 TransferMode;  // Chuncked() or normal(content length)
-    int                                 ErrorCode;
     std::string                         chunkedBodySize;
     std::string                         body;
     VirtualServer                       *Vserver;
@@ -52,65 +51,67 @@ private:
     std::string                         HeaderReq;
     bool                                doneServing;
     bool                                doneReading;
+    bool                                headerDone;
+    std::string                         location_str;// ! don't forget to set this to it's value from ConfigFile
+    int                                 FirstChunckBodySize;
 
-// static attrebuites
-
+// *************  static attrebuites **************
     static std::string					Methods[3];
 	static std::string					validChars;
 
-// ***************** Private Methodes **************
-private:
-    void	SetNewPath();
 
+public:
+// ************ Constructor destructor ****************
+    Request(int,  VirtualServer *);
+    ~Request();
+
+
+private:
+// ***************** Private Methodes **************
+    void	SetNewPath();
+    bool	ReadCheckHeader();
+    void	saveFirstChuckBody();
+
+// ***************** Error checking Method **********
     void	URI_Checking(const std::string&);
     bool	URI_ValidLength(const std::string&) const;
     bool    URI_ValidChar(const std::string&) const;
     bool	URI_ValidLocation(const std::string&) const;
+    void	checkValidMethod();
+    void	checkValid_GET_Header();
+    void	checkValid_POST_Header();
+    void	checkValid_DELETE_Header();
+    void	checkValidHeader();
 
-public:
-// ************ Constructor destructor
-    Request(int,  VirtualServer *);
-    ~Request();
 
-// ******** Public Methods
+// ********** Public Methods ************
+    void    ParseRequest();
     void    readHeader(const std::string&, size_t);
 	void	storeHeader(const std::string&);
 	void	storeRequestLine(const std::string&);
 	void	storeData(const std::string&);
-
-    void    ParseRequest();
     
+
 // ************** Getters *******************
 
-    int     getMethdType() const;
-    int     getFdSocket() const;
-    int     getError() const;
-    int 	*getTransferMode();
-    bool    getDoneServing(void) const;
-
-    std::string	getBody(void) const;
-
-    std::string	getChunkedBodySize(void) const;
+    int                 getMethdType() const;
+    int                 getFdSocket() const;
+    int                 getError() const;
+    int 	            *getTransferMode();
+    bool                getDoneServing(void) const;
+    std::string	        getBody(void) const;
+    std::string	        getChunkedBodySize(void) const;
     const std::string&  getOldPath() const;
     const std::string&  getNewPath() const;
-    bool    getDoneReading() const;
-
-// ************* Debug ****************
-    void    printRequest();
+    bool                getDoneReading() const;
+    
 
 // ************* Setters ****************
     void    setDoneServing();
+    void    setDoneReading();
+    void    setLocation_str(std::string);
 
-private :
-		class RequestException : public std::exception
-		{
-			private :
-				std::string	error;
-
-			public :
-				RequestException(std::string error);
-				virtual ~RequestException(void) throw();
-				const char *what(void) const throw();
-		};
+// ************* Debug ****************
+    void    printRequest();
 
 };

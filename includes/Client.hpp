@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 11:49:42 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/08 17:59:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ class Client
 private:
 	int                 sockeFd;
 	VirtualServer*		Vserver;
-	t_files*				files;
+	t_files*			files;
 	char                buf[BUF_SIZE];
 	int					MethodType;
 	Request				request;
 	Response			*response;
-	bool    		doneReading;
+	bool    			doneReading;
 
 	
 	// AMethod*			method;

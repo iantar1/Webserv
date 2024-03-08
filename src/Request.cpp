@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 11:57:03 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/08 18:52:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), ErrorFlag(0), reading_done(0),
-							Vserver(_Vserver), doneServing(false), doneReading(false)
+							Vserver(_Vserver), doneServing(false), doneReading(false), headerDone(false)
 {
 	MethodType = 0;
+	FirstChunckBodySize = 0;
 	std::cout << RED << "Requset Constructred\n" << RESET;
 }
 
@@ -39,6 +40,71 @@ void	Request::storeHeader(const std::string& line)
 	key = line.substr(0, index + 1);
 	value = line.substr(index + 1);
 	Header[key] = value;
+}
+
+// *************** Private Error Chicking Methods *******************
+
+void	Request::checkValidHeader()
+{
+	
+}
+
+void	Request::checkValid_GET_Header()
+{
+	if (MethodType == 0)
+	{
+		ErrorFlag = NOT_IMPLEMENTED;
+		throw std::runtime_error("Not Implemented");
+	}
+	if (body.empty() == false)
+	{
+		ErrorFlag = BAD_REQ;
+		throw std::runtime_error("Bad req");
+	}
+}
+
+void	Request::checkValid_POST_Header()
+{
+	if (Header.find("Transfer-Encoding") != Header.end()
+		&& Header["Transfer-Encoding"] != "chunked")
+	{
+		ErrorFlag = NOT_IMPLEMENTED;
+		throw std::runtime_error("Not Implemented");
+	}
+	if (Header.find("Transfer-Encoding") == Header.end()
+		&& Header.find("Content-Length") == Header.end())
+	{
+		ErrorFlag = BAD_REQ;
+		throw std::runtime_error("bad Request");
+	}
+	if (Header.find("Content-Length") != Header.end())
+	{
+		if (atol((Header["Content-Length"]).c_str()) > )// !
+	}
+}
+
+void	Request::checkValid_DELETE_Header()
+{
+	
+}
+
+void	Request::checkValidMethod()
+{
+	switch (getMethdType())
+	{
+	case GET:
+		checkValid_GET_Header();
+		break;
+	case POST:
+		checkValid_POST_Header();
+		break;
+	case DELETE:
+		checkValid_DELETE_Header();
+		break;
+	default:
+		
+		break;
+	}
 }
 
 bool	Request::URI_ValidLength(const std::string& uri) const
@@ -166,7 +232,7 @@ int*	Request::getTransferMode()
 
 int	Request::getError(void) const
 {
-	return this->ErrorCode;
+	return this->ErrorFlag;
 }
 
 std::string	Request::getBody(void) const
@@ -201,35 +267,73 @@ bool	Request::getDoneReading() const
 }
 
 
-// ************** Main Method *******************
 
 
 
-void	Request::ParseRequest()
-{
-	int bytesRead;
-
-    bytesRead = read(SocketFd, buf, BUF_SIZE);
-    if (bytesRead < 0)
-	{
-        throw std::runtime_error("read syscall failed");
-	}
-	for (int i = 0; i < bytesRead; i++)
-	{
-		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))	
-			break ;
-		HeaderReq += buf[i];
-	}
-
-	storeData(HeaderReq);
-    reading_done = true;
-}
 
 // ************* Setters *************
 
 void	Request::setDoneServing()
 {
 	this->doneServing = true;
+}
+
+void    Request::setDoneReading()
+{
+	this->doneReading = true;
+}
+
+void    Request::setLocation_str(std::string _location_str)
+{
+	this->location_str = _location_str;
+}
+
+
+// ************** Main Method *******************
+
+bool	Request::ReadCheckHeader()
+{
+    bytesRead = read(SocketFd, buf, BUF_SIZE);
+    if (bytesRead < 0)
+	{
+		ErrorFlag = INTERNAL_ERR;
+        throw std::runtime_error("read syscall failed");
+	}
+	for (int i = 0; i < bytesRead; i++)
+	{
+		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))
+		{
+			headerDone = true;
+			storeData(HeaderReq);
+			FirstChunckBodySize = bytesRead - (i + 4);
+			return (true);
+		}
+		HeaderReq += buf[i];
+	}
+	return (false);
+}
+
+void	Request::saveFirstChuckBody()
+{
+	body = std::string(&(*(buf + FirstChunckBodySize - 1)), FirstChunckBodySize);
+}
+
+
+void	Request::ParseRequest()
+{
+	try
+	{
+		if (ReadCheckHeader())// * throw if error, return true if done
+		{
+			checkValidMethod(); // ! throw if error
+			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
+				saveFirstChuckBody();
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 }
 
 // ************ Debug *****************
