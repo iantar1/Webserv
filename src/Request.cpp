@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 18:52:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 22:06:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,11 @@ void	Request::checkValid_POST_Header()
 	}
 	if (Header.find("Content-Length") != Header.end())
 	{
-		if (atol((Header["Content-Length"]).c_str()) > )// !
+		if (atol((Header["Content-Length"]).c_str()) > Vserver->locations[location_str]->getMaxBodySize())
+		{
+			ErrorFlag = REQ_ENTITY_TOO_LONG;
+			throw std::runtime_error("Request Entity Too Large");
+		}
 	}
 }
 
@@ -265,9 +269,6 @@ bool	Request::getDoneReading() const
 {
 	return (this->doneServing);
 }
-
-
-
 
 
 

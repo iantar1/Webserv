@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 17:52:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 22:07:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ private:
     Location(const Location&);
     Location& operator=(const Location&);
 
-	std::vector<std::string>	allowedMethods;
 
 public: // you will change this later to private
+	std::vector<std::string>	allowedMethods;
 	bool		autoIndex;
 	long		maxBodySize;
 	std::string	uploadPost;

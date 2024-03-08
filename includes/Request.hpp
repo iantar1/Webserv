@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 18:45:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 22:10:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ private:
     bool                                doneServing;
     bool                                doneReading;
     bool                                headerDone;
-    std::string                         location_str;// ! don't forget to set this to it's value from ConfigFile
+    std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
     int                                 FirstChunckBodySize;
 
 // *************  static attrebuites **************
@@ -84,6 +84,7 @@ private:
     void	checkValidHeader();
 
 
+public:
 // ********** Public Methods ************
     void    ParseRequest();
     void    readHeader(const std::string&, size_t);
@@ -91,7 +92,6 @@ private:
 	void	storeRequestLine(const std::string&);
 	void	storeData(const std::string&);
     
-
 // ************** Getters *******************
 
     int                 getMethdType() const;

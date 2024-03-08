@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 15:59:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 22:08:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,6 @@ void	VirtualServer::SetLocation(Location* loc, std::string strLocation)
 
 // ***************** Getters *********************
 
-// const std::string&	VirtualServer::getVServerName() const
-// {
-// 	return (N);
-// }
-
 int		VirtualServer::getFdSocket() const
 {
 	return (fdSocket);
@@ -59,7 +54,6 @@ const std::string&	VirtualServer::getPort() const
 	return (Port);
 }
 	
-
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
 	std::cout << "look\t" << _locStr << "\n";
@@ -71,7 +65,6 @@ const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 		if (_locStr.compare(0, (it->first).size(), it->first) == 0)
 		{
 			break ;
-			// return (locations[it->first]->getRoot());
 		}
 	}
 	return (locations[it->first]->getRoot());
@@ -85,4 +78,9 @@ mapIterType	VirtualServer::getLocationsBeginIterMap() const
 mapIterType	VirtualServer::getLocationsEndIterMap() const
 {
 	return (locations.end());
+}
+
+const std::string&	VirtualServer::getLocation(std::string location_str)
+{
+	return ((locations[location_str])->getLocation());
 }

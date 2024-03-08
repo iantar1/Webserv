@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:27 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 10:25:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 22:09:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,11 @@ private:
 	std::string							ServerName;
 	size_t								maxCleintBodySize;
 
-	std::map<std::string, Location *>	locations;
 
 public:
+// public Attrebiute (class)
+	std::map<std::string, Location *>	locations;
+
 	std::string							Port;
 	std::string							HostAddress;
 	VirtualServer();
@@ -47,6 +49,7 @@ public:
 	const std::string&	getRootLocatin(const std::string&);
 	mapIterType			getLocationsBeginIterMap() const;
 	mapIterType			getLocationsEndIterMap() const;
+	const std::string&	getLocation(std::string);
 	
 	void	SetLocation(Location*, std::string);
 	// void	setVserverINfo(const std::string& name, );
