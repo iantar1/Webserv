@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 18:27:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/08 11:43:06 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void    Server::addCleintToEpoll(int index)
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
 	std::cout << RED << "done\n" << RESET << std::endl;
-	clients[fd]->ReadParseReqHeader();
 }
 
 bool	Server::NewClient(int index)
@@ -119,10 +118,13 @@ void Server::DropCleint(int ClientFd)
 {
 
 	epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL);
-	// delete[] clients[ClientFd];
-	// clients.erase(ClientFd);
+	delete clients.find(ClientFd)->second;
+	clients.erase(ClientFd);
 	(void)ClientFd;
 }
+
+// Desing Time
+
 
 int Server::launchServer()
 {
@@ -136,6 +138,7 @@ int Server::launchServer()
 	while (true)
 	{
 		int readyFd;
+		bzero(events, sizeof(events));
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
 			std::cout << "readyFd: " << readyFd << "\n";
@@ -150,22 +153,35 @@ int Server::launchServer()
 				}
 				else
 				{
-					if (clients[events[i].data.fd]->DoneServing == false) // serve the client
+					std::cout << "(events[i].events & EPOLLIN): " << (events[i].events & EPOLLIN) << std::endl;
+					std::cout << "============> " << events[i].events << " EPOLLIN: " << EPOLLIN << " EPOLLOUT: " << EPOLLOUT << std::endl;
+					// std::cout << MAGENTA << "Done Serving :" << clients[events[i].data.fd]->doneServing << RESET << std::endl;
+					std::cout << MAGENTA << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
+					if (events[i].events & EPOLLIN && clients[events[i].data.fd]->getDoneServing() == false) // serve the client
 					{
-						std::cout << YELLOW << "SERVING Client" << RESET << std::endl;
-						clients[events[i].data.fd]->ServingClient();
+						clients[events[i].data.fd]->ReadParseReqHeader();
+						std::cout << RED << "ReadParseReqHeader done\n" << RESET;
+						std::cout << GREEN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 					}
-					else 
+					else if (events[i].events & EPOLLOUT && clients[events[i].data.fd]->getDoneServing() == false)
 					{
-						std::cout << "HEHEHE\n";
+						clients[events[i].data.fd]->ServingClient();
+						std::cout << YELLOW << "SERVING Client done" << RESET << std::endl;
+						std::cout << BLUE << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
+						
+					}
+					else
+					{
+						std::cout << CYAN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 						DropCleint(events[i].data.fd);
 					}
 				}
 			}
-			bzero(events, sizeof(events));
 		}
 	}
 }
+// EPOLLIN : 00001
+// EPOLLOUT: 00100
 
 Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser)
 {

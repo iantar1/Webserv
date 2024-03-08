@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 14:51:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 11:56:32 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ private:
     std::string                         newPath;
     std::string                         oldPath;
     std::string                         HeaderReq;
+    bool                                doneServing;
+    bool                                doneReading;
 
 // static attrebuites
 
@@ -84,15 +86,20 @@ public:
     int     getFdSocket() const;
     int     getError() const;
     int 	*getTransferMode();
+    bool    getDoneServing(void) const;
 
     std::string	getBody(void) const;
 
     std::string	getChunkedBodySize(void) const;
     const std::string&  getOldPath() const;
     const std::string&  getNewPath() const;
+    bool    getDoneReading() const;
 
 // ************* Debug ****************
     void    printRequest();
+
+// ************* Setters ****************
+    void    setDoneServing();
 
 private :
 		class RequestException : public std::exception

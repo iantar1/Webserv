@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:47:10 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 13:33:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:18:44 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,16 @@ private:
 		GetResponse(int socket, Request* request, t_files* files);
 		~GetResponse(void);
 
-		void	theGetHeaderResponse(int code, int transferType);
-		void	theGetRedirectionRequest(void);
-		void	theGetErrorBadRequest(void);
-		void	theGetErrorForbidden(void);
-		void	theGetErrorNotFound(void);
-		void	theGetResponseOk(void);
-		void	directoryListing(void);
-		void	regularFileGet(void);
-		void	theGetMethod(void);
+		void			theGetHeaderResponse(int code, int transferType);
+		void			theGetRedirectionRequest(void);
+		void			theGetErrorBadRequest(void);
+		void			theGetErrorForbidden(void);
+		void			theGetErrorNotFound(void);
+		void			theGetResponseOk(void);
+		void			directoryListing(void);
+		void			regularFileGet(void);
+		void			theGetMethod(void);
+		std::string		getResponse(void) const;
 
 	private :
 		class GetResponseException : public std::exception

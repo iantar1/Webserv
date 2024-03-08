@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/07 14:57:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 11:57:03 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), ErrorFlag(0), reading_done(0), Vserver(_Vserver) 
+Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), ErrorFlag(0), reading_done(0),
+							Vserver(_Vserver), doneServing(false), doneReading(false)
 {
 	MethodType = 0;
 	std::cout << RED << "Requset Constructred\n" << RESET;
@@ -188,6 +189,18 @@ const std::string&  Request::getNewPath() const
 	return (newPath);
 }
 
+
+bool	Request::getDoneServing() const
+{
+	return (this->doneServing);
+}
+
+bool	Request::getDoneReading() const
+{
+	return (this->doneServing);
+}
+
+
 // ************** Main Method *******************
 
 
@@ -210,6 +223,13 @@ void	Request::ParseRequest()
 
 	storeData(HeaderReq);
     reading_done = true;
+}
+
+// ************* Setters *************
+
+void	Request::setDoneServing()
+{
+	this->doneServing = true;
 }
 
 // ************ Debug *****************

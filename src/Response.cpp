@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/07 09:59:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 10:22:53 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	Response::errorPage(int errorCode)
 	}
 	this->response += "\r\n" + this->responseBody;
 	write(this->socket, this->response.c_str(), this->response.size());
+	this->response.clear();
 }
 
 void	Response::StartResponse()
@@ -90,8 +91,9 @@ void	Response::StartResponse()
 	std::cout << "Satrt Response\n";
 	if (request->getMethdType() == GET)
 	{
-		std::cout << GREEN << " GET " << RESET << "\n"; 
+		std::cout << GREEN << " GET " << RESET << "\n";
 		GetResponse		get(this->socket, this->request, this->files);
+		write(this->request->getFdSocket(), get.getResponse().c_str(), get.getResponse().size());
 	}
 	// else if (request->getMethdType() == POST)
 	// 	PostResponse	post(this->socket, this->request, this->files);

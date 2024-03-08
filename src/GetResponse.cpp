@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/07 17:43:15 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/08 11:07:18 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void GetResponse::theGetRedirectionRequest(void)
 	// std::cout << this->redirection << "ooooo\n";
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
+	// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetErrorBadRequest(void)
@@ -89,7 +89,7 @@ void GetResponse::theGetErrorBadRequest(void)
 	this->body = getPageContent("defaultPages/400.htm") + "\r\n\r\n";
 	theGetHeaderResponse(BAD_REQUEST, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetErrorNotFound(void)
@@ -98,7 +98,7 @@ void GetResponse::theGetErrorNotFound(void)
 	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
 	theGetHeaderResponse(NOT_FOUND, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetErrorForbidden(void)
@@ -107,13 +107,13 @@ void GetResponse::theGetErrorForbidden(void)
 	this->body = getPageContent("defaultPages/403.htm") + "\r\n\r\n";
 	theGetHeaderResponse(FORBIDDEN, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void GetResponse::theGetResponseOk(void)
 {
 	theGetHeaderResponse(OK, TRANSFER_ENCODING);
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 
 	this->body = "";
 	char buf[1025];
@@ -129,10 +129,10 @@ void GetResponse::theGetResponseOk(void)
 		std::string str(buf, byteRead);
 
 		this->body = dec_to_hex(str.size()) + "\r\n" + str + "\r\n";
-		write(this->socket, this->body.c_str(), this->body.length());
+		// write(this->socket, this->body.c_str(), this->body.length());
 	}
 
-	write(this->socket, "0\r\n\r\n", 5);
+	// write(this->socket, "0\r\n\r\n", 5);
 }
 
 void			GetResponse::directoryListing(void)
@@ -160,7 +160,7 @@ void			GetResponse::directoryListing(void)
 	theGetHeaderResponse(OK, CONTENT_LENGHT);
 	this->response += this->body;
 
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void			GetResponse::regularFileGet(void)
@@ -226,4 +226,7 @@ void GetResponse::theGetMethod(void)
 		else
 			regularFileGet();
 	}
+	this->request->setDoneServing();
 }
+
+std::string		GetResponse::getResponse(void) const { return this->response; }

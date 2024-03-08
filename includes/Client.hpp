@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:39:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/08 11:49:42 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ private:
 	int					MethodType;
 	Request				request;
 	Response			*response;
+	bool    		doneReading;
 
 	
 	// AMethod*			method;
@@ -53,14 +54,22 @@ public:
 	~Client();
 
 // Request and Respose classes
-	// std::map<std::string , AMethod*> respose;
+// std::map<std::string , AMethod*> respose;
 
-	bool    		DoneServing;
-	bool    		DoneHeaderReading;
+	bool    		doneServing;
 
  	void	ReadParseReqHeader();
 	void	ServingClient();
 	void	PrintRequest() const;
+
+// ******* Getters ***************
+	bool    getDoneServing() const;
+	bool	getDoneReading() const;
+
+// ********** Setters *************
+
+	void    setDoneServing();
+	void    setDoneReading();
 
 };
 
