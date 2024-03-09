@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:47:10 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 17:28:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 22:12:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ private:
 
 	private :
 		std::string 						header, body, response, strTime, contentType, path, oldPath, redirection;
+		std::ifstream						inFile;
 		Request 							*request;
 		t_files								files;
-		std::ifstream						inFile;
 		int 								socket;
 
 	public :
@@ -44,17 +44,4 @@ private:
 		void			regularFileGet(void);
 		void			theGetMethod(void);
 		std::string		getResponse(void) const;
-
-	private :
-		class GetResponseException : public std::exception
-		{
-		private:
-			std::string error;
-
-		public:
-			GetResponseException(std::string error);
-			virtual ~GetResponseException(void) throw();
-			const char *what(void) const throw();
-		};
-
 };

@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 17:23:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 22:50:26 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	Client::ReadParseReqHeader()
 
 void	Client::ServingClient()
 {
-    
     // allwoed Methode , so you need to constuct Respose with Vserver
     response->StartResponse();
     // std::cout << "start Response\n";

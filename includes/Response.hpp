@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 17:24:16 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 22:32:48 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,24 @@ private:
 	Response &operator=(const Response&);
 
 	private :
-		int 	socket;
-		std::string	responseBody, response, strTime;
-		t_files	files;
-		Request*	request;
+		int 				socket;
+
+		Request				*request;
+		t_files				files;
+
+		std::ifstream		inFile;
+
+		std::string			responseBody;
+		std::string			header;
+		std::string			body;
+		std::string			response;
+		std::string			strTime;
+		std::string			contentType;
+		std::string			path;
+		std::string			oldPath;
+		std::string			redirection;
+
+		bool				streamStart;
 
 	public :
 		Response(Request* request, t_files files);
@@ -38,15 +52,15 @@ private:
 		void	thePostMethod(void);
 		void	theDeleteMethod(void);
 		void	StartResponse();
-	private :
-		class ResponseException : public std::exception
-		{
-		private:
-			std::string error;
 
-		public:
-			ResponseException(std::string error);
-			virtual ~ResponseException(void) throw();
-			const char *what(void) const throw();
-		};
+
+		void			theGetHeaderResponse(int code, int transferType);
+		void			theGetRedirectionRequest(void);
+		void			theGetErrorBadRequest(void);
+		void			theGetErrorForbidden(void);
+		void			theGetErrorNotFound(void);
+		void			theGetResponseOk(void);
+		void			directoryListing(void);
+		void			regularFileGet(void);
+		void			theGetMethod(void);
 };

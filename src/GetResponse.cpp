@@ -6,20 +6,13 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 17:48:42 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 22:00:29 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/macros.hpp"
 #include "../includes/GetResponse.hpp"
 #include "../includes/utils.hpp"
-
-GetResponse::GetResponseException::GetResponseException(std::string error) : error(error) {}
-
-const char *GetResponse::GetResponseException::what(void) const throw() { return this->error.c_str(); }
-
-GetResponse::GetResponseException::~GetResponseException(void) throw() {}
-
 
 GetResponse::GetResponse(int socket, Request *request, t_files files)
 {
