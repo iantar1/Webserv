@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 11:06:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 15:21:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ Client::Client(int fdSock, VirtualServer* Vser, t_files* _files) :
 
 Client::~Client()
 {
+    std::cout << RED << "Cleint Dessss/...\n" << RESET;
+    delete response; 
 }
 
 void    Client::PrintRequest() const

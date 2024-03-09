@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/07 16:07:50 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 15:13:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_files	getDataFromFiles(void)
 	data.mime = mimeTypes();
 	data.headers = getHeaders();
 	data.status = getStatus();
+	std::cout << "HONA\n";
 	return data;
 }
 
@@ -69,6 +70,7 @@ std::map<int, std::string>	getHeaders(void)
 		std::cout << "Couldn't open Headers file!" << std::endl;
 	while (std::getline(inFile, line))
 		headers.insert(std::make_pair(i++, line));
+	inFile.close();
 	return headers;
 }
 
@@ -86,6 +88,7 @@ std::map<int, std::string>	getStatus(void)
 		nb = std::atoi(line.c_str());
 		status.insert(std::make_pair(nb, line));
 	}
+	inFile.close();
 	return status;
 }
 
@@ -110,6 +113,7 @@ std::map<std::string, std::string> mimeTypes(void)
 			value += (line.c_str())[i++];
 		out.insert(std::make_pair(key, value));
 	}
+	inFile.close();
 	return out;
 }
 
@@ -152,8 +156,8 @@ std::string	getPageContent(std::string page)
 			pageContent += line;
 			pageContent += "\n";
 		}
-		inFile.close();
 	}
+	inFile.close();
 	return pageContent;
 }
 

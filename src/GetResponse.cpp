@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 11:10:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 15:47:44 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ GetResponse::GetResponse(int socket, Request *request, t_files* files)
 	this->request = request;
 	this->socket = socket;
 	this->files = files;
+	this->response.clear();
+	this->header.clear();
 
 	theGetMethod();
 }
