@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/08 10:22:53 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 11:16:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Response::Response(Request* request, t_files* files)
 	this->request = request;
 	this->socket = request->getFdSocket();
 	this->files = files;
-	std::cout << RED << "Response Constructor\n" << RESET;
+	// std::cout << RED << "Response Constructor\n" << RESET;
 	// std::string		data = this->request->getBody();
 	// std::cout << "==> " << data << std::endl;
 
@@ -88,14 +88,14 @@ void	Response::errorPage(int errorCode)
 
 void	Response::StartResponse()
 {
-	std::cout << "Satrt Response\n";
+	// std::cout << "Satrt Response\n";
 	if (request->getMethdType() == GET)
 	{
 		std::cout << GREEN << " GET " << RESET << "\n";
 		GetResponse		get(this->socket, this->request, this->files);
 		write(this->request->getFdSocket(), get.getResponse().c_str(), get.getResponse().size());
 	}
-	// else if (request->getMethdType() == POST)
-	// 	PostResponse	post(this->socket, this->request, this->files);
+	else if (request->getMethdType() == POST)
+		PostResponse	post(this->socket, this->request, this->files);
     //else Delete
 }

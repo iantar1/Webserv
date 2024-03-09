@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 10:51:59 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:06:27 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,6 @@ Request::~Request()
 {
 }
 
-
-void	Request::storeHeader(const std::string& line)
-{
-	std::string	key;
-	std::string	value;
-	size_t		index;
-
-	index = line.find(":");
-	key = line.substr(0, index);
-	if (line.size() > index + 1)
-		value = line.substr(index + 1);
-	Header[key] = value;
-}
 
 // *************** Private Error Chicking Methods *******************
 
@@ -179,29 +166,6 @@ void	Request::storeRequestLine(const std::string& line)
 	setFlagError(NOT_IMPLEMENTED, "Invalid Method");
 }
 
-void	Request::storeData(const std::string& dataRequest)
-{
-	std::istringstream iss(dataRequest);
-    std::string line;
-	
-	for (int i = 0; std::getline(iss, line); i++)
-	{
-		if (i == 0)
-		{
-			storeRequestLine(line);
-		}
-		else if (line == "\r")
-		{
-			break ;
-		}
-		else
-		{
-			storeHeader(line);
-		}
-	}
-    reading_done = true;
-}
-
 
 void	Request::SetNewPath()
 {
@@ -287,7 +251,43 @@ void	Request::setFlagError(int error_flag, const std::string& mes)
 	throw std::runtime_error(mes);
 }
 
-// ************** Main Method *******************
+// ************** Main Methods *******************
+
+void	Request::storeHeader(const std::string& line)
+{
+	std::string	key;
+	std::string	value;
+	size_t		index;
+
+	index = line.find(":");
+	key = line.substr(0, index);
+	if (line.size() > index + 1)
+		value = line.substr(index + 1);
+	Header[key] = value;
+}
+
+void	Request::storeData(const std::string& dataRequest)
+{
+	std::istringstream iss(dataRequest);
+    std::string line;
+	
+	for (int i = 0; std::getline(iss, line); i++)
+	{
+		if (i == 0)
+		{
+			storeRequestLine(line);
+		}
+		else if (line == "\r")
+		{
+			break ;
+		}
+		else
+		{
+			storeHeader(line);
+		}
+	}
+    reading_done = true;
+}
 
 bool	Request::ReadCheckHeader()
 {
@@ -331,7 +331,7 @@ void	Request::ParseRequest()
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << RED << e.what() << RESET << '\n';
 	}
 }
 

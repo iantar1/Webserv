@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 14:51:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 11:06:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Client::Client(int fdSock, VirtualServer* Vser, t_files* _files) :
         sockeFd(fdSock), Vserver(Vser),files(_files), request(fdSock, Vser), doneReading(false) // initialier list
 {
     response = new Response(&request, files);
-    std::cout << RED << "Cleint Constructred\n" << RESET;
+    // std::cout << RED << "Cleint Constructred\n" << RESET;
 }
 
 Client::~Client()
@@ -40,7 +40,7 @@ void	Client::ServingClient()
     
     // allwoed Methode , so you need to constuct Respose with Vserver
     response->StartResponse();
-    std::cout << "start Response\n";
+    // std::cout << "start Response\n";
 }
 
 // ************** Gettter *********************

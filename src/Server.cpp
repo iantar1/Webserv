@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 11:43:06 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 11:15:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,20 @@ void    Server::addCleintToEpoll(int index)
 	struct sockaddr_in clientAddr;
 	socklen_t clientAddrLen = sizeof(clientAddr);
 
-	std::cout << "waiting for a cleint" << "on : " << serverFd << "\n";
+	// std::cout << "waiting for a cleint" << "on : " << serverFd << "\n";
 	int	fd = accept(Vservers[index]->getFdSocket(), NULL, &clientAddrLen);
 	if (fd < 0)
 		throw std::runtime_error("accept\n");
-	std::cout << "Cleint fd: " << fd << " accepted\n";
+	// std::cout << "Cleint fd: " << fd << " accepted\n";
 
 	clients[fd] = new Client(fd, Vservers[index], &files);
-	std::cout << "fd: " << fd << "Client accepeted\n";
+	// std::cout << "fd: " << fd << "Client accepeted\n";
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
 	
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
-	std::cout << RED << "done\n" << RESET << std::endl;
+	std::cout << RED << "add Cleint To Epoll & Mapped\n" << RESET;
 }
 
 bool	Server::NewClient(int index)
@@ -107,7 +107,6 @@ bool	Server::NewClient(int index)
 		if (events[index].data.fd == Vservers[j]->getFdSocket())
 		{
 			Server::addCleintToEpoll(j);
-			
 			return (1);
 		}
 	}
@@ -120,7 +119,7 @@ void Server::DropCleint(int ClientFd)
 	epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL);
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
-	(void)ClientFd;
+	std::cout << RED << "Drop Client\n" << RESET;
 }
 
 // Desing Time
@@ -141,8 +140,8 @@ int Server::launchServer()
 		bzero(events, sizeof(events));
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
-			std::cout << "readyFd: " << readyFd << "\n";
-			std::cout << "***************** wiating for a new connection *******************\n";
+			// std::cout << "readyFd: " << readyFd << "\n";
+			// std::cout << "***************** wiating for a new connection *******************\n";
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
@@ -153,26 +152,25 @@ int Server::launchServer()
 				}
 				else
 				{
-					std::cout << "(events[i].events & EPOLLIN): " << (events[i].events & EPOLLIN) << std::endl;
-					std::cout << "============> " << events[i].events << " EPOLLIN: " << EPOLLIN << " EPOLLOUT: " << EPOLLOUT << std::endl;
+					// std::cout << "(events[i].events & EPOLLIN): " << (events[i].events & EPOLLIN) << std::endl;
+					// std::cout << "============> " << events[i].events << " EPOLLIN: " << EPOLLIN << " EPOLLOUT: " << EPOLLOUT << std::endl;
 					// std::cout << MAGENTA << "Done Serving :" << clients[events[i].data.fd]->doneServing << RESET << std::endl;
-					std::cout << MAGENTA << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
+					// std::cout << MAGENTA << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 					if (events[i].events & EPOLLIN && clients[events[i].data.fd]->getDoneServing() == false) // serve the client
 					{
 						clients[events[i].data.fd]->ReadParseReqHeader();
-						std::cout << RED << "ReadParseReqHeader done\n" << RESET;
-						std::cout << GREEN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
+						// std::cout << RED << "ReadParseReqHeader done\n" << RESET;
+						// std::cout << GREEN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 					}
 					else if (events[i].events & EPOLLOUT && clients[events[i].data.fd]->getDoneServing() == false)
 					{
 						clients[events[i].data.fd]->ServingClient();
-						std::cout << YELLOW << "SERVING Client done" << RESET << std::endl;
-						std::cout << BLUE << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
-						
+						// std::cout << YELLOW << "SERVING Client done" << RESET << std::endl;
+						//std::cout << BLUE << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 					}
 					else
 					{
-						std::cout << CYAN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
+						// std::cout << CYAN << "Done Serving :" << clients[events[i].data.fd]->getDoneServing() << RESET << std::endl;
 						DropCleint(events[i].data.fd);
 					}
 				}

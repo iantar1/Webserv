@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/08 11:07:18 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/09 11:10:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ GetResponse::GetResponseException::~GetResponseException(void) throw() {}
 
 GetResponse::GetResponse(int socket, Request *request, t_files* files)
 {
-	std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ THE Get Methode @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+	// std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ THE Get Methode @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 	this->request = request;
 	this->socket = socket;
 	this->files = files;
@@ -37,7 +37,7 @@ void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
-	std::cout << "Code: " << code << " || " << transferType << std::endl;
+	// std::cout << "Code: " << code << " || " << transferType << std::endl;
 
 	header_it = this->files->headers.find(RESPONSE_STATUS);
 	header_it->second += this->files->status.find(code)->second;
@@ -198,16 +198,20 @@ void GetResponse::theGetMethod(void)
 
 	now = time(0);
 	this->path = this->request->getNewPath();
-	std::cout << "getNewPath: " << request->getNewPath() << "\n";
+	// std::cout << "getNewPath: " << request->getNewPath() << "\n";
 	this->oldPath = this->request->getOldPath();
-	std::cout << "getOldPath: " << request->getOldPath() << "\n";
-
+	// std::cout << "getOldPath: " << request->getOldPath() << "\n";
 	local_time = localtime(&now);
-	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+
+	this->strTime = ToString(local_time->tm_year + 1900) + "-"
+		+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
+			+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
+				+ ":" + ToString(local_time->tm_sec);
+
 	this->response = "";
 	this->redirection = "";
 
-	std::cout << "body: " << this->request->getBody() << "\n";
+	// std::cout << "body: " << this->request->getBody() << "\n";
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
