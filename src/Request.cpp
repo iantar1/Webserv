@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 22:06:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 10:51:59 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, VirtualServer *_Vserver) : SocketFd(fd), ErrorFlag(0), reading_done(0),
-							Vserver(_Vserver), doneServing(false), doneReading(false), headerDone(false)
+Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0), reading_done(0),
+							doneServing(false), doneReading(false), headerDone(false)
 {
 	MethodType = 0;
 	FirstChunckBodySize = 0;
-	std::cout << RED << "Requset Constructred\n" << RESET;
 }
 
 
@@ -37,8 +36,9 @@ void	Request::storeHeader(const std::string& line)
 	size_t		index;
 
 	index = line.find(":");
-	key = line.substr(0, index + 1);
-	value = line.substr(index + 1);
+	key = line.substr(0, index);
+	if (line.size() > index + 1)
+		value = line.substr(index + 1);
 	Header[key] = value;
 }
 
@@ -53,13 +53,11 @@ void	Request::checkValid_GET_Header()
 {
 	if (MethodType == 0)
 	{
-		ErrorFlag = NOT_IMPLEMENTED;
-		throw std::runtime_error("Not Implemented");
+		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (body.empty() == false)
 	{
-		ErrorFlag = BAD_REQ;
-		throw std::runtime_error("Bad req");
+		setFlagError(BAD_REQ, "bad Request");
 	}
 }
 
@@ -68,21 +66,18 @@ void	Request::checkValid_POST_Header()
 	if (Header.find("Transfer-Encoding") != Header.end()
 		&& Header["Transfer-Encoding"] != "chunked")
 	{
-		ErrorFlag = NOT_IMPLEMENTED;
-		throw std::runtime_error("Not Implemented");
+		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("Transfer-Encoding") == Header.end()
 		&& Header.find("Content-Length") == Header.end())
 	{
-		ErrorFlag = BAD_REQ;
-		throw std::runtime_error("bad Request");
+		setFlagError(BAD_REQ, "bad Request");
 	}
 	if (Header.find("Content-Length") != Header.end())
 	{
 		if (atol((Header["Content-Length"]).c_str()) > Vserver->locations[location_str]->getMaxBodySize())
 		{
-			ErrorFlag = REQ_ENTITY_TOO_LONG;
-			throw std::runtime_error("Request Entity Too Large");
+			setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
 		}
 	}
 }
@@ -148,18 +143,15 @@ void	Request::URI_Checking(const std::string& uri)
 {
 	if (URI_ValidChar(uri))
 	{
-		ErrorFlag = BAD_REQ;
-		return ;
+		setFlagError(BAD_REQ, "BAD_REQ");
 	}
 	if (URI_ValidLength(uri))
 	{
-		ErrorFlag = REQ_URI_TOO_LONG;
-		return ;	
+		setFlagError(REQ_URI_TOO_LONG, "REQ_URI_TOO_LONG");	
 	}
 	if (URI_ValidLocation(uri))
 	{
-		ErrorFlag = NOT_FOUND;
-		return ;
+		setFlagError(NOT_FOUND, "NOT FOUND");
 	}
 }
 
@@ -184,7 +176,7 @@ void	Request::storeRequestLine(const std::string& line)
 			return ;
 		}
 	}
-	throw std::runtime_error("Invalid Method");
+	setFlagError(NOT_IMPLEMENTED, "Invalid Method");
 }
 
 void	Request::storeData(const std::string& dataRequest)
@@ -289,6 +281,11 @@ void    Request::setLocation_str(std::string _location_str)
 	this->location_str = _location_str;
 }
 
+void	Request::setFlagError(int error_flag, const std::string& mes)
+{
+	ErrorFlag = error_flag;
+	throw std::runtime_error(mes);
+}
 
 // ************** Main Method *******************
 
@@ -329,6 +326,7 @@ void	Request::ParseRequest()
 			checkValidMethod(); // ! throw if error
 			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
 				saveFirstChuckBody();
+			printRequest();
 		}
 	}
 	catch(const std::exception& e)
@@ -341,10 +339,15 @@ void	Request::ParseRequest()
 
 void	Request::printRequest()
 {
-	std::cout << "||************REQUEST************||\n";
-	std::cout << RequestHeader << "\n";
+	std::cout << "||************REQUEST HEADER************||\n";
+	//std::cout << RequestHeader << "\n";
 	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
 	{
-		std::cout << it->second << "\n";
+		std::cout << it->first << ":"<< it->second << "\n";
 	}
+	std::cout << "||************REQUEST BODY************||\n";
+	if (body.empty())
+		std::cout << "--no body--\n";
+	else
+		std::cout << body;
 }

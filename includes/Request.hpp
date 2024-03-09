@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 22:10:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 10:51:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,32 @@ private:
     Request& operator=(const Request&);
 
 private:
-	char								buf[BUF_SIZE];
-    int                                 SocketFd;
-    int                                 bytesRead;
-    int                                 ErrorFlag; // when you face an error , set a Macro to it 
-    std::string                         RequestHeader;
+    VirtualServer                       *Vserver;
+
     std::map<std::string, std::string>	Header;
-	int									MethodType;
 	std::vector<std::string>			RequestLine;// this line: GET /hello.htm HTTP/1.1
-	bool								reading_done;
+
+	char								buf[BUF_SIZE];
+
+    int                                 SocketFd;
+    int                                 ErrorFlag; // when you face an error , set a Macro to it 
+    int                                 bytesRead;
+	int									MethodType;
     int                                 TransferMode;  // Chuncked() or normal(content length)
+    int                                 FirstChunckBodySize;
+
+    std::string                         RequestHeader;
     std::string                         chunkedBodySize;
     std::string                         body;
-    VirtualServer                       *Vserver;
     std::string                         newPath;
     std::string                         oldPath;
     std::string                         HeaderReq;
+    std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
+
+	bool								reading_done;
     bool                                doneServing;
     bool                                doneReading;
     bool                                headerDone;
-    std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
-    int                                 FirstChunckBodySize;
 
 // *************  static attrebuites **************
     static std::string					Methods[3];
@@ -110,6 +115,7 @@ public:
     void    setDoneServing();
     void    setDoneReading();
     void    setLocation_str(std::string);
+    void	setFlagError(int, const std::string&);
 
 // ************* Debug ****************
     void    printRequest();
