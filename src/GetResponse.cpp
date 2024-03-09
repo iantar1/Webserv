@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 15:47:44 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 16:59:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,33 @@ GetResponse::~GetResponse(void) {}
 void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
+	std::map<int, std::string> walo = this->files->headers;
 
 	// std::cout << "Code: " << code << " || " << transferType << std::endl;
 
-	header_it = this->files->headers.find(RESPONSE_STATUS);
+	header_it = walo.find(RESPONSE_STATUS);
 	header_it->second += this->files->status.find(code)->second;
 
-	header_it = this->files->headers.find(DATE);
+	header_it = walo.find(DATE);
 	header_it->second += this->strTime;
 
-	header_it = this->files->headers.find(CONTENT_TYPE);
+	header_it = walo.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
 
 	if (this->redirection != "")
 	{
-		header_it = this->files->headers.find(LOCATION);
+		header_it = walo.find(LOCATION);
 		header_it->second += this->redirection;
 	}
 
 	if (transferType == CONTENT_LENGHT)
 	{
-		header_it = this->files->headers.find(CONTENT_LENGHT);
+		header_it = walo.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
 
-	header_it = this->files->headers.begin();
-	while (header_it != this->files->headers.end())
+	header_it = walo.begin();
+	while (header_it != walo.end())
 	{
 		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
 			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
@@ -200,9 +201,7 @@ void GetResponse::theGetMethod(void)
 
 	now = time(0);
 	this->path = this->request->getNewPath();
-	// std::cout << "getNewPath: " << request->getNewPath() << "\n";
 	this->oldPath = this->request->getOldPath();
-	// std::cout << "getOldPath: " << request->getOldPath() << "\n";
 	local_time = localtime(&now);
 
 	this->strTime = ToString(local_time->tm_year + 1900) + "-"

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 15:43:57 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 16:50:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ int Server::launchServer()
 	while (true)
 	{
 		int readyFd;
-		// bzero(events, sizeof(events));
+		bzero(events, sizeof(events));
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
 			// std::cout << "readyFd: " << readyFd << "\n";

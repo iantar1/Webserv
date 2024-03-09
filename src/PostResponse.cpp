@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 04:13:45 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 16:33:16 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 16:27:10 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	PostResponse::thePostInternalServerError(void)
 	thePostHeaderResponse(INTERNAL_ERR, CONTENT_LENGHT);
 	this->response += this->body;
 	write(this->socket, this->response.c_str(), this->response.size());
+	std::cout << "WRITE\n";
 }
 
 void	PostResponse::thePostResponseCreatedPage(void)
@@ -117,6 +118,7 @@ void	PostResponse::thePostResponseCreatedPage(void)
 	thePostHeaderResponse(CREATED, CONTENT_LENGHT);
 	this->response += this->body;
 	write(this->socket, this->response.c_str(), this->response.size());
+	std::cout << "WRITE\n";
 }
 
 void	PostResponse::thePostResponseCreate(int *mode)

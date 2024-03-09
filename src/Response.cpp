@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 15:47:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 16:53:06 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,11 @@ Response::Response(Request* request, t_files* files)
 }
 
 
-Response::~Response(void) {}
+Response::~Response(void)
+{
+	
+	std::cout << GREEN << "RESPONCE DESTRUCTOR\n" << RESET;
+}
 
 void	Response::errorPage(int errorCode)
 {
@@ -92,8 +96,9 @@ void	Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{
 		GetResponse		get(this->socket, this->request, this->files);
+		std::cout << "==================> : " << &this->response << std::endl;
 		std::cout << GREEN << " GET " << RESET << "\n";
-		std::cout << RED << get.getResponse() << std::endl;
+		std::cout << RED << get.getResponse() << RESET << std::endl;
 		write(this->request->getFdSocket(), get.getResponse().c_str(), get.getResponse().size());
 	}
 	// else if (request->getMethdType() == POST)
