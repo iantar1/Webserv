@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:21:39 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 16:59:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 17:48:42 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ const char *GetResponse::GetResponseException::what(void) const throw() { return
 GetResponse::GetResponseException::~GetResponseException(void) throw() {}
 
 
-GetResponse::GetResponse(int socket, Request *request, t_files* files)
+GetResponse::GetResponse(int socket, Request *request, t_files files)
 {
 	// std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ THE Get Methode @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 	this->request = request;
@@ -38,33 +38,32 @@ GetResponse::~GetResponse(void) {}
 void		GetResponse::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
-	std::map<int, std::string> walo = this->files->headers;
 
 	// std::cout << "Code: " << code << " || " << transferType << std::endl;
 
-	header_it = walo.find(RESPONSE_STATUS);
-	header_it->second += this->files->status.find(code)->second;
+	header_it = this->files.headers.find(RESPONSE_STATUS);
+	header_it->second += this->files.status.find(code)->second;
 
-	header_it = walo.find(DATE);
+	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
 
-	header_it = walo.find(CONTENT_TYPE);
+	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
 
 	if (this->redirection != "")
 	{
-		header_it = walo.find(LOCATION);
+		header_it = this->files.headers.find(LOCATION);
 		header_it->second += this->redirection;
 	}
 
 	if (transferType == CONTENT_LENGHT)
 	{
-		header_it = walo.find(CONTENT_LENGHT);
+		header_it = this->files.headers.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
 
-	header_it = walo.begin();
-	while (header_it != walo.end())
+	header_it = this->files.headers.begin();
+	while (header_it != this->files.headers.end())
 	{
 		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
 			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
@@ -174,8 +173,8 @@ void			GetResponse::regularFileGet(void)
 		extension = getFileExtension(this->path);
 		if (extension != "")
 		{
-			mime_it = this->files->mime.find(extension);
-			if (mime_it != this->files->mime.end())
+			mime_it = this->files.mime.find(extension);
+			if (mime_it != this->files.mime.end())
 				this->contentType = mime_it->second;
 		}
 		else
@@ -216,7 +215,10 @@ void GetResponse::theGetMethod(void)
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
+	{
 		theGetErrorNotFound();
+		std::cout << "???????????" << std::endl;
+	}
 	else
 	{
 		if (S_ISDIR(buffer.st_mode))

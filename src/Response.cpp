@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 16:53:06 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 17:59:45 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ const char *Response::ResponseException::what(void) const throw() { return this-
 
 Response::ResponseException::~ResponseException(void) throw() {}
 
-Response::Response(Request* request, t_files* files)
+Response::Response(Request* request, t_files files)
 {
 
 	this->request = request;
@@ -65,21 +65,21 @@ void	Response::errorPage(int errorCode)
 {
 	std::map<int, std::string>::iterator	header_it;
 
-	header_it = this->files->headers.find(RESPONSE_STATUS);
-	header_it->second += this->files->status.find(errorCode)->second;
+	header_it = this->files.headers.find(RESPONSE_STATUS);
+	header_it->second += this->files.status.find(errorCode)->second;
 
-	header_it = this->files->headers.find(CONTENT_TYPE);
+	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += "text/html";
 
-	header_it = this->files->headers.find(CONTENT_LENGHT);
+	header_it = this->files.headers.find(CONTENT_LENGHT);
 	this->responseBody = getPageContent("defaultPages/" + ToString(errorCode) + ".htm") + "\r\n\r\n";
 	header_it->second += ToString(responseBody.size());
 
-	header_it = this->files->headers.find(DATE);
+	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
 
-	header_it = this->files->headers.begin();
-	while (header_it != this->files->headers.end())
+	header_it = this->files.headers.begin();
+	while (header_it != this->files.headers.end())
 	{
 		if (header_it->first != TRANSFER_ENCODING)
 			this->response += header_it->second + "\r\n";
@@ -96,9 +96,7 @@ void	Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{
 		GetResponse		get(this->socket, this->request, this->files);
-		std::cout << "==================> : " << &this->response << std::endl;
 		std::cout << GREEN << " GET " << RESET << "\n";
-		std::cout << RED << get.getResponse() << RESET << std::endl;
 		write(this->request->getFdSocket(), get.getResponse().c_str(), get.getResponse().size());
 	}
 	// else if (request->getMethdType() == POST)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 17:59:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 17:24:26 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ class Client
 private:
 	int                 sockeFd;
 	VirtualServer*		Vserver;
-	t_files*			files;
+	t_files				files;
 	char                buf[BUF_SIZE];
 	int					MethodType;
 	Request				request;
@@ -50,7 +50,7 @@ private:
 	Client();
 
 public:
-	Client(int, VirtualServer*, t_files*);
+	Client(int, VirtualServer*, t_files);
 	~Client();
 
 // Request and Respose classes

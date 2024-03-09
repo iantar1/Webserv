@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetResponse.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 03:47:10 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 14:45:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 17:28:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ private:
 	private :
 		std::string 						header, body, response, strTime, contentType, path, oldPath, redirection;
 		Request 							*request;
-		t_files								*files;
+		t_files								files;
 		std::ifstream						inFile;
 		int 								socket;
 
 	public :
-		GetResponse(int socket, Request* request, t_files* files);
+		GetResponse(int socket, Request* request, t_files files);
 		~GetResponse(void);
 
 		void			theGetHeaderResponse(int code, int transferType);

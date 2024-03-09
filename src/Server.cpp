@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 16:50:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/09 17:29:59 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void    Server::addCleintToEpoll(int index)
 		throw std::runtime_error("accept\n");
 	// std::cout << "Cleint fd: " << fd << " accepted\n";
 
-	clients[fd] = new Client(fd, Vservers[index], &files);
+	clients[fd] = new Client(fd, Vservers[index], files);
 	// std::cout << "fd: " << fd << "Client accepeted\n";
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
