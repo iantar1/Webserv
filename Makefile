@@ -35,7 +35,7 @@ fclean : clean
 re : fclean all
 
 COM = to save
-git : 
+push : 
 	make fclean
 	git add .
 	git commit -m "${COM}"
