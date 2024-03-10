@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 10:28:44 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 12:41:32 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@ Client::Client(int fdSock, VirtualServer* Vser, t_files _files) :
         sockeFd(fdSock), Vserver(Vser),files(_files), request(fdSock, Vser), doneReading(false) // initialier list
 {
     response = new Response(&request, files);
-    // std::cout << RED << "Cleint Constructred\n" << RESET;
 }
 
 Client::~Client()
 {
-    std::cout << RED << "Cleint Dessss/...\n" << RESET;
     delete response; 
 }
 

@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 11:38:04 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 12:37:51 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,18 +131,6 @@ bool    Request::URI_ValidLocation(const std::string& uri) const
     }
     return (1);
 }
-/*
-	location /src:
-	/src/it
-		root : fsdfsdfsdfsd/dsfsdfsd
-	location /src :
-		root : 123/123
-
-
-	123/123/src
-	
-*/
-
 
 void	Request::URI_Checking(const std::string& uri)
 {
@@ -370,3 +358,4 @@ void	Request::printRequest()
 	else
 		std::cout << body;
 }
+
