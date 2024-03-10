@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 18:30:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 21:07:01 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ private:
 		void			Delete();
 
 
-
+		std::string		getResponse() const;
 
 
 		void			PostResponse(int socket, Request *request, t_files files);

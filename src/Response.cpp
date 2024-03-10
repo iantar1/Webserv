@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 19:26:38 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 21:49:31 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	Response::errorPage(int errorCode)
 		header_it++;
 	}
 	this->response += "\r\n" + this->responseBody;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 	this->response.clear();
 }
 
@@ -66,16 +66,16 @@ void	Response::StartResponse()
 
 	if (request->getMethdType() == GET)
 	{
-		std::cout << "=========================================================\n";
+		// std::cout << "=========================================================\n";
 		theGetMethod();
-		write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
+		// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	else if (request->getMethdType() == POST)
 	{
 		// thePostMethod(mode);
 		PostResponse(this->request->getFdSocket(), this->request, this->files);
 	}
-    //else Delete
+	//else Delete
 }
 // ******** DELETE MEthod ************
 
@@ -186,6 +186,7 @@ void Response::theGetResponseOk(void)
 		std::streamsize byteRead;
 
 		signal(SIGPIPE, SIG_IGN);
+		std::cout << "####" << std::endl;
 		this->inFile.read(buf, 1024);
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0) {
@@ -277,8 +278,8 @@ void Response::theGetMethod(void)
 	this->redirection.clear();
 
 	// std::cout << "body: " << this->request->getBody() << "\n";
-	std::cout << GREEN << "REQUEST OLD PATH:\n" << this->oldPath << "\nEND REQUEST" << RESET << std::endl;
-	std::cout << BLUE << "REQUEST NEW PATH:\n" << this->path << "\nEND REQUEST" << RESET << std::endl;
+	// std::cout << GREEN << "REQUEST OLD PATH:\n" << this->oldPath << "\nEND REQUEST" << RESET << std::endl;
+	// std::cout << BLUE << "REQUEST NEW PATH:\n" << this->path << "\nEND REQUEST" << RESET << std::endl;
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
@@ -418,7 +419,7 @@ void	Response::thePostInternalServerError(void)
 	this->body = getPageContent("defaultPages/500.htm") + "\r\n\r\n";
 	thePostHeaderResponse(INTERNAL_ERR, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 	// std::cout << "WRITE\n";
 }
 
@@ -428,16 +429,16 @@ void	Response::thePostResponseCreatedPage(void)
 	this->body = getPageContent("defaultPages/201.htm") + "\r\n\r\n";
 	thePostHeaderResponse(CREATED, CONTENT_LENGHT);
 	this->response += this->body;
-	write(this->socket, this->response.c_str(), this->response.size());
+	// write(this->socket, this->response.c_str(), this->response.size());
 	// std::cout << "WRITE\n";
 }
 
 void	Response::thePostResponseCreate(int *mode)
 {
 	int	ccl;
-	std::cout << "========||==========\n";
-	std::cout << this->request->getBody() << "\n";
-	std::cout << "========||==========\n";
+	// std::cout << "========||==========\n";
+	// std::cout << this->request->getBody() << "\n";
+	// std::cout << "========||==========\n";
 	// this->request->printRequest();
 	if (this->postType == NORMAL_POST)
 	{
@@ -445,7 +446,7 @@ void	Response::thePostResponseCreate(int *mode)
 		this->outFile.write(data.data(), data.size());
 		this->contentTotalSizePosted += data.size();
 		// std::cout << RED << this->contentLenght << RESET << std::endl;
-		std::cout << this->contentTotalSizePosted << "\n";
+		// std::cout << this->contentTotalSizePosted << "\n";
 		if (this->contentTotalSizePosted >= this->contentLenght) {
 			this->request->setDoneServing();
 			thePostResponseCreatedPage();
@@ -465,3 +466,5 @@ void	Response::thePostResponseCreate(int *mode)
 			*mode = NORMAL;
 	}
 }
+
+std::string		Response::getResponse() const { return this->response; }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 17:15:28 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 21:09:57 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,7 @@ void    Client::setDoneReading()
     doneReading = true;
     request.setDoneHeaderReading();
 }
+
+int		Client::getSocketFd() const { return this->sockeFd; }
+
+Response*	Client::getResponseClass() const { return this->response; }

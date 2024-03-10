@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 19:38:38 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 22:20:11 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,7 +329,7 @@ void	Request::readBody()
 {
 	body.clear();
 	bytesRead = read(SocketFd, buf, BUF_SIZE);
-	std::cout << RED << buf << RESET << std::endl;
+	// std::cout << RED << buf << RESET << std::endl;
 	// exit(25);
     if (bytesRead < 0)
 	{

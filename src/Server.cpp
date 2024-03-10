@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 20:26:43 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 22:32:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void Server::DropCleint(int ClientFd)
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
 	close(ClientFd);
-	std::cout << RED << "Drop Client\n" << RESET;
+	// std::cout << RED << "Drop Client\n" << RESET;
 }
 
 // Desing Timeget.getResponse()
@@ -149,7 +149,7 @@ int Server::launchServer()
 				// std::cout << "readyFD: " << readyFd << "\n";
 				if (NewClient(i))
 				{
-					std::cout << YELLOW << "new Cleint added fd: "<< events[i].data.fd << "\n" << RESET;
+					// std::cout << YELLOW << "new Cleint added fd: "<< events[i].data.fd << "\n" << RESET;
 				}
 				else
 				{
@@ -157,19 +157,22 @@ int Server::launchServer()
 					{
 						clients[events[i].data.fd]->ReadParseReqHeader();
 						/*
-							Hna Kayne l Mochkile Khassek T3eyete 3lya hna bache nb9a nktebe machi ta ikoune 
+							Hna Kayne l Mochkile Khassek T3eyete 3lya hna bache nb9a nktebe fl post machi ta ikoune 
 							l client open to EPOLOUT !!!!!!!!!!!!!!
 							So handli had lkhire....
 						*/
+						clients[events[i].data.fd]->ServingClient();
 					}
 					else if ((events[i].events & EPOLLOUT) && clients[events[i].data.fd]->getDoneServing() == false)
 					{
-						std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
-						clients[events[i].data.fd]->ServingClient();
+						// std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
+						write(this->clients[events[i].data.fd]->getSocketFd(),
+								this->clients[events[i].data.fd]->getResponseClass()->getResponse().c_str(),
+									this->clients[events[i].data.fd]->getResponseClass()->getResponse().size());
 					}
 					else
 					{
-						std::cout << "done: "  << clients[events[i].data.fd]->getDoneServing() << "\n";
+						// std::cout << "done: "  << clients[events[i].data.fd]->getDoneServing() << "\n";
 						DropCleint(events[i].data.fd);
 					}
 				}
