@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 17:20:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 19:38:38 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,11 +299,11 @@ void	Request::storeData(const std::string& dataRequest)
 
 bool	Request::ReadCheckHeader()
 {
-    bytesRead = read(SocketFd, buf, BUF_SIZE);
-    if (bytesRead < 0)
+	bytesRead = read(SocketFd, buf, BUF_SIZE);
+	if (bytesRead < 0)
 	{
 		ErrorFlag = INTERNAL_ERR;
-        throw std::runtime_error("read syscall failed");
+		throw std::runtime_error("read syscall failed");
 	}
 	for (int i = 0; i < bytesRead; i++)
 	{
@@ -312,6 +312,7 @@ bool	Request::ReadCheckHeader()
 			headerDone = true;
 			storeData(HeaderReq);
 			FirstChunckBodySize = bytesRead - (i + 4);
+			// std::cout << RED << "LETH: " << HeaderReq.size() << "\n" << RESET;
 			return (true);
 		}
 		HeaderReq += buf[i];
@@ -322,14 +323,14 @@ bool	Request::ReadCheckHeader()
 void	Request::saveFirstChuckBody()
 {
 	body = std::string(&(*(buf + bytesRead - FirstChunckBodySize)), FirstChunckBodySize);
-	std::cout << "FirstChunckBodySize: "<< FirstChunckBodySize << "\n";
-	std::cout << " bytesRead: "<< bytesRead << "\n";
-	// setDoneServing();
 }
 
 void	Request::readBody()
 {
+	body.clear();
 	bytesRead = read(SocketFd, buf, BUF_SIZE);
+	std::cout << RED << buf << RESET << std::endl;
+	// exit(25);
     if (bytesRead < 0)
 	{
 		ErrorFlag = INTERNAL_ERR;
@@ -349,13 +350,13 @@ void	Request::ParseRequest()
 			{
 				saveFirstChuckBody();
 			}
-			printRequest();
+			// printRequest();
 		}
 		else if (MethodType == POST)
 		{
 			readBody();
-			std::cout << YELLOW << body <<RESET "\n";
-			exit(1);
+			// std::cout << YELLOW << body <<RESET "\n";
+			// exit(1);
 		}
 	}
 	catch(const std::exception& e)
@@ -374,10 +375,5 @@ void	Request::printRequest()
 	{
 		std::cout << it->first << ":"<< it->second << "\n";
 	}
-	std::cout << "||************REQUEST BODY************||\n";
-	if (body.empty())
-		std::cout << "--no body--\n";
-	else
-		std::cout << body;
 }
 

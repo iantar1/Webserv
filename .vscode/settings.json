@@ -5,7 +5,8 @@
         "stdexcept": "cpp",
         "iosfwd": "cpp",
         "fstream": "cpp",
-        "new": "cpp"
+        "new": "cpp",
+        "*.tcc": "cpp"
     },
     "editor.codeActionsOnSave": {
         

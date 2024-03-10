@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 12:55:35 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 18:30:19 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,16 @@ private:
 
 	private :
 		int 				socket;
+		int					contentTotalSizePosted;
+		int					mode;
+		int					contentLenght;
+		int					postType;
 
 		Request				*request;
 		t_files				files;
 
 		std::ifstream		inFile;
+		std::ofstream						outFile;
 
 		std::string			responseBody;
 		std::string			header;
@@ -41,8 +46,10 @@ private:
 		std::string			path;
 		std::string			oldPath;
 		std::string			redirection;
+		std::string			requestBody;
 
 		bool				streamStart;
+		bool				outOpened;
 
 	public :
 		Response(Request* request, t_files files);
@@ -64,4 +71,17 @@ private:
 		void			regularFileGet(void);
 		void			theGetMethod(void);
 		void			Delete();
+
+
+
+
+
+		void			PostResponse(int socket, Request *request, t_files files);
+
+		void			thePostHeaderResponse(int code, int transferType);
+		void			thePostResponseCreate(int *mode);
+		void			thePostInternalServerError(void);
+		void			thePostResponseCreatedPage(void);
+		void			thePostMethod(int *mode);
+
 };

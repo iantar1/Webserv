@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 17:01:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 20:26:43 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,10 +156,15 @@ int Server::launchServer()
 					if ((events[i].events & EPOLLIN) && clients[events[i].data.fd]->getDoneServing() == false) // serve the client
 					{
 						clients[events[i].data.fd]->ReadParseReqHeader();
+						/*
+							Hna Kayne l Mochkile Khassek T3eyete 3lya hna bache nb9a nktebe machi ta ikoune 
+							l client open to EPOLOUT !!!!!!!!!!!!!!
+							So handli had lkhire....
+						*/
 					}
 					else if ((events[i].events & EPOLLOUT) && clients[events[i].data.fd]->getDoneServing() == false)
 					{
-						// std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
+						std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
 						clients[events[i].data.fd]->ServingClient();
 					}
 					else
