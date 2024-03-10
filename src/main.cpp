@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 17:13:38 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 11:37:39 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void fillVector(std::vector<VirtualServer*>& Vser)
 
 int	main(int ac, char **av)
 {
-	
 	try
 	{
 		std::vector<VirtualServer*> Vserv;

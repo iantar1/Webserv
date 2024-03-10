@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 11:06:27 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 11:38:04 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,20 +111,38 @@ bool	Request::URI_ValidChar(const std::string& uri) const
 	return (0);
 }
 
-bool	Request::URI_ValidLocation(const std::string& uri) const
+bool    Request::URI_ValidLocation(const std::string& uri) const
 {
-	mapIterType	it = Vserver->getLocationsBeginIterMap();
-	mapIterType	it_end = Vserver->getLocationsEndIterMap();
+    mapIterType    it = Vserver->getLocationsBeginIterMap();
+    mapIterType    it_end = Vserver->getLocationsEndIterMap();
 
-	for (;it != it_end; ++it)
-	{
-		if (uri.compare(0, (it->first).size(), it->first))
-			return (1);
-		if ((it->first).size() < uri.size() && uri[(it->first).size()] != '/')
-			return (1);
-	}
-	return (0);
+    for (;it != it_end; ++it)
+    {
+        if (uri.compare(0, (it->first).size(), it->first) == 0)
+        {
+			// std::cout << ""
+            if ((it->first).size() == uri.size())
+                return (0);
+            if ((it->first).size() < uri.size() && uri[(it->first).size()] == '/')
+                return (0);
+			if (it->first == "/") // hard code
+				return (0);
+        }
+    }
+    return (1);
 }
+/*
+	location /src:
+	/src/it
+		root : fsdfsdfsdfsd/dsfsdfsd
+	location /src :
+		root : 123/123
+
+
+	123/123/src
+	
+*/
+
 
 void	Request::URI_Checking(const std::string& uri)
 {
@@ -157,6 +175,7 @@ void	Request::storeRequestLine(const std::string& line)
 	SetNewPath(); // set new Path
 	for (int i = 0; i < 3; i++)
 	{
+		std::cout << "i = " << i << "\n";
 		if (Methods[i].compare(RequestLine[0]) == 0)
 		{
 			MethodType = i + 1;

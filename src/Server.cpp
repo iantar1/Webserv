@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 17:29:59 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 11:35:56 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,10 +163,12 @@ int Server::launchServer()
 					}
 					else if ((events[i].events & EPOLLOUT) && clients[events[i].data.fd]->getDoneServing() == false)
 					{
+						// std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
 						clients[events[i].data.fd]->ServingClient();
 					}
 					else
 					{
+						std::cout << "done: "  << clients[events[i].data.fd]->getDoneServing() << "\n";
 						DropCleint(events[i].data.fd);
 					}
 				}

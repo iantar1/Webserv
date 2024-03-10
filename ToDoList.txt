@@ -1,0 +1,11 @@
+1. comments as code:
+
+		if (request->getError() != 0)
+		{
+	 		errorPage(request->getError());
+	 		return ;
+		}
+
+
+2.
+ 

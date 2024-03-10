@@ -6,12 +6,11 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 22:46:54 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 11:33:43 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/macros.hpp"
-# include "../includes/GetResponse.hpp"
 # include "../includes/PostResponse.hpp"
 # include "../includes/Response.hpp"
 # include "../includes/utils.hpp"
@@ -37,6 +36,7 @@ Response::Response(Request* request, t_files files) : streamStart(false)
 	// * 	errorPage(request->getError());
 	// * 	return ;
 	// * }
+
 	// std::cout << "getMethosd : " << request->getMethdType() << "\n";
 	// if (request->getMethdType() == GET)
 	// {
@@ -89,21 +89,17 @@ void	Response::StartResponse()
 	// std::cout << "Satrt Response\n";
 	if (request->getMethdType() == GET)
 	{
+		// std::cout << "start Response\n";
 		// GetResponse		get(this->socket, this->request, this->files);
 		theGetMethod();
 		std::cout << GREEN << " GET " << RESET << "\n";
+		std::cout << BLACK << this->response.c_str() << RESET << std::endl;
 		write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	// else if (request->getMethdType() == POST)
 	// 	PostResponse	post(this->socket, this->request, this->files);
     //else Delete
 }
-
-
-
-
-
-
 
 
 void		Response::theGetHeaderResponse(int code, int transferType)
@@ -196,11 +192,15 @@ void Response::theGetResponseOk(void)
 		char buf[1025];
 		std::streamsize byteRead;
 
+		std::cout << "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU\n";
+
 		signal(SIGPIPE, SIG_IGN);
 		this->inFile.read(buf, 1024);
 		byteRead = this->inFile.gcount();
-		if (byteRead <= 0)
+		if (byteRead <= 0) {
 			this->body = "0\r\n\r\n";
+			this->request->setDoneServing();
+		}
 		else
 		{
 			std::string str(buf, byteRead);
@@ -253,7 +253,8 @@ void			Response::regularFileGet(void)
 		else
 			this->contentType = "applocation/octet-stream";
 
-		this->inFile.open(this->path.c_str());
+		if (!this->streamStart)
+			this->inFile.open(this->path.c_str());
 
 		if (!this->inFile.is_open())
 			theGetErrorNotFound();
@@ -261,8 +262,8 @@ void			Response::regularFileGet(void)
 			theGetResponseOk();
 
 		// std::cout << this->response << std::endl;
-
-		this->inFile.close();
+		if (this->request->getDoneServing())
+			this->inFile.close();
 }
 
 void Response::theGetMethod(void)
@@ -307,5 +308,5 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
-	this->request->setDoneServing();
+	// this->request->setDoneServing();
 }
