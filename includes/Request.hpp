@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/09 10:51:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 14:11:03 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ public:
     const std::string&  getOldPath() const;
     const std::string&  getNewPath() const;
     bool                getDoneReading() const;
+    std::map<std::string, std::string>  getRequest() const;
     
 
 // ************* Setters ****************

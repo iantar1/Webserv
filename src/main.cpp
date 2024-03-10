@@ -6,15 +6,13 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 11:37:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 14:21:12 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/macros.hpp"
 # include "../includes/VirtualServer.hpp"
-
-# include "../includes/ConfigFileParser.hpp"
 # include <iostream>
 # define PORT 8080
 # define CONNECTIN_QUEUE 100
@@ -57,10 +55,10 @@ Location*	getLocation2(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 	
-	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/www_new";
-	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/www_new";
+	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/Web";
+	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/Web";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/nabboune/Desktop/Projects/www_new";
+	loc->root = "/nfs/homes/nabboune/Desktop/Projects/Web";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";

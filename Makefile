@@ -14,7 +14,7 @@ SRC =	./src/main.cpp \
 		./src/Client.cpp \
 		./src/utils.cpp \
 		./src/Request.cpp \
-		#./src/PostResponse.cpp
+		./src/PostResponse.cpp
 
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
