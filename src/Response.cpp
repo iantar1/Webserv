@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 12:41:14 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:26:34 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,28 @@ void	Response::StartResponse()
 	// 	PostResponse	post(this->socket, this->request, this->files);
     //else Delete
 }
+// ******** DELETE MEthod ************
 
+void	Response::Delete(const std::string& path)
+{
+	struct stat statBuf;
+
+	checkAllowedDelete();
+    if (stat(path.c_str(), &statBuf)) {
+		// ! set a flag in request file
+		// ! you must check errors in requst 
+		// ! and send what you want to delete or a flag
+		if (check_flag)
+		else
+			CALL_method();
+        throw std::runtime_error("");
+    }
+	
+}
 
 void		Response::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
-
-	// std::cout << "Code: " << code << " || " << transferType << std::endl;
 
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(code)->second;
@@ -166,8 +181,6 @@ void Response::theGetResponseOk(void)
 		this->body.clear();
 		char buf[1025];
 		std::streamsize byteRead;
-
-		std::cout << "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU\n";
 
 		signal(SIGPIPE, SIG_IGN);
 		this->inFile.read(buf, 1024);
@@ -267,7 +280,6 @@ void Response::theGetMethod(void)
 	else if (stat(this->path.c_str(), &buffer))
 	{
 		theGetErrorNotFound();
-		std::cout << "???????????" << std::endl;
 	}
 	else
 	{
@@ -283,5 +295,4 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
-	// this->request->setDoneServing();
 }

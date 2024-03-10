@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 11:37:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 12:52:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # include "../includes/macros.hpp"
 # include "../includes/VirtualServer.hpp"
 
-# include "../includes/ConfigFileParser.hpp"
 # include <iostream>
 # define PORT 8080
 # define CONNECTIN_QUEUE 100
