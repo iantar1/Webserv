@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PostResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 04:13:45 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 16:27:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 13:50:15 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ const char *PostResponse::PostResponseException::what(void) const throw() { retu
 PostResponse::PostResponseException::~PostResponseException(void) throw() {}
 
 
-PostResponse::PostResponse(int socket, Request *request, t_files* files)
+PostResponse::PostResponse(int socket, Request *request, t_files files)
 {
 	this->request = request;
 	this->socket = socket;
@@ -53,7 +53,7 @@ void	PostResponse::thePostMethod(int *mode)
 		this->postType = CHUNKED_POST;
 
 	this->contentType = this->request->getRequest().find("Content-Type")->second;
-	extension = getContentExtension(this->files->mime, this->contentType);
+	extension = getContentExtension(this->files.mime, this->contentType);
 	fileName = "Uploads/" + generateNameFile() + extension;
 
 	local_time = localtime(&now);
@@ -74,23 +74,23 @@ void		PostResponse::thePostHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
-	header_it = this->files->headers.find(RESPONSE_STATUS);
-	header_it->second += this->files->status.find(code)->second;
+	header_it = this->files.headers.find(RESPONSE_STATUS);
+	header_it->second += this->files.status.find(code)->second;
 
-	header_it = this->files->headers.find(DATE);
+	header_it = this->files.headers.find(DATE);
 	header_it->second += this->strTime;
 
-	header_it = this->files->headers.find(CONTENT_TYPE);
+	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
 
 	if (transferType == CONTENT_LENGHT)
 	{
-		header_it = this->files->headers.find(CONTENT_LENGHT);
+		header_it = this->files.headers.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
 
-	header_it = this->files->headers.begin();
-	while (header_it != this->files->headers.end())
+	header_it = this->files.headers.begin();
+	while (header_it != this->files.headers.end())
 	{
 		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
 			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))

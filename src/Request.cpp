@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 12:37:51 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 14:24:20 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ void	Request::checkValid_POST_Header()
 	{
 		setFlagError(BAD_REQ, "bad Request");
 	}
-	if (Header.find("Content-Length") != Header.end())
-	{
-		if (atol((Header["Content-Length"]).c_str()) > Vserver->locations[location_str]->getMaxBodySize())
-		{
-			setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
-		}
-	}
+	// if (Header.find("Content-Length") != Header.end())
+	// {
+	// 	if (atol((Header["Content-Length"]).c_str()) > Vserver->locations[location_str]->getMaxBodySize())
+	// 	{
+	// 		setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
+	// 	}
+	// }
 }
 
 void	Request::checkValid_DELETE_Header()
@@ -233,6 +233,7 @@ bool	Request::getDoneReading() const
 	return (this->doneServing);
 }
 
+std::map<std::string, std::string>  Request::getRequest() const { return this->Header; }
 
 
 // ************* Setters *************

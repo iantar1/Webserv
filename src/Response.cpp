@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 13:29:23 by iantar           ###   ########.fr       */
+/*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
+/*   Updated: 2024/03/10 14:35:33 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,20 @@ void	Response::errorPage(int errorCode)
 
 void	Response::StartResponse()
 {
-	if (request->getError() != 0)
-	{
-		errorPage(request->getError());
-		return ;
-	}
+	// if (request->getError() != 0)
+	// {
+	// 	errorPage(request->getError());
+	// 	return ;
+	// }
 
 	if (request->getMethdType() == GET)
 	{
+		std::cout << "=========================================================\n";
 		theGetMethod();
 		write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	// else if (request->getMethdType() == POST)
-	// 	PostResponse	post(this->socket, this->request, this->files);
+	// 	PostResponse	post(this->request->getFdSocket(), this->request, this->files);
     //else Delete
 }
 // ******** DELETE MEthod ************
@@ -275,7 +276,8 @@ void Response::theGetMethod(void)
 	this->redirection.clear();
 
 	// std::cout << "body: " << this->request->getBody() << "\n";
-	std::cout << GREEN << "REQUEST OLD PATH:\n" << this->request->getOldPath() << "END REQUEST" << RESET << std::endl;
+	std::cout << GREEN << "REQUEST OLD PATH:\n" << this->oldPath << "\nEND REQUEST" << RESET << std::endl;
+	std::cout << BLUE << "REQUEST NEW PATH:\n" << this->path << "\nEND REQUEST" << RESET << std::endl;
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))
