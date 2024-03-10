@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 01:05:52 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 13:26:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/10 13:29:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	Response::Delete(const std::string& path)
 	checkAllowedDelete();
     if (stat(path.c_str(), &statBuf)) {
 		// ! set a flag in request file
+		// ! wash kayen , wash 3ndek lh9 deleteh.
 		// ! you must check errors in requst 
 		// ! and send what you want to delete or a flag
 		if (check_flag)
