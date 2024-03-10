@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PostResponse.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 02:15:17 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 13:50:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 15:35:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ private:
 		int									contentLenght;
 		int									postType;
 		int 								socket;
+		int									contentTotalSizePosted;
+		int									mode;
 
 	public :
 		PostResponse(int socket, Request *request, t_files files);

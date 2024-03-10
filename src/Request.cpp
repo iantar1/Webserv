@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 14:24:20 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:20:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0), reading_done(0),
-							doneServing(false), doneReading(false), headerDone(false)
+Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0),
+							doneServing(false), doneHeaderReading(false), headerDone(false)
 {
 	MethodType = 0;
 	FirstChunckBodySize = 0;
@@ -228,9 +228,9 @@ bool	Request::getDoneServing() const
 	return (this->doneServing);
 }
 
-bool	Request::getDoneReading() const
+bool	Request::getDoneHeaderReading() const
 {
-	return (this->doneServing);
+	return (this->doneHeaderReading);
 }
 
 std::map<std::string, std::string>  Request::getRequest() const { return this->Header; }
@@ -243,9 +243,9 @@ void	Request::setDoneServing()
 	this->doneServing = true;
 }
 
-void    Request::setDoneReading()
+void    Request::setDoneHeaderReading()
 {
-	this->doneReading = true;
+	this->doneHeaderReading = true;
 }
 
 void    Request::setLocation_str(std::string _location_str)
@@ -269,8 +269,8 @@ void	Request::storeHeader(const std::string& line)
 
 	index = line.find(":");
 	key = line.substr(0, index);
-	if (line.size() > index + 1)
-		value = line.substr(index + 1);
+	if (line.size() > index + 2)
+		value = line.substr(index + 2);
 	Header[key] = value;
 }
 
@@ -294,7 +294,7 @@ void	Request::storeData(const std::string& dataRequest)
 			storeHeader(line);
 		}
 	}
-    reading_done = true;
+    doneHeaderReading = true;
 }
 
 bool	Request::ReadCheckHeader()
@@ -321,20 +321,41 @@ bool	Request::ReadCheckHeader()
 
 void	Request::saveFirstChuckBody()
 {
-	body = std::string(&(*(buf + FirstChunckBodySize - 1)), FirstChunckBodySize);
+	body = std::string(&(*(buf + bytesRead - FirstChunckBodySize)), FirstChunckBodySize);
+	std::cout << "FirstChunckBodySize: "<< FirstChunckBodySize << "\n";
+	std::cout << " bytesRead: "<< bytesRead << "\n";
+	// setDoneServing();
 }
 
+void	Request::readBody()
+{
+	bytesRead = read(SocketFd, buf, BUF_SIZE);
+    if (bytesRead < 0)
+	{
+		ErrorFlag = INTERNAL_ERR;
+        throw std::runtime_error("read syscall failed");
+	}
+	body = std::string(buf, bytesRead);
+}
 
 void	Request::ParseRequest()
 {
 	try
 	{
-		if (ReadCheckHeader())// * throw if error, return true if done
+		if (!doneHeaderReading && ReadCheckHeader())// * throw if error, return true if done
 		{
 			checkValidMethod(); // ! throw if error
 			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
+			{
 				saveFirstChuckBody();
+			}
 			printRequest();
+		}
+		else if (MethodType == POST)
+		{
+			readBody();
+			std::cout << YELLOW << body <<RESET "\n";
+			exit(1);
 		}
 	}
 	catch(const std::exception& e)

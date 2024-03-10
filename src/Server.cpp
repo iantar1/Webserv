@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 11:35:56 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:01:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,11 @@ void    Server::addCleintToEpoll(int index)
 	struct sockaddr_in clientAddr;
 	socklen_t clientAddrLen = sizeof(clientAddr);
 
-	// std::cout << "waiting for a cleint" << "on : " << serverFd << "\n";
 	int	fd = accept(Vservers[index]->getFdSocket(), NULL, &clientAddrLen);
 	if (fd < 0)
 		throw std::runtime_error("accept\n");
-	// std::cout << "Cleint fd: " << fd << " accepted\n";
 
 	clients[fd] = new Client(fd, Vservers[index], files);
-	// std::cout << "fd: " << fd << "Client accepeted\n";
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
 	
@@ -120,7 +117,6 @@ void Server::DropCleint(int ClientFd)
 	{
 		std::cerr << "Failed to remove client FD from epoll instance." << std::endl;
         close(epollFd);
-		exit(1);
 	}
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);

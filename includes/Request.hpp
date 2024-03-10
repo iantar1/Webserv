@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 14:11:03 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/10 17:15:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ private:
     std::string                         HeaderReq;
     std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
 
-	bool								reading_done;
     bool                                doneServing;
-    bool                                doneReading;
+    bool                                doneHeaderReading;
     bool                                headerDone;
 
 // *************  static attrebuites **************
@@ -76,6 +75,7 @@ private:
     void	SetNewPath();
     bool	ReadCheckHeader();
     void	saveFirstChuckBody();
+    void	readBody();
 
 // ***************** Error checking Method **********
     void	URI_Checking(const std::string&);
@@ -108,13 +108,13 @@ public:
     std::string	        getChunkedBodySize(void) const;
     const std::string&  getOldPath() const;
     const std::string&  getNewPath() const;
-    bool                getDoneReading() const;
+    bool                getDoneHeaderReading() const;
     std::map<std::string, std::string>  getRequest() const;
     
 
 // ************* Setters ****************
     void    setDoneServing();
-    void    setDoneReading();
+    void    setDoneHeaderReading();
     void    setLocation_str(std::string);
     void	setFlagError(int, const std::string&);
 
