@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 21:09:57 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:52:13 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,3 +68,5 @@ void    Client::setDoneReading()
 int		Client::getSocketFd() const { return this->sockeFd; }
 
 Response*	Client::getResponseClass() const { return this->response; }
+
+Request*		Client::getRequest() { return &this->request; }

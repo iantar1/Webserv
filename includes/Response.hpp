@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/10 21:07:01 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:50:41 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ private:
 		int					postType;
 
 		Request				*request;
-		t_files				files;
+		t_files				&files;
 
 		std::ifstream		inFile;
-		std::ofstream						outFile;
+		std::ofstream		outFile;
 
 		std::string			responseBody;
 		std::string			header;
@@ -50,38 +50,41 @@ private:
 
 		bool				streamStart;
 		bool				outOpened;
+		bool				gotTime;
+		bool				modeChecked;
+		bool				dataCopy;
 
 	public :
-		Response(Request* request, t_files files);
+		Response(Request* request, t_files &files);
 		virtual ~Response(void);
 
-		void	errorPage(int errorCode);
-		void	thePostMethod(void);
-		void	theDeleteMethod(void);
-		void	StartResponse();
+		void					errorPage(int errorCode);
+		void					thePostMethod(void);
+		void					theDeleteMethod(void);
+		void					StartResponse();
 
 
-		void			theGetHeaderResponse(int code, int transferType);
-		void			theGetRedirectionRequest(void);
-		void			theGetErrorBadRequest(void);
-		void			theGetErrorForbidden(void);
-		void			theGetErrorNotFound(void);
-		void			theGetResponseOk(void);
-		void			directoryListing(void);
-		void			regularFileGet(void);
-		void			theGetMethod(void);
-		void			Delete();
+		void					theGetHeaderResponse(int code, int transferType);
+		void					theGetRedirectionRequest(void);
+		void					theGetErrorBadRequest(void);
+		void					theGetErrorForbidden(void);
+		void					theGetErrorNotFound(void);
+		void					theGetResponseOk(void);
+		void					directoryListing(void);
+		void					regularFileGet(void);
+		void					theGetMethod(void);
+		void					Delete();
 
 
-		std::string		getResponse() const;
+		const std::string		&getResponse() const;
 
 
-		void			PostResponse(int socket, Request *request, t_files files);
+		void					PostResponse();
 
-		void			thePostHeaderResponse(int code, int transferType);
-		void			thePostResponseCreate(int *mode);
-		void			thePostInternalServerError(void);
-		void			thePostResponseCreatedPage(void);
-		void			thePostMethod(int *mode);
+		void					thePostHeaderResponse(int code, int transferType);
+		void					thePostResponseCreate(int *mode);
+		void					thePostInternalServerError(void);
+		void					thePostResponseCreatedPage(void);
+		void					thePostMethod();
 
 };

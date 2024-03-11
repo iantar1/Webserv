@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 21:09:50 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 12:30:53 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ public:
 	bool		getDoneReading() const;
 	int			getSocketFd() const;
 	Response	*getResponseClass() const;
+	Request		*getRequest();
 // ********** Setters *************
 
 	void    setDoneServing();

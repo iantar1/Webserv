@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 21:49:31 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:03:41 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 # include "../includes/Response.hpp"
 # include "../includes/utils.hpp"
 
-Response::Response(Request* request, t_files files) : contentTotalSizePosted(0), streamStart(false), outOpened(false)
+Response::Response(Request* request, t_files &files) : contentTotalSizePosted(0),
+		request(request), files(files), streamStart(false),
+		outOpened(false), gotTime(false), modeChecked(false), dataCopy(false)
 {
-	this->request = request;
 	this->socket = request->getFdSocket();
-	this->files = files;
 }
 
 Response::~Response(void)
@@ -73,7 +73,7 @@ void	Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		// thePostMethod(mode);
-		PostResponse(this->request->getFdSocket(), this->request, this->files);
+		PostResponse();
 	}
 	//else Delete
 }
@@ -260,19 +260,29 @@ void			Response::regularFileGet(void)
 
 void Response::theGetMethod(void)
 {
-	tm				*local_time;
-	time_t			now;
+	if (!this->gotTime) 
+	{
+		tm				*local_time;
+		time_t			now;
+
+		now = time(0);
+		local_time = localtime(&now);
+
+		this->strTime = ToString(local_time->tm_year + 1900) + "-"
+			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
+				+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
+					+ ":" + ToString(local_time->tm_sec);
+		this->gotTime = true;
+	}
+
+	if (!this->dataCopy)
+	{
+		this->path = this->request->getNewPath();
+		this->oldPath = this->request->getOldPath();
+		this->dataCopy = true;
+	}
+
 	struct stat		buffer;
-
-	now = time(0);
-	this->path = this->request->getNewPath();
-	this->oldPath = this->request->getOldPath();
-	local_time = localtime(&now);
-
-	this->strTime = ToString(local_time->tm_year + 1900) + "-"
-		+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
-			+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
-				+ ":" + ToString(local_time->tm_sec);
 
 	this->response.clear();
 	this->redirection.clear();
@@ -324,52 +334,62 @@ void Response::theGetMethod(void)
 
 
 
-void	Response::PostResponse(int socket, Request *request, t_files files)
+void	Response::PostResponse()
 {
-	this->request = request;
-	this->socket = socket;
-	this->files = files;
-
 	// std::cout << YELLOW << this->request->getBody() << RESET << std::endl;
 	// this->request->printRequest();
 	// std::cout << RED << "ACHE HAD IKHAN : " << this->request->getRequest().find("Content-Length")->first << RESET << std::endl;
-	if (this->request->getRequest().find("Content-Length") != this->request->getRequest().end())
-		this->mode = NORMAL;
-	else
-		this->mode = CHUNKED;
-	thePostMethod(&this->mode);
+	if (!this->modeChecked)
+	{
+		if (this->request->getRequest().find("Content-Length") != this->request->getRequest().end())
+			this->mode = NORMAL;
+		else
+			this->mode = CHUNKED;
+		this->modeChecked = true;
+	}
+	thePostMethod();
 }
 
-void	Response::thePostMethod(int *mode)
+void	Response::thePostMethod()
 {
-	tm												*local_time;
-	time_t											now;
 	std::string										extension, fileName;
-	std::map<std::string, std::string>				mime, req;
-	std::map<std::string, std::string>::iterator	mime_it, req_it;
+	std::map<std::string, std::string>				mime;
+	std::map<std::string, std::string>::iterator	mime_it;
 
-	now = time(0);
-
-	req = this->request->getRequest();
-	req_it = req.find("Content-Length");
-	// std::cout << "SALAM O3ALAYKOUME!!!!!!!!!\n";
-	// std::cout << *mode << std::endl;
-	if (*mode == NORMAL)
+	if (!this->gotTime)
 	{
-		this->postType = NORMAL_POST;
-		this->contentLenght = std::atoi((this->request->getRequest().find("Content-Length")->second).c_str());
-	}
-	else
-		this->postType = CHUNKED_POST;
+		tm												*local_time;
+		time_t											now;
 
-	this->contentType = this->request->getRequest().find("Content-Type")->second;
-	extension = getContentExtension(this->files.mime, this->contentType);
-	fileName = "Uploads/" + generateNameFile() + extension;
+		now = time(0);
+		local_time = localtime(&now);
+		this->strTime = ToString(local_time->tm_year + 1900) + "-"
+			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
+				+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
+					+ ":" + ToString(local_time->tm_sec);
+	}
+
+	if (!this->dataCopy)
+	{
+		// std::cout << "SALAM O3ALAYKOUME!!!!!!!!!\n";
+		// std::cout << *mode << std::endl;
+		if (this->mode == NORMAL)
+		{
+			this->postType = NORMAL_POST;
+			this->contentLenght = std::atoi((this->request->getRequest().find("Content-Length")->second).c_str());
+		}
+		else
+			this->postType = CHUNKED_POST;
+		this->dataCopy = true;
+		this->contentType = this->request->getRequest().find("Content-Type")->second;
+
+		extension = getContentExtension(this->files.mime, this->contentType);
+		fileName = "Uploads/" + generateNameFile() + extension;
+	}
+
 
 	// std::cout << RED << "FILE NAME : " << fileName << RESET << std::endl;
 
-	local_time = localtime(&now);
-	this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	this->response = "";
 
 	if (!this->outOpened) {
@@ -467,4 +487,4 @@ void	Response::thePostResponseCreate(int *mode)
 	}
 }
 
-std::string		Response::getResponse() const { return this->response; }
+const std::string&		Response::getResponse() const { return this->response; }

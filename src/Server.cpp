@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 22:32:30 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 11:53:47 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,10 +161,13 @@ int Server::launchServer()
 							l client open to EPOLOUT !!!!!!!!!!!!!!
 							So handli had lkhire....
 						*/
-						clients[events[i].data.fd]->ServingClient();
+						if (clients[events[i].data.fd]->getRequest()->getMethdType() == POST)
+							clients[events[i].data.fd]->ServingClient();
 					}
 					else if ((events[i].events & EPOLLOUT) && clients[events[i].data.fd]->getDoneServing() == false)
 					{
+						if (clients[events[i].data.fd]->getRequest()->getMethdType() == GET)
+							clients[events[i].data.fd]->ServingClient();
 						// std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
 						write(this->clients[events[i].data.fd]->getSocketFd(),
 								this->clients[events[i].data.fd]->getResponseClass()->getResponse().c_str(),

@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 19:38:43 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:12:46 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,17 +99,17 @@ public:
     
 // ************** Getters *******************
 
-    int                 getMethdType() const;
-    int                 getFdSocket() const;
-    int                 getError() const;
-    int 	            *getTransferMode();
-    bool                getDoneServing(void) const;
-    std::string	        getBody(void) const;
-    std::string	        getChunkedBodySize(void) const;
-    const std::string&  getOldPath() const;
-    const std::string&  getNewPath() const;
-    bool                getDoneHeaderReading() const;
-    std::map<std::string, std::string>  getRequest() const;
+    const int                                   &getMethdType() const;
+    const int                                   &getFdSocket() const;
+    const int                                   &getError() const;
+    const int                                   *getTransferMode();
+    const bool                                  &getDoneServing(void) const;
+    const std::string	                        &getBody(void) const;
+    const std::string	                        &getChunkedBodySize(void) const;
+    const std::string                           &getOldPath() const;
+    const std::string                           &getNewPath() const;
+    const bool                                  &getDoneHeaderReading() const;
+    const std::map<std::string, std::string>    &getRequest() const;
     
 
 // ************* Setters ****************

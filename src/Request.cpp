@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 22:20:11 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 13:08:21 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,32 +182,32 @@ void	Request::SetNewPath()
 
 // ************ Getters **************
 
-int Request::getMethdType() const
+const int& Request::getMethdType() const
 {
 	return (this->MethodType);
 }
 
-int	Request::getFdSocket() const
+const int&	Request::getFdSocket() const
 {
 	return (SocketFd);
 }
 
-int*	Request::getTransferMode()
+const int*	Request::getTransferMode()
 {
 	return (&TransferMode);
 }
 
-int	Request::getError(void) const
+const int&	Request::getError(void) const
 {
 	return this->ErrorFlag;
 }
 
-std::string	Request::getBody(void) const
+const std::string&	Request::getBody(void) const
 {
 	return this->body;
 }
 
-std::string	Request::getChunkedBodySize(void) const
+const std::string&	Request::getChunkedBodySize(void) const
 {
 	return this->chunkedBodySize;
 }
@@ -223,17 +223,17 @@ const std::string&  Request::getNewPath() const
 }
 
 
-bool	Request::getDoneServing() const
+const bool&	Request::getDoneServing() const
 {
 	return (this->doneServing);
 }
 
-bool	Request::getDoneHeaderReading() const
+const bool&	Request::getDoneHeaderReading() const
 {
 	return (this->doneHeaderReading);
 }
 
-std::map<std::string, std::string>  Request::getRequest() const { return this->Header; }
+const std::map<std::string, std::string>&  Request::getRequest() const { return this->Header; }
 
 
 // ************* Setters *************
