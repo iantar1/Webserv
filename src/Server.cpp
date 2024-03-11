@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 14:55:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/11 15:15:33 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ int Server::ServerCore()
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
 			{
-				if (NewClient(i))
+				if (NewClient(i)) // add new client
 				{
 					std::cout << YELLOW << "new Cleint added ,fd: "<< events[i].data.fd << "\n" << RESET;
 					connectedClients++;
@@ -177,5 +177,4 @@ Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser), connectedCli
 
 Server::~Server()
 {
-	
 }

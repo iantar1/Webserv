@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 13:12:46 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:52:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ private:
 
     bool                                doneServing;
     bool                                doneHeaderReading;
-    bool                                headerDone;
 
 // *************  static attrebuites **************
     static std::string					Methods[3];
@@ -75,7 +74,8 @@ private:
     void	SetNewPath();
     bool	ReadCheckHeader();
     void	saveFirstChuckBody();
-    void	readBody();
+    void	storeBody();
+    void	WhichMethod(const std::string&);
 
 // ***************** Error checking Method **********
     void	URI_Checking(const std::string&);
@@ -87,7 +87,7 @@ private:
     void	checkValid_POST_Header();
     void	checkValid_DELETE_Header();
     void	checkValidHeader();
-
+    void	httpVersionCheck(const std::string&);
 
 public:
 // ********** Public Methods ************
@@ -96,19 +96,22 @@ public:
 	void	storeHeader(const std::string&);
 	void	storeRequestLine(const std::string&);
 	void	storeData(const std::string&);
+    void	ReadRequest();
     
 // ************** Getters *******************
 
-    const int                                   &getMethdType() const;
-    const int                                   &getFdSocket() const;
-    const int                                   &getError() const;
-    const int                                   *getTransferMode();
-    const bool                                  &getDoneServing(void) const;
-    const std::string	                        &getBody(void) const;
-    const std::string	                        &getChunkedBodySize(void) const;
+    int     getMethdType() const;
+    int     getFdSocket() const;
+    int     getError() const;
+    int     getTransferMode();
+
+    bool    getDoneServing(void) const;
+    bool    getDoneHeaderReading() const;
+
+    const std::string                           &getBody(void) const;
+    const std::string                           &getChunkedBodySize(void) const;
     const std::string                           &getOldPath() const;
     const std::string                           &getNewPath() const;
-    const bool                                  &getDoneHeaderReading() const;
     const std::map<std::string, std::string>    &getRequest() const;
     
 

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/09 15:13:13 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/11 14:58:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ t_files	getDataFromFiles(void)
 	data.mime = mimeTypes();
 	data.headers = getHeaders();
 	data.status = getStatus();
-	std::cout << "HONA\n";
 	return data;
 }
 
