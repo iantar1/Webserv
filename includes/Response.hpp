@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/11 14:18:24 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:22:28 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ private:
 		int					mode;
 		int					contentLenght;
 		int					postType;
+		int					ccl;
 
 		Request				*request;
 		t_files				&files;
@@ -53,6 +54,7 @@ private:
 		bool				gotTime;
 		bool				modeChecked;
 		bool				dataCopy;
+		bool				startedTheChunk;
 
 	public :
 		Response(Request* request, t_files &files);

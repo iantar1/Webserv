@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 14:14:20 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 21:05:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 # include "../includes/utils.hpp"
 
 Response::Response(Request* request, t_files &files) : contentTotalSizePosted(0),
-		request(request), files(files), streamStart(false),
-		outOpened(false), gotTime(false), modeChecked(false), dataCopy(false)
+		request(request), files(files), streamStart(false), outOpened(false), 
+		gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false)
 {
 	this->socket = request->getFdSocket();
 }
@@ -454,7 +454,6 @@ void	Response::thePostResponseCreatedPage(void)
 
 void	Response::thePostResponseCreate(void)
 {
-	int	ccl;
 	// std::cout << "========||==========\n";
 	// std::cout << this->request->getBody() << "\n";
 	// std::cout << "========||==========\n";
@@ -462,10 +461,16 @@ void	Response::thePostResponseCreate(void)
 	if (this->postType == NORMAL_POST)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
+		std::cout << YELLOW << "=================||=================" << RESET << std::endl;
+		std::cout << RED << "SIZE: " << this->request->getBody().size() << RESET << "\nDATA:\n" << this->request->getBody().data() << std::endl;
+		std::cout << YELLOW << "=================||=================" << RESET << std::endl;
 		this->contentTotalSizePosted += this->request->getBody().size();
+		std::cout << YELLOW << "=================_-_-_=================" << RESET << std::endl;
+		std::cout << BLUE << this->contentTotalSizePosted << " || " << this->contentLenght << RESET << std::endl;
+		std::cout << YELLOW << "=================_-_-_=================" << RESET << std::endl;
 		// std::cout << RED << this->contentLenght << RESET << std::endl;
 		// std::cout << this->contentTotalSizePosted << "\n";
-		if (this->contentTotalSizePosted >= this->contentLenght) {
+		if (this->contentTotalSizePosted == this->contentLenght) {
 			this->request->setDoneServing();
 			thePostResponseCreatedPage();
 			this->outFile.close();
@@ -475,9 +480,88 @@ void	Response::thePostResponseCreate(void)
 	else if (this->postType == CHUNKED_POST)
 	{
 		std::string		data = this->request->getBody();
-		ccl = hexStringToInt(this->request->getChunkedBodySize());
+		int				restart;
+
+		if (!this->startedTheChunk) {
+			int	nl = this->request->getBody().find("\r\n");
+
+			if (nl != std::string::npos) {
+				this->ccl = hexStringToInt(this->request->getBody());
+				nl += 2;
+			}
+			else {
+				nl = 0;
+				restart = -1;
+			}
+			this->outFile.write(this->request->getBody().substr(nl).c_str(), this->request->getBody().substr(nl).size());
+			this->contentTotalSizePosted += this->request->getBody().substr(nl).size();
+			if (this->ccl != this->contentTotalSizePosted)
+				this->startedTheChunk = true;
+			else {
+				this->startedTheChunk = false;
+				this->contentTotalSizePosted = 0;
+			}
+		}
+		else {
+			int	nl = this->request->getBody().find_first_of("\r\n");
+			// int	lnl = this->request->getBody().find_first_of("\r\n");
+
+			if (nl == std::string::npos) {
+				this->outFile.write(this->request->getBody().c_str(), this->request->getBody().size());
+				this->contentTotalSizePosted += this->request->getBody().size();
+				restart = -1;
+			}
+			else {
+				this->outFile.write(this->request->getBody().substr(0, nl).c_str(), nl);
+				this->contentTotalSizePosted += nl;
+				restart = nl + 2;
+			}
+
+			if (this->ccl == this->contentTotalSizePosted) {
+				this->startedTheChunk = false;
+				this->contentTotalSizePosted = 0;
+			}
+		}
+
+/*
+	chunk :
+			5
+			Hello
+			5
+			 Worl
+			5
+			d, Ho
+			10
+			w are thin
+			3
+			gs?
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		this->ccl = hexStringToInt(this->request->getChunkedBodySize());
 		// std::cout << ccl << " || " << this->request->getChunkedBodySize() << std::endl;
-		if (ccl != 0)
+		if (this->ccl != 0)
 			this->outFile.write(data.data(), ccl);
 			// write(this->socket, this->request.getBody().data(), ccl);
 		else
