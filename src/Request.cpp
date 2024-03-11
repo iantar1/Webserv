@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 13:08:21 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:59:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0),
-							doneServing(false), doneHeaderReading(false), headerDone(false)
+							doneServing(false), doneHeaderReading(false)
 {
 	MethodType = 0;
 	FirstChunckBodySize = 0;
@@ -148,29 +148,42 @@ void	Request::URI_Checking(const std::string& uri)
 	}
 }
 
-void	Request::storeRequestLine(const std::string& line)
+void	Request::httpVersionCheck(const std::string& http)
 {
-	std::stringstream	sstr(line);
-	std::string			word;
+	if (http.compare("HTTP/1.1"))
+		setFlagError(BAD_REQ, "BAD REQUEST");
+}
 
-
-	while (sstr >> word)
-	{
-		RequestLine.push_back(word);
-	}
-	URI_Checking(RequestLine[1]);
-	oldPath = RequestLine[1]; // /hello.htmn for example
-	SetNewPath(); // set new Path
+void	Request::WhichMethod(const std::string& method)
+{
 	for (int i = 0; i < 3; i++)
 	{
-		std::cout << "i = " << i << "\n";
-		if (Methods[i].compare(RequestLine[0]) == 0)
+		if (Methods[i].compare(method) == 0)
 		{
 			MethodType = i + 1;
 			return ;
 		}
 	}
 	setFlagError(NOT_IMPLEMENTED, "Invalid Method");
+}
+
+void	Request::storeRequestLine(const std::string& line)
+{
+	std::stringstream	sstr(line);
+	std::string			word;
+
+
+	for (int i = 0; sstr >> word; i++)
+	{
+		if (i == 3)
+			setFlagError(BAD_REQ, "BAD REQUEST");
+		RequestLine.push_back(word);
+	}
+	URI_Checking(RequestLine[1]);
+	httpVersionCheck(RequestLine[2]);
+	oldPath = RequestLine[1]; // /hello.htmn for example
+	SetNewPath(); // set new Path
+	WhichMethod(RequestLine[0]);
 }
 
 
@@ -182,22 +195,22 @@ void	Request::SetNewPath()
 
 // ************ Getters **************
 
-const int& Request::getMethdType() const
+int Request::getMethdType() const
 {
 	return (this->MethodType);
 }
 
-const int&	Request::getFdSocket() const
+int	Request::getFdSocket() const
 {
 	return (SocketFd);
 }
 
-const int*	Request::getTransferMode()
+int	Request::getTransferMode()
 {
-	return (&TransferMode);
+	return (TransferMode);
 }
 
-const int&	Request::getError(void) const
+int	Request::getError(void) const
 {
 	return this->ErrorFlag;
 }
@@ -223,17 +236,20 @@ const std::string&  Request::getNewPath() const
 }
 
 
-const bool&	Request::getDoneServing() const
+bool	Request::getDoneServing() const
 {
 	return (this->doneServing);
 }
 
-const bool&	Request::getDoneHeaderReading() const
+bool	Request::getDoneHeaderReading() const
 {
 	return (this->doneHeaderReading);
 }
 
-const std::map<std::string, std::string>&  Request::getRequest() const { return this->Header; }
+const std::map<std::string, std::string>&  Request::getRequest() const
+{
+	return (this->Header);
+}
 
 
 // ************* Setters *************
@@ -259,7 +275,6 @@ void	Request::setFlagError(int error_flag, const std::string& mes)
 	throw std::runtime_error(mes);
 }
 
-// ************** Main Methods *******************
 
 void	Request::storeHeader(const std::string& line)
 {
@@ -273,6 +288,7 @@ void	Request::storeHeader(const std::string& line)
 		value = line.substr(index + 2);
 	Header[key] = value;
 }
+
 
 void	Request::storeData(const std::string& dataRequest)
 {
@@ -291,33 +307,23 @@ void	Request::storeData(const std::string& dataRequest)
 		}
 		else
 		{
+			syntaxError(i, line);
 			storeHeader(line);
 		}
 	}
     doneHeaderReading = true;
 }
 
-bool	Request::ReadCheckHeader()
+"User-Agent:"
+"Host:"
+"Accept-Language:"
+"Accept-Encoding:"
+"Connection:"
+
+
+void	syntaxError(int index, const std::string& line)
 {
-	bytesRead = read(SocketFd, buf, BUF_SIZE);
-	if (bytesRead < 0)
-	{
-		ErrorFlag = INTERNAL_ERR;
-		throw std::runtime_error("read syscall failed");
-	}
-	for (int i = 0; i < bytesRead; i++)
-	{
-		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))
-		{
-			headerDone = true;
-			storeData(HeaderReq);
-			FirstChunckBodySize = bytesRead - (i + 4);
-			// std::cout << RED << "LETH: " << HeaderReq.size() << "\n" << RESET;
-			return (true);
-		}
-		HeaderReq += buf[i];
-	}
-	return (false);
+	
 }
 
 void	Request::saveFirstChuckBody()
@@ -325,38 +331,84 @@ void	Request::saveFirstChuckBody()
 	body = std::string(&(*(buf + bytesRead - FirstChunckBodySize)), FirstChunckBodySize);
 }
 
-void	Request::readBody()
+void	Request::storeBody()
 {
 	body.clear();
-	bytesRead = read(SocketFd, buf, BUF_SIZE);
-	// std::cout << RED << buf << RESET << std::endl;
-	// exit(25);
-    if (bytesRead < 0)
+	if (FirstChunckBodySize)
 	{
-		ErrorFlag = INTERNAL_ERR;
-        throw std::runtime_error("read syscall failed");
+		saveFirstChuckBody();
+		FirstChunckBodySize = 0;
+		return ;
 	}
 	body = std::string(buf, bytesRead);
 }
 
-void	Request::ParseRequest()
+// ************** Main Methods *******************
+
+bool	Request::ReadCheckHeader()
+{
+	for (int i = 0; i < bytesRead; i++)
+	{
+		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))
+		{
+			// syntaxError();
+			doneHeaderReading = true;
+			storeData(HeaderReq);
+			FirstChunckBodySize = bytesRead - (i + 4);
+			return (true);
+		}
+		HeaderReq += buf[i];
+	}
+	return (false);
+}
+
+// void	Request::ParseRequest()
+// {
+// 	try
+// 	{
+// 		bytesRead = read(SocketFd, buf, BUF_SIZE);
+
+// 		if (!doneHeaderReading && ReadCheckHeader())// * throw if error, return true if done
+// 		{
+// 			checkValidMethod(); // ! throw if error
+// 			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
+// 			{
+// 				saveFirstChuckBody();
+// 			}
+// 			// printRequest();
+// 		}
+// 		else if (MethodType == POST)
+// 		{
+// 			readBody();
+// 		}
+// 	}
+// 	catch(const std::exception& e)
+// 	{
+// 		std::cerr << RED << e.what() << RESET << '\n';
+// 	}
+// }
+
+void	Request::ReadRequest()
 {
 	try
 	{
-		if (!doneHeaderReading && ReadCheckHeader())// * throw if error, return true if done
+		bytesRead = read(SocketFd, buf, BUF_SIZE);
+		if (bytesRead < 0)
+			std::runtime_error("read system call failed\n");// ! should i set a flag ?
+		if (bytesRead == 0 && !doneHeaderReading)
+			setFlagError(BAD_REQ, "thre is No \\r\\n\\r\\n");
+		if (doneHeaderReading)
 		{
-			checkValidMethod(); // ! throw if error
-			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
+			if (MethodType == POST) // * save the first chunck body
 			{
-				saveFirstChuckBody();
+				storeBody();
 			}
-			// printRequest();
+			return ;
 		}
-		else if (MethodType == POST)
+		if (ReadCheckHeader())
 		{
-			readBody();
-			// std::cout << YELLOW << body <<RESET "\n";
-			// exit(1);
+			syntaxError();
+			checkValidMethod();
 		}
 	}
 	catch(const std::exception& e)
