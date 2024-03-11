@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 14:03:41 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:14:20 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,12 +385,11 @@ void	Response::thePostMethod()
 
 		extension = getContentExtension(this->files.mime, this->contentType);
 		fileName = "Uploads/" + generateNameFile() + extension;
+
+		this->response = "";
 	}
 
-
 	// std::cout << RED << "FILE NAME : " << fileName << RESET << std::endl;
-
-	this->response = "";
 
 	if (!this->outOpened) {
 		this->outFile.open(fileName.c_str(), std::ios::app);
@@ -400,7 +399,7 @@ void	Response::thePostMethod()
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
 	else
-		thePostResponseCreate(mode);
+		thePostResponseCreate();
 }
 
 void		Response::thePostHeaderResponse(int code, int transferType)
@@ -453,7 +452,7 @@ void	Response::thePostResponseCreatedPage(void)
 	// std::cout << "WRITE\n";
 }
 
-void	Response::thePostResponseCreate(int *mode)
+void	Response::thePostResponseCreate(void)
 {
 	int	ccl;
 	// std::cout << "========||==========\n";
@@ -462,9 +461,8 @@ void	Response::thePostResponseCreate(int *mode)
 	// this->request->printRequest();
 	if (this->postType == NORMAL_POST)
 	{
-		std::string		data = this->request->getBody();
-		this->outFile.write(data.data(), data.size());
-		this->contentTotalSizePosted += data.size();
+		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
+		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << RED << this->contentLenght << RESET << std::endl;
 		// std::cout << this->contentTotalSizePosted << "\n";
 		if (this->contentTotalSizePosted >= this->contentLenght) {
@@ -483,7 +481,7 @@ void	Response::thePostResponseCreate(int *mode)
 			this->outFile.write(data.data(), ccl);
 			// write(this->socket, this->request.getBody().data(), ccl);
 		else
-			*mode = NORMAL;
+			this->mode = NORMAL;
 	}
 }
 

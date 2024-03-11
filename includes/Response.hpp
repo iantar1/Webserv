@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/11 13:50:41 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:12:02 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ private:
 		void					PostResponse();
 
 		void					thePostHeaderResponse(int code, int transferType);
-		void					thePostResponseCreate(int *mode);
+		void					thePostResponseCreate(void);
 		void					thePostInternalServerError(void);
 		void					thePostResponseCreatedPage(void);
-		void					thePostMethod();
+		void					thePostMethod(void);
 
 };
