@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/11 14:12:02 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:18:24 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ private:
 		virtual ~Response(void);
 
 		void					errorPage(int errorCode);
-		void					thePostMethod(void);
+		// void					thePostMethod(void);
 		void					theDeleteMethod(void);
 		void					StartResponse();
 
