@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 17:59:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/11 22:05:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
+
 
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0),
 							doneServing(false), doneHeaderReading(false)
@@ -283,6 +284,8 @@ void	Request::storeHeader(const std::string& line)
 	size_t		index;
 
 	index = line.find(":");
+	if (index == std::string::npos)
+		setFlagError(BAD_REQ, "bad Request");
 	key = line.substr(0, index);
 	if (line.size() > index + 2)
 		value = line.substr(index + 2);

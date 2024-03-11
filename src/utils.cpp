@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/11 14:58:16 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/11 22:13:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,4 +190,13 @@ std::string	replacePath(std::string path, std::string location, std::string root
 {
 	path = root + path.substr(location.size());
 	return path;
+}
+
+std::string toLower(const std::string& str)
+{
+    std::string result;
+    for (size_t i = 0; i < str.size(); i++) {
+        result += std::tolower(str[i]);
+    }
+    return (result);
 }
