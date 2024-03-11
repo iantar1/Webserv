@@ -3,33 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 11:53:47 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:55:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/Server.hpp"
 
-# define PORT 8080
-
-
-	
-// use getaddrinfo()
-	// bzero(&S_Addr, sizeof(S_Addr));
-	// S_Addr.sin_family = AF_INET;// * we use ipv4
-	// S_Addr.sin_addr.s_addr = INADDR_ANY;//*the OS set to my macine's IP address//inet_addr("10.13.10.4"); u don't need to use htonl() , becouse I set 0.0.0.0
-	// std::cout << "here: " << vSer->getPort() << "\n";
-	// S_Addr.sin_port = htons(vSer->getPort()); //* host to network short (little endian / big endian problem)
-
 int Server::socketCreate(VirtualServer* vSer)
 {
-	int                 sockfd;
-	
+	int             sockfd;
 	struct addrinfo	hints;
-	struct addrinfo *res;
+	struct addrinfo	*res;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;// IP4
@@ -126,8 +114,25 @@ void Server::DropCleint(int ClientFd)
 
 // Desing Timeget.getResponse()
 
+void	Server::ServeClients(int index)
+{
+	if (events[index].events & EPOLLIN)
+	{
+		clients[events[index].data.fd]->ReadParseReqHeader();
+		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST)
+			clients[events[index].data.fd]->ServingClient();
+	}
+	else if (events[index].events & EPOLLOUT)
+	{
+		if (clients[events[index].data.fd]->getRequest()->getMethdType() == GET)
+			clients[events[index].data.fd]->ServingClient();
+		write(this->clients[events[index].data.fd]->getSocketFd(),
+				this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+					this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+	}
+}
 
-int Server::launchServer()
+int Server::ServerCore()
 {
 	epollFd = epoll_create1(0);
 	if (epollFd < 0)
@@ -138,53 +143,33 @@ int Server::launchServer()
 	{
 		int readyFd;
 		bzero(events, sizeof(events));
+		std::cout << "***************** wiating for a new connection *******************\n";
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
-			// std::cout << "readyFd: " << readyFd << "\n";
-			// std::cout << "***************** wiating for a new connection *******************\n";
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
 			for (int i = 0; i < readyFd; i++)
 			{
-				// std::cout << "readyFD: " << readyFd << "\n";
 				if (NewClient(i))
 				{
-					// std::cout << YELLOW << "new Cleint added fd: "<< events[i].data.fd << "\n" << RESET;
+					std::cout << YELLOW << "new Cleint added ,fd: "<< events[i].data.fd << "\n" << RESET;
+					connectedClients++;
+				}
+				else if (clients[events[i].data.fd]->getDoneServing() == false)
+				{
+					ServeClients(i);
 				}
 				else
 				{
-					if ((events[i].events & EPOLLIN) && clients[events[i].data.fd]->getDoneServing() == false) // serve the client
-					{
-						clients[events[i].data.fd]->ReadParseReqHeader();
-						/*
-							Hna Kayne l Mochkile Khassek T3eyete 3lya hna bache nb9a nktebe fl post machi ta ikoune 
-							l client open to EPOLOUT !!!!!!!!!!!!!!
-							So handli had lkhire....
-						*/
-						if (clients[events[i].data.fd]->getRequest()->getMethdType() == POST)
-							clients[events[i].data.fd]->ServingClient();
-					}
-					else if ((events[i].events & EPOLLOUT) && clients[events[i].data.fd]->getDoneServing() == false)
-					{
-						if (clients[events[i].data.fd]->getRequest()->getMethdType() == GET)
-							clients[events[i].data.fd]->ServingClient();
-						// std::cout << "cletnmrt: " << clients[events[i].data.fd]->getDoneServing() << "\n";
-						write(this->clients[events[i].data.fd]->getSocketFd(),
-								this->clients[events[i].data.fd]->getResponseClass()->getResponse().c_str(),
-									this->clients[events[i].data.fd]->getResponseClass()->getResponse().size());
-					}
-					else
-					{
-						// std::cout << "done: "  << clients[events[i].data.fd]->getDoneServing() << "\n";
-						DropCleint(events[i].data.fd);
-					}
+					DropCleint(events[i].data.fd);
+					connectedClients--;
 				}
 			}
 		}
 	}
 }
 
-Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser)
+Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser), connectedClients(0)
 {
 	files = getDataFromFiles();
 }

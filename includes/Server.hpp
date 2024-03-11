@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:06 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 22:28:54 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/11 14:55:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,16 @@ private:
 // epoll structure
 	struct epoll_event  				event;
 	struct epoll_event  				events[100];
+	int									connectedClients;
 
+//************ private Methods **************
 private:
 	int		socketCreate(VirtualServer* vSer);
 	void    addServersToEpoll();
 	void    addCleintToEpoll(int);
 	bool	NewClient(int);
 	void	DropCleint(int);
+	void	ServeClients(int);
 
 private:
 	Server& operator=(const Server&);
@@ -52,6 +55,6 @@ public:
 	Server(std::vector<VirtualServer*>&);
 	~Server();
 
-	int launchServer();    
+	int ServerCore();    
 };
 
