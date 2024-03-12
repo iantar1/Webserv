@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 23:15:12 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/12 02:28:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 
-Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver), SocketFd(fd), ErrorFlag(0),
-							doneServing(false), doneHeaderReading(false)
+Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
+		 SocketFd(fd), ErrorFlag(0),doneServing(false), doneHeaderReading(false)
 {
 	MethodType = 0;
 	FirstChunckBodySize = 0;
@@ -61,13 +61,13 @@ void	Request::checkValid_POST_Header()
 	{
 		setFlagError(BAD_REQ, "bad Request");
 	}
-	// if (Header.find("Content-Length") != Header.end())
-	// {
-	// 	if (atol((Header["Content-Length"]).c_str()) > Vserver->locations[location_str]->getMaxBodySize())
-	// 	{
-	// 		setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
-	// 	}
-	// }
+	if (Header.find("Content-Length") != Header.end())
+	{
+		if (atol((Header["Content-Length"]).c_str()) > location->getMaxBodySize())
+		{
+			setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
+		}
+	}
 }
 
 void	Request::checkValid_DELETE_Header()
@@ -112,7 +112,7 @@ bool	Request::URI_ValidChar(const std::string& uri) const
 	return (0);
 }
 
-bool    Request::URI_ValidLocation(const std::string& uri) const
+bool    Request::URI_ValidLocation(const std::string& uri)
 {
     mapIterType    it = Vserver->getLocationsBeginIterMap();
     mapIterType    it_end = Vserver->getLocationsEndIterMap();
@@ -121,7 +121,8 @@ bool    Request::URI_ValidLocation(const std::string& uri) const
     {
         if (uri.compare(0, (it->first).size(), it->first) == 0)
         {
-			// std::cout << ""
+			location_str = std::string(it->first);
+			location = it->second;
             if ((it->first).size() == uri.size())
                 return (0);
             if ((it->first).size() < uri.size() && uri[(it->first).size()] == '/')
@@ -310,24 +311,13 @@ void	Request::storeData(const std::string& dataRequest)
 		}
 		else
 		{
-			syntaxError(i, line);
+			//syntaxError(i, line);
 			storeHeader(line);
 		}
 	}
     doneHeaderReading = true;
 }
 
-"User-Agent:"
-"Host:"
-"Accept-Language:"
-"Accept-Encoding:"
-"Connection:"
-
-
-void	syntaxError(int index, const std::string& line)
-{
-	
-}
 
 void	Request::saveFirstChuckBody()
 {

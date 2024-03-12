@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 17:52:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/12 01:39:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ private:
 
     std::map<std::string, std::string>	Header;
 	std::vector<std::string>			RequestLine;// this line: GET /hello.htm HTTP/1.1
+    Location                            *location;
 
 	char								buf[BUF_SIZE];
 
@@ -81,7 +82,7 @@ private:
     void	URI_Checking(const std::string&);
     bool	URI_ValidLength(const std::string&) const;
     bool    URI_ValidChar(const std::string&) const;
-    bool	URI_ValidLocation(const std::string&) const;
+    bool	URI_ValidLocation(const std::string&);
     void	checkValidMethod();
     void	checkValid_GET_Header();
     void	checkValid_POST_Header();
