@@ -6,12 +6,13 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/12 02:28:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/12 02:44:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
+# include "../includes/utils.hpp"
 
 std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
@@ -39,31 +40,33 @@ void	Request::checkValidHeader()
 
 void	Request::checkValid_GET_Header()
 {
-	if (MethodType == 0)
-	{
-		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
-	}
 	if (body.empty() == false)
 	{
 		setFlagError(BAD_REQ, "bad Request");
 	}
+	for (size_t i = 0 ; i < (location->allowedMethods).size(); i++)
+	{
+		if (location->allowedMethods[i].compare("GET") == 0)
+			return ;
+	}
+	setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 }
 
 void	Request::checkValid_POST_Header()
 {
-	if (Header.find("Transfer-Encoding") != Header.end()
-		&& Header["Transfer-Encoding"] != "chunked")
+	if (Header.find("transfer-encoding") != Header.end()
+		&& Header["transfer-encoding"] != "chunked")
 	{
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
-	if (Header.find("Transfer-Encoding") == Header.end()
-		&& Header.find("Content-Length") == Header.end())
+	if (Header.find("transfer-encoding") == Header.end()
+		&& Header.find("content-length") == Header.end())
 	{
 		setFlagError(BAD_REQ, "bad Request");
 	}
-	if (Header.find("Content-Length") != Header.end())
+	if (Header.find("content-length") != Header.end())
 	{
-		if (atol((Header["Content-Length"]).c_str()) > location->getMaxBodySize())
+		if (atol((Header["content-length"]).c_str()) > location->getMaxBodySize())
 		{
 			setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
 		}
@@ -72,7 +75,16 @@ void	Request::checkValid_POST_Header()
 
 void	Request::checkValid_DELETE_Header()
 {
-	
+		if (body.empty() == false)
+	{
+		setFlagError(BAD_REQ, "bad Request");
+	}
+	for (size_t i = 0 ; i < (location->allowedMethods).size(); i++)
+	{
+		if (location->allowedMethods[i].compare("DELETE") == 0)
+			return ;
+	}
+	setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 }
 
 void	Request::checkValidMethod()
@@ -287,7 +299,7 @@ void	Request::storeHeader(const std::string& line)
 	index = line.find(":");
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
-	key = line.substr(0, index);
+	key = toLower(line.substr(0, index));
 	if (line.size() > index + 2)
 		value = line.substr(index + 2);
 	Header[key] = value;
@@ -400,7 +412,6 @@ void	Request::ReadRequest()
 		}
 		if (ReadCheckHeader())
 		{
-			syntaxError();
 			checkValidMethod();
 		}
 	}

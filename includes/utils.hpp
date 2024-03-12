@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/05 12:42:35 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/12 02:32:19 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ std::map<std::string, std::string> mimeTypes(void);
 bool	isAllowed(std::string &str);
 bool	isLongReq(std::string &str);
 bool	startsWith(std::string full, std::string start);
+
+
+std::string toLower(const std::string&);
 
 template <typename T>
 std::string toStr(const T& value) {

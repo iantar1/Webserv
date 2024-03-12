@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 21:05:30 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/12 03:23:56 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,23 +79,19 @@ void	Response::StartResponse()
 }
 // ******** DELETE MEthod ************
 
-// void	Response::Delete(const std::string& path)
-// {
-// 	struct stat statBuf;
+void	Response::Delete(const std::string& path)
+{
+	struct stat statBuf;
 
-// 	checkAllowedDelete();
-//     if (stat(path.c_str(), &statBuf)) {
-		// ! set a flag in request file
-		// ! wash kayen , wash 3ndek lh9 deleteh.
-		// ! you must check errors in requst 
-		// ! and send what you want to delete or a flag
-// 		if (check_flag)
-// 		else
-// 			CALL_method();
-//         throw std::runtime_error("");
-//     }
+	checkAllowedDelete();
+    if (stat(path.c_str(), &statBuf)) {
+		if (check_flag)
+		else
+			CALL_method();
+        throw std::runtime_error("");
+    }
 	
-// }
+}
 
 void		Response::theGetHeaderResponse(int code, int transferType)
 {
