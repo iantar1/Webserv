@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/12 01:39:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 23:26:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,12 @@ public:
 
 private:
 // ***************** Private Methodes **************
-    void	SetNewPath();
-    bool	ReadCheckHeader();
-    void	saveFirstChuckBody();
-    void	storeBody();
-    void	WhichMethod(const std::string&);
+    void	    SetNewPath();
+    bool	    ReadCheckHeader();
+    void	    saveFirstChuckBody();
+    void	    storeBody();
+    void	    WhichMethod(const std::string&);
+    std::string skipLeadingWhitespace(const std::string&);
 
 // ***************** Error checking Method **********
     void	URI_Checking(const std::string&);

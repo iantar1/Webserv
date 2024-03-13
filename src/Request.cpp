@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 22:00:31 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/13 23:33:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,6 +301,14 @@ void	Request::setFlagError(int error_flag, const std::string& mes)
 	throw std::runtime_error(mes);
 }
 
+std::string Request::skipLeadingWhitespace(const std::string& str)
+{
+    std::string result;
+	size_t index;
+
+    for (index = 0; index < str.length() && isspace(str[index]); ++index) {}
+    return (str.substr(index));
+}
 
 void	Request::storeHeader(const std::string& line)
 {
@@ -312,8 +320,7 @@ void	Request::storeHeader(const std::string& line)
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
-	if (line.size() > index + 2)
-		value = line.substr(index + 2);
+	value = skipLeadingWhitespace(line.substr(index));
 	Header[key] = value;
 }
 
@@ -337,7 +344,6 @@ void	Request::storeData(const std::string& dataRequest)
 		}
 		else
 		{
-			//syntaxError(i, line);
 			storeHeader(line);
 		}
 	}
@@ -370,7 +376,6 @@ bool	Request::ReadCheckHeader()
 	{
 		if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 		{
-			// syntaxError();
 			doneHeaderReading = true;
 			storeData(HeaderReq);
 			FirstChunckBodySize = bytesRead - (i + 4);
@@ -380,32 +385,6 @@ bool	Request::ReadCheckHeader()
 	}
 	return (false);
 }
-
-// void	Request::ParseRequest()
-// {
-// 	try
-// 	{
-// 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-
-// 		if (!doneHeaderReading && ReadCheckHeader())// * throw if error, return true if done
-// 		{
-// 			checkValidMethod(); // ! throw if error
-// 			if (MethodType == POST && FirstChunckBodySize) // * save the first chunck body
-// 			{
-// 				saveFirstChuckBody();
-// 			}
-// 			// printRequest();
-// 		}
-// 		else if (MethodType == POST)
-// 		{
-// 			readBody();
-// 		}
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		std::cerr << RED << e.what() << RESET << '\n';
-// 	}
-// }
 
 void	Request::ReadRequest()
 {
