@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/10 13:16:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:48:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@
 # define MOVED_PERMA 301
 # define FOUND 302
 # define UNAUTHORIZED 401
-# define FORBIDDEN 403
+# define FORBIDDEN 403 // !return in delete
 # define METHOD_NOT_ALLOWED 405
 # define CONFLICT 409
 # define NOT_FOUND 404
@@ -83,3 +83,8 @@
 
 # define  ACCEPTED 202
 
+// ! delete method
+
+# define SUCCESS 0
+# define PERMISSION_DENIED 1
+# define ERROR 2

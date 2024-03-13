@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 01:52:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 15:02:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,6 @@ int Server::ServerCore()
 Server::Server(std::vector<VirtualServer*>& Vser) : Vservers(Vser), connectedClients(0)
 {
 	files = getDataFromFiles();
-	// ! here you should open key Request  file 
 }
 
 

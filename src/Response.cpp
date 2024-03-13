@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 14:31:52 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:56:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,34 +100,28 @@ bool	isDiractory(const std::string& path)
 bool	deleteFile(const std::string& path)
 {
 	if (access(path.c_str(), W_OK))
-    {
-        // ! set flag
-        return (1);
-    }
+        return (PERMISSION_DENIED);
     if (unlink(path.c_str()))
-        // ! set flag
-    return (0);
+        return (ERROR);
+    return (SUCCESS);
 }
-
-# define FLAG 1
 
 int	deleteDiractory(const std::string& path)
 {
-	struct dirent *entry;
-    DIR *dir_stream;
-    std::string entryFullPath;
+	struct dirent	*entry;
+    DIR 			*dir_stream;
+    std::string		entryFullPath;
+	int 			status;
 
     dir_stream = opendir(path.c_str());
     if (dir_stream == NULL)
     {
-        // ! setflag
-        return (1);
+        return (PERMISSION_DENIED);
     }
     if (access(path.c_str(), R_OK | W_OK))
     {
         closedir(dir_stream);
-        // ! setflag
-        return (1);
+        return (PERMISSION_DENIED);
     }
     while ((entry = readdir(dir_stream)) != NULL)
     {
@@ -139,20 +133,22 @@ int	deleteDiractory(const std::string& path)
         entryFullPath += entry->d_name;
         if (isDiractory(entryFullPath.c_str()))
         {
-            deleteDiractory(entryFullPath.c_str());
+			status = deleteDiractory(entryFullPath.c_str());
+            if (status)
+				return (status); //! rmdir fail
         }
         if (isFile(entryFullPath.c_str()))
         {
-            if (deleteFile(entryFullPath.c_str()))
+			status = deleteFile(entryFullPath.c_str());
+            if (status)
 			{
                 closedir(dir_stream);
-				// ! set flag
-				return (1);
+				return (status);
 			}
         }
     }
     closedir(dir_stream);
-    rmdir(path.c_str());
+    return (rmdir(path.c_str()));
 }
 
 
