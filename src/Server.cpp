@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 15:02:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 23:48:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,16 @@ void	Server::ServeClients(int index)
 	{
 		clients[events[index].data.fd]->ReadParseReqHeader();
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST)
-			clients[events[index].data.fd]->ServingClient();
+		{
+			clients[events[index].data.fd]->ServingClient();	
+		}
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == GET)
+		{
 			clients[events[index].data.fd]->ServingClient();
+		}
 		write(this->clients[events[index].data.fd]->getSocketFd(),
 				this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 					this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());

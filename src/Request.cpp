@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 23:33:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 23:58:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ void	Request::checkValid_GET_Header()
 void	Request::checkValid_POST_Header()
 {
 
-	std::map<std::string, std::string>::iterator	it = this->Header.find("transfer-encoding");
-	std::cout << "*******************************************************" << std::endl;
+	// std::map<std::string, std::string>::iterator	it = this->Header.find("transfer-encoding");
+	// std::cout << "*******************************************************" << std::endl;
 	// while (it != this->Header.end()) {
-		std::cout << it->first << " || " << it->second << " || " << it->second.compare("chunked") << std::endl;
+		// std::cout << it->first << " || " << it->second << " || " << it->second.compare("chunked") << std::endl;
 	// 	it++;
 	// }
-	std::cout << "*******************************************************" << std::endl;
+	// std::cout << "*******************************************************" << std::endl;
 
 
 
@@ -107,7 +107,7 @@ void	Request::checkValidMethod()
 		checkValid_GET_Header();
 		break;
 	case POST:
-		// checkValid_POST_Header();
+		checkValid_POST_Header();
 		break;
 	case DELETE:
 		checkValid_DELETE_Header();
@@ -205,11 +205,11 @@ void	Request::storeRequestLine(const std::string& line)
 			setFlagError(BAD_REQ, "BAD REQUEST");
 		RequestLine.push_back(word);
 	}
+	WhichMethod(RequestLine[0]);
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
 	oldPath = RequestLine[1]; // /hello.htmn for example
 	SetNewPath(); // set new Path
-	WhichMethod(RequestLine[0]);
 }
 
 
@@ -379,6 +379,7 @@ bool	Request::ReadCheckHeader()
 			doneHeaderReading = true;
 			storeData(HeaderReq);
 			FirstChunckBodySize = bytesRead - (i + 4);
+
 			return (true);
 		}
 		HeaderReq += buf[i];
@@ -390,10 +391,8 @@ void	Request::ReadRequest()
 {
 	try
 	{
-		std::cout << "???" << std::endl;
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 
-		// std::cout << "================ REQUEST ===============" << std::endl;
 		// std::cout << buf << std::endl;
 		// std::cout << "================== END =================" << std::endl;
 		std::cout << "BytesRead = " << bytesRead << std::endl;
@@ -411,18 +410,12 @@ void	Request::ReadRequest()
 		{
 			if (MethodType == POST) // * save the first chunck body
 			{
+
 				storeBody();
 			}
-			// std::map<std::string, std::string>::iterator	it = this->Header.begin();
-			// std::cout << "*******************************************************" << std::endl;
-			// while (it != this->Header.end()) {
-			// 	std::cout << it->first << " || " << it->second << std::endl;
-			// 	it++;
-			// }
-			// std::cout << "*******************************************************" << std::endl;
-			return ;
 		}
-
+		printRequest();
+		
 	}
 	catch(const std::exception& e)
 	{
@@ -440,5 +433,9 @@ void	Request::printRequest()
 	{
 		std::cout << it->first << ":"<< it->second << "\n";
 	}
+	std::cout << "||************REQUEST Body************||\n\n";
+	std::cout << body << "\n";
+	std::cout << "||************************************||\n";
+	
 }
 
