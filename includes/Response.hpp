@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 14:24:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 20:06:01 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ private:
 	private :
 		int 				socket;
 		int					contentTotalSizePosted;
+		int					chunkContentTotalSizePosted;
+		int					chunkSize;
 		int					mode;
 		int					contentLenght;
 		int					postType;

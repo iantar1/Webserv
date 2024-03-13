@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/12 02:44:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 22:00:31 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,21 @@ void	Request::checkValid_GET_Header()
 
 void	Request::checkValid_POST_Header()
 {
-	if (Header.find("transfer-encoding") != Header.end()
-		&& Header["transfer-encoding"] != "chunked")
+
+	std::map<std::string, std::string>::iterator	it = this->Header.find("transfer-encoding");
+	std::cout << "*******************************************************" << std::endl;
+	// while (it != this->Header.end()) {
+		std::cout << it->first << " || " << it->second << " || " << it->second.compare("chunked") << std::endl;
+	// 	it++;
+	// }
+	std::cout << "*******************************************************" << std::endl;
+
+
+
+	if (this->Header.find("transfer-encoding") != this->Header.end()
+		&& this->Header.find("transfer-encoding")->second.compare("chunked"))
 	{
+		std::cout << Header["transfer-encoding"] << " <==" <<std::endl;
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("transfer-encoding") == Header.end()
@@ -95,7 +107,7 @@ void	Request::checkValidMethod()
 		checkValid_GET_Header();
 		break;
 	case POST:
-		checkValid_POST_Header();
+		// checkValid_POST_Header();
 		break;
 	case DELETE:
 		checkValid_DELETE_Header();
@@ -310,6 +322,8 @@ void	Request::storeData(const std::string& dataRequest)
 {
 	std::istringstream iss(dataRequest);
     std::string line;
+
+
 	
 	for (int i = 0; std::getline(iss, line); i++)
 	{
@@ -333,7 +347,7 @@ void	Request::storeData(const std::string& dataRequest)
 
 void	Request::saveFirstChuckBody()
 {
-	body = std::string(&(*(buf + bytesRead - FirstChunckBodySize)), FirstChunckBodySize);
+	body = std::string(buf + bytesRead - FirstChunckBodySize, FirstChunckBodySize);
 }
 
 void	Request::storeBody()
@@ -354,7 +368,7 @@ bool	Request::ReadCheckHeader()
 {
 	for (int i = 0; i < bytesRead; i++)
 	{
-		if (i + 3 < bytesRead && !strncmp(&(*(buf + i)), "\r\n\r\n", 4))
+		if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 		{
 			// syntaxError();
 			doneHeaderReading = true;
@@ -397,23 +411,39 @@ void	Request::ReadRequest()
 {
 	try
 	{
+		std::cout << "???" << std::endl;
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
+
+		// std::cout << "================ REQUEST ===============" << std::endl;
+		// std::cout << buf << std::endl;
+		// std::cout << "================== END =================" << std::endl;
+		std::cout << "BytesRead = " << bytesRead << std::endl;
+
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n");// ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
 			setFlagError(BAD_REQ, "thre is No \\r\\n\\r\\n");
+
+		if (ReadCheckHeader())
+		{
+			checkValidMethod();
+		}
 		if (doneHeaderReading)
 		{
 			if (MethodType == POST) // * save the first chunck body
 			{
 				storeBody();
 			}
+			// std::map<std::string, std::string>::iterator	it = this->Header.begin();
+			// std::cout << "*******************************************************" << std::endl;
+			// while (it != this->Header.end()) {
+			// 	std::cout << it->first << " || " << it->second << std::endl;
+			// 	it++;
+			// }
+			// std::cout << "*******************************************************" << std::endl;
 			return ;
 		}
-		if (ReadCheckHeader())
-		{
-			checkValidMethod();
-		}
+
 	}
 	catch(const std::exception& e)
 	{

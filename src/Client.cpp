@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 01:51:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 17:38:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void    Client::PrintRequest() const
 void	Client::ReadParseReqHeader()
 {
     request.ReadRequest();
+    // std::cout << "*******************FIRST BODY***********************" << request.getBody() << "*************************END**********************" << std::endl;
 }
 
 

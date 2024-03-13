@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 14:59:02 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 18:24:43 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ Location*	getLocation1(std::string location)
 	
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
+	loc->setMaxbodySize(9000000);
 	
 	return (loc);
 }
@@ -60,7 +61,7 @@ Location*	getLocation2(std::string location)
 	loc->index = "page.html";
 	loc->root = "/nfs/homes/nabboune/Desktop/Projects/Web";
 	loc->location =  "/";
-	
+
 	loc->errorPage[404] = "";
 	loc->cgi[".py"] = "/usr/bin/python3";
 
@@ -69,6 +70,7 @@ Location*	getLocation2(std::string location)
 	
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
+	loc->setMaxbodySize(9000000);
 	
 	return (loc);
 }

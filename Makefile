@@ -6,14 +6,16 @@ RM = rm -rf
 
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
 
-SRC =	./src/main.cpp \
-  		./src/Server.cpp \
-		./src/VirtualServer.cpp \
+SRC =	./src/VirtualServer.cpp \
 		./src/Response.cpp \
 		./src/Location.cpp \
+		./src/Request.cpp \
 		./src/Client.cpp \
+  		./src/Server.cpp \
 		./src/utils.cpp \
-		./src/Request.cpp
+		./src/main.cpp \
+		./src/Post.cpp \
+		./src/Get.cpp
 		
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
