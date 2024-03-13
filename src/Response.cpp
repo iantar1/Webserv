@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 17:09:12 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/13 23:11:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	Response::StartResponse()
 }
 // ******** DELETE MEthod ************
 
-bool	isFile(const std::string& path)
+bool	Response::isFile(const std::string& path)
 {
 	struct stat file_info;
 
@@ -88,7 +88,7 @@ bool	isFile(const std::string& path)
 	return (S_ISREG(file_info.st_mode));
 }
 
-bool	isDiractory(const std::string& path)
+bool	Response::isDiractory(const std::string& path)
 {
 	struct stat file_info;
 
@@ -97,7 +97,7 @@ bool	isDiractory(const std::string& path)
 	return (S_ISDIR(file_info.st_mode));
 }
 
-bool	deleteFile(const std::string& path)
+bool	Response::deleteFile(const std::string& path)
 {
 	if (access(path.c_str(), W_OK))
 		return (PERMISSION_DENIED);
@@ -106,7 +106,7 @@ bool	deleteFile(const std::string& path)
 	return (SUCCESS);
 }
 
-int	deleteDiractory(const std::string& path)
+int	Response::deleteDiractory(const std::string& path)
 {
 	struct dirent	*entry;
 	DIR 			*dir_stream;

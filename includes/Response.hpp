@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 20:06:01 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/13 23:10:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,11 @@ private:
 		void					thePostInternalServerError(void);
 		void					thePostResponseCreatedPage(void);
 		void					thePostMethod(void);
-
+	
+// ******* DelteMethod
+	private:
+		bool	isFile(const std::string&);
+		bool	isDiractory(const std::string&);
+		bool	deleteFile(const std::string&);
+		int		deleteDiractory(const std::string&);
 };
