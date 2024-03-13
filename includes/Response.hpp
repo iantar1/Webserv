@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/11 17:22:28 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:24:36 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,8 @@ private:
 
 
 		const std::string		&getResponse() const;
-
-
 		void					PostResponse();
+		void					DeleteMethod(const std::string&);
 
 		void					thePostHeaderResponse(int code, int transferType);
 		void					thePostResponseCreate(void);

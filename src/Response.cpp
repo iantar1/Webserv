@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 01:49:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 14:31:52 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,51 +79,96 @@ void	Response::StartResponse()
 }
 // ******** DELETE MEthod ************
 
-// bool	isFile(const std::string& path)
-// {
-// 	struct stat file_info;
+bool	isFile(const std::string& path)
+{
+	struct stat file_info;
 
-//     if (stat(path.c_str(), &file_info))
-//         return (false);
-//     return (S_ISREG(file_info.st_mode));
-// }
+    if (stat(path.c_str(), &file_info))
+        return (false);
+    return (S_ISREG(file_info.st_mode));
+}
 
-// bool	isDiractory(const std::string& path)
-// {
-// 	struct stat file_info;
+bool	isDiractory(const std::string& path)
+{
+	struct stat file_info;
 
-//     if (stat(path.c_str(), &file_info))
-//         return (false);
-//     return (S_ISDIR(file_info.st_mode));
-// }
+    if (stat(path.c_str(), &file_info))
+        return (false);
+    return (S_ISDIR(file_info.st_mode));
+}
 
-// void	Response::deleteFile(const std::string& path)
-// {
-// 	if (access(path.c_str(), W_OK))
-//         //PERMISSION_DENIED;
-//     if (unlink(path.c_str()))
-//         // ERROR
-// }
+bool	deleteFile(const std::string& path)
+{
+	if (access(path.c_str(), W_OK))
+    {
+        // ! set flag
+        return (1);
+    }
+    if (unlink(path.c_str()))
+        // ! set flag
+    return (0);
+}
 
-// void	Response::deleteDiractory(const std::string& path)
-// {
+# define FLAG 1
+
+int	deleteDiractory(const std::string& path)
+{
+	struct dirent *entry;
+    DIR *dir_stream;
+    std::string entryFullPath;
+
+    dir_stream = opendir(path.c_str());
+    if (dir_stream == NULL)
+    {
+        // ! setflag
+        return (1);
+    }
+    if (access(path.c_str(), R_OK | W_OK))
+    {
+        closedir(dir_stream);
+        // ! setflag
+        return (1);
+    }
+    while ((entry = readdir(dir_stream)) != NULL)
+    {
+        if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
+            continue ;
+        entryFullPath = path;
+        if (entryFullPath[entryFullPath.size() - 1] != '/')
+            entryFullPath += '/';
+        entryFullPath += entry->d_name;
+        if (isDiractory(entryFullPath.c_str()))
+        {
+            deleteDiractory(entryFullPath.c_str());
+        }
+        if (isFile(entryFullPath.c_str()))
+        {
+            if (deleteFile(entryFullPath.c_str()))
+			{
+                closedir(dir_stream);
+				// ! set flag
+				return (1);
+			}
+        }
+    }
+    closedir(dir_stream);
+    rmdir(path.c_str());
+}
+
+
+void	Response::DeleteMethod(const std::string& path)
+{
+	struct stat statBuf;
+
+	checkAllowedDelete();
+    if (stat(path.c_str(), &statBuf)) {
+		if (check_flag)
+		else
+			CALL_method();
+        throw std::runtime_error("");
+    }
 	
-// }
-
-
-// void	Response::DeleteMethod(const std::string& path)
-// {
-// 	struct stat statBuf;
-
-// 	checkAllowedDelete();
-//     if (stat(path.c_str(), &statBuf)) {
-// 		if (check_flag)
-// 		else
-// 			CALL_method();
-//         throw std::runtime_error("");
-//     }
-	
-// }
+}
 
 void		Response::theGetHeaderResponse(int code, int transferType)
 {
