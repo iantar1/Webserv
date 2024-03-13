@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/10 14:35:30 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/12 03:23:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 01:49:56 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +79,51 @@ void	Response::StartResponse()
 }
 // ******** DELETE MEthod ************
 
-void	Response::Delete(const std::string& path)
-{
-	struct stat statBuf;
+// bool	isFile(const std::string& path)
+// {
+// 	struct stat file_info;
 
-	checkAllowedDelete();
-    if (stat(path.c_str(), &statBuf)) {
-		if (check_flag)
-		else
-			CALL_method();
-        throw std::runtime_error("");
-    }
+//     if (stat(path.c_str(), &file_info))
+//         return (false);
+//     return (S_ISREG(file_info.st_mode));
+// }
+
+// bool	isDiractory(const std::string& path)
+// {
+// 	struct stat file_info;
+
+//     if (stat(path.c_str(), &file_info))
+//         return (false);
+//     return (S_ISDIR(file_info.st_mode));
+// }
+
+// void	Response::deleteFile(const std::string& path)
+// {
+// 	if (access(path.c_str(), W_OK))
+//         //PERMISSION_DENIED;
+//     if (unlink(path.c_str()))
+//         // ERROR
+// }
+
+// void	Response::deleteDiractory(const std::string& path)
+// {
 	
-}
+// }
+
+
+// void	Response::DeleteMethod(const std::string& path)
+// {
+// 	struct stat statBuf;
+
+// 	checkAllowedDelete();
+//     if (stat(path.c_str(), &statBuf)) {
+// 		if (check_flag)
+// 		else
+// 			CALL_method();
+//         throw std::runtime_error("");
+//     }
+	
+// }
 
 void		Response::theGetHeaderResponse(int code, int transferType)
 {
@@ -476,48 +508,48 @@ void	Response::thePostResponseCreate(void)
 	else if (this->postType == CHUNKED_POST)
 	{
 		std::string		data = this->request->getBody();
-		int				restart;
+		// int				restart;
 
-		if (!this->startedTheChunk) {
-			int	nl = this->request->getBody().find("\r\n");
+		// if (!this->startedTheChunk) {
+		// 	int	nl = this->request->getBody().find("\r\n");
 
-			if (nl != std::string::npos) {
-				this->ccl = hexStringToInt(this->request->getBody());
-				nl += 2;
-			}
-			else {
-				nl = 0;
-				restart = -1;
-			}
-			this->outFile.write(this->request->getBody().substr(nl).c_str(), this->request->getBody().substr(nl).size());
-			this->contentTotalSizePosted += this->request->getBody().substr(nl).size();
-			if (this->ccl != this->contentTotalSizePosted)
-				this->startedTheChunk = true;
-			else {
-				this->startedTheChunk = false;
-				this->contentTotalSizePosted = 0;
-			}
-		}
-		else {
-			int	nl = this->request->getBody().find_first_of("\r\n");
-			// int	lnl = this->request->getBody().find_first_of("\r\n");
+		// 	if (nl != std::string::npos) {
+		// 		this->ccl = hexStringToInt(this->request->getBody());
+		// 		nl += 2;
+		// 	}
+		// 	else {
+		// 		nl = 0;
+		// 		restart = -1;
+		// 	}
+		// 	this->outFile.write(this->request->getBody().substr(nl).c_str(), this->request->getBody().substr(nl).size());
+		// 	this->contentTotalSizePosted += this->request->getBody().substr(nl).size();
+		// 	if (this->ccl != this->contentTotalSizePosted)
+		// 		this->startedTheChunk = true;
+		// 	else {
+		// 		this->startedTheChunk = false;
+		// 		this->contentTotalSizePosted = 0;
+		// 	}
+		// }
+		// else {
+		// 	int	nl = this->request->getBody().find_first_of("\r\n");
+		// 	// int	lnl = this->request->getBody().find_first_of("\r\n");
 
-			if (nl == std::string::npos) {
-				this->outFile.write(this->request->getBody().c_str(), this->request->getBody().size());
-				this->contentTotalSizePosted += this->request->getBody().size();
-				restart = -1;
-			}
-			else {
-				this->outFile.write(this->request->getBody().substr(0, nl).c_str(), nl);
-				this->contentTotalSizePosted += nl;
-				restart = nl + 2;
-			}
+		// 	if (nl == std::string::npos) {
+		// 		this->outFile.write(this->request->getBody().c_str(), this->request->getBody().size());
+		// 		this->contentTotalSizePosted += this->request->getBody().size();
+		// 		restart = -1;
+		// 	}
+		// 	else {
+		// 		this->outFile.write(this->request->getBody().substr(0, nl).c_str(), nl);
+		// 		this->contentTotalSizePosted += nl;
+		// 		restart = nl + 2;
+		// 	}
 
-			if (this->ccl == this->contentTotalSizePosted) {
-				this->startedTheChunk = false;
-				this->contentTotalSizePosted = 0;
-			}
-		}
+		// 	if (this->ccl == this->contentTotalSizePosted) {
+		// 		this->startedTheChunk = false;
+		// 		this->contentTotalSizePosted = 0;
+		// 	}
+		// }
 
 /*
 	chunk :

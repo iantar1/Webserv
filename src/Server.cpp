@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/11 21:30:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/13 01:52:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int Server::ServerCore()
 	{
 		int readyFd;
 		bzero(events, sizeof(events));
-		std::cout << "***************** wiating for a new connection *******************\n";
+		// std::cout << "***************** wiating for a new connection *******************\n";
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
 		{
 			if (readyFd < 0)
