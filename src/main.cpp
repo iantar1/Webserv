@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 18:24:43 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/14 00:09:27 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ Location*	getLocation1(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 	
-	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/WebServ";
-	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/WebServ/";
+	loc->uploadPath = "/nfs/homes/iantar/Desktop/WebservServ";
+	loc->uploadPost = "/nfs/homes/iantar/Desktop/WebservServ/";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/nabboune/Desktop/Projects/WebServ/";
+	loc->root = "/nfs/homes/iantar/Desktop/WebservServ/";
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
@@ -46,7 +46,7 @@ Location*	getLocation1(std::string location)
 	return (loc);
 }
 
-// iantarPath: 
+// /nfs/homes/iantar/Desktop/Webserv
 
 Location*	getLocation2(std::string location)
 {
@@ -56,10 +56,10 @@ Location*	getLocation2(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 	
-	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/Web";
-	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/Web";
+	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
+	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/nabboune/Desktop/Projects/Web";
+	loc->root = "/nfs/homes/iantar/Desktop/Webserv";
 	loc->location =  "/";
 
 	loc->errorPage[404] = "";
