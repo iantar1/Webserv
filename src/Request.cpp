@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 03:50:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 04:02:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
-													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
+											SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	MethodType = 0;
 	lastCharHederIndex = 0;
@@ -113,9 +113,7 @@ std::string Request::skipLeadingWhitespace(const std::string &str)
 	std::string result;
 	size_t index;
 
-	for (index = 0; index < str.length() && isspace(str[index]); ++index)
-	{
-	}
+	for (index = 0; index < str.length() && isspace(str[index]); ++index) {}
 	return (str.substr(index));
 }
 
@@ -135,8 +133,8 @@ void Request::storeHeader(const std::string &line)
 
 void Request::storeData(const std::string &dataRequest)
 {
-	std::istringstream iss(dataRequest);
-	std::string line;
+	std::istringstream	iss(dataRequest);
+	std::string			line;
 
 	for (int i = 0; std::getline(iss, line); i++)
 	{
@@ -162,7 +160,6 @@ void Request::saveFirstChuckBody()
 	{
 		body += buf[i];
 	}
-	// body = std::string(buf + bytesRead - lastCharHederIndex, lastCharHederIndex);
 }
 
 void Request::storeBody()
@@ -245,7 +242,7 @@ void Request::checkValidMethod()
 		checkValid_DELETE_Header();
 		break;
 	default:
-
+		setFlagError(BAD_REQ, "Bad Req");
 		break;
 	}
 }
@@ -283,7 +280,7 @@ bool Request::URI_ValidLocation(const std::string &uri)
 				return (0);
 			if ((it->first).size() < uri.size() && uri[(it->first).size()] == '/')
 				return (0);
-			if (it->first == "/") // hard code
+			if (it->first == "/") // ! hard code
 				return (0);
 		}
 	}
@@ -373,11 +370,6 @@ void Request::ReadRequest()
 	try
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-
-		// std::cout << buf << std::endl;
-		// std::cout << "================== END =================" << std::endl;
-		std::cout << "BytesRead = " << bytesRead << std::endl;
-
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
