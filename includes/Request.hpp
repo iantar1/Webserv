@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 23:26:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 03:49:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ private:
     int                                 bytesRead;
 	int									MethodType;
     int                                 TransferMode;  // Chuncked() or normal(content length)
-    int                                 FirstChunckBodySize;
+    int                                 lastCharHederIndex;
 
     std::string                         RequestHeader;
     std::string                         chunkedBodySize;

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 02:13:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 03:50:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
 													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	MethodType = 0;
-	FirstChunckBodySize = 0;
+	lastCharHederIndex = 0;
 }
 
 Request::~Request()
@@ -158,16 +158,20 @@ void Request::storeData(const std::string &dataRequest)
 
 void Request::saveFirstChuckBody()
 {
-	body = std::string(buf + bytesRead - FirstChunckBodySize, FirstChunckBodySize);
+	for (int i = lastCharHederIndex; i < bytesRead; i++)
+	{
+		body += buf[i];
+	}
+	// body = std::string(buf + bytesRead - lastCharHederIndex, lastCharHederIndex);
 }
 
 void Request::storeBody()
 {
 	body.clear();
-	if (FirstChunckBodySize)
+	if (lastCharHederIndex)
 	{
 		saveFirstChuckBody();
-		FirstChunckBodySize = 0;
+		lastCharHederIndex = 0;
 		return;
 	}
 	body = std::string(buf, bytesRead);
@@ -195,18 +199,9 @@ void Request::checkValid_GET_Header()
 
 void Request::checkValid_POST_Header()
 {
-
-	std::cout << "size: " << Header.size() << "\n";
-	std::cout << "*******************************************************" << std::endl;
-	// for (std::map<std::string, std::string>::iterator	it = this->Header.begin(); it != this->Header.end(); ++it)
-	// {
-	// 	std::cout << it->first << " || " << it->second << " || "  << std::endl;
-	// }
-	std::cout << "*******************************************************" << std::endl;
-
-	if (this->Header.find("transfer-encoding") != this->Header.end() && this->Header.find("transfer-encoding")->second.compare("chunked"))
+	if (this->Header.find("transfer-encoding") != this->Header.end()
+		&& this->Header.find("transfer-encoding")->second.compare("chunked"))
 	{
-		// std::cout << Header["transfer-encoding"] << " <==" <<std::endl;
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
@@ -264,7 +259,8 @@ bool Request::URI_ValidChar(const std::string &uri) const
 {
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i]) && validChars.find(uri[i]) == std::string::npos)
+		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i])
+			&& validChars.find(uri[i]) == std::string::npos)
 		{
 			return (1);
 		}
@@ -362,7 +358,7 @@ bool Request::ReadCheckHeader()
 		{
 			doneHeaderReading = true;
 			storeData(HeaderReq);
-			FirstChunckBodySize = bytesRead - (i + 4);
+			lastCharHederIndex = i + 3;
 
 			return (true);
 		}
@@ -371,11 +367,6 @@ bool Request::ReadCheckHeader()
 	return (false);
 }
 
-// std::ostream &operator<<(std::ostream &os, const char *str)
-// {
-// 	printf("%s", str);
-// 	return os;
-// }
 
 void Request::ReadRequest()
 {
@@ -403,19 +394,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-
-		for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
-		{
-			std::cout << it->first << " || " << it->second << " || " << std::endl;
-		}
-
-		std::cout << "**************************************************\n";
-		for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
-		{
-			printf(" =====> %c", it->second[it->second.length() - 1]);
-			// std::cout << it->first << " || " << it->second << " || " << std::endl;
-		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{
