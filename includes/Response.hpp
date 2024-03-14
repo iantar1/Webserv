@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 23:26:17 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 23:00:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ private:
 
 		const std::string		&getResponse() const;
 		void					PostResponse();
-		void					DeleteMethod(const std::string&);
 
 		void					thePostHeaderResponse(int code, int transferType);
 		void					thePostResponseCreate(void);
@@ -92,8 +91,8 @@ private:
 	
 // ******************** DelteMethod **************
 	private:
+		int		DeleteMethod(const std::string&);
 		bool	isFile(const std::string&);
 		bool	isDiractory(const std::string&);
 		bool	deleteFile(const std::string&);
-		int		deleteDiractory(const std::string&);
 };

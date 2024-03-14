@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 04:07:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 04:19:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void Server::DropCleint(int ClientFd)
 	// std::cout << RED << "Drop Client\n" << RESET;
 }
 
-// Desing Timeget.getResponse()
+// ! Desing Timeget.getResponse()
 
 void	Server::ServeClients(int index)
 {

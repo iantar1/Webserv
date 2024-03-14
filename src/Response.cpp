@@ -6,30 +6,31 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 23:11:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/14 22:59:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/macros.hpp"
-# include "../includes/Response.hpp"
-# include "../includes/utils.hpp"
+#include "../includes/macros.hpp"
+#include "../includes/Response.hpp"
+#include "../includes/utils.hpp"
 
-Response::Response(Request* request, t_files &files) : contentTotalSizePosted(0),
-		request(request), files(files), streamStart(false), outOpened(false), 
-		gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false)
+Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
+													   request(request), files(files), streamStart(false), outOpened(false),
+													   gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false)
 {
 	this->socket = request->getFdSocket();
 }
 
 Response::~Response(void)
 {
-	
-	std::cout << GREEN << "RESPONCE DESTRUCTOR\n" << RESET;
+
+	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
+			  << RESET;
 }
 
-void	Response::errorPage(int errorCode)
+void Response::errorPage(int errorCode)
 {
-	std::map<int, std::string>::iterator	header_it;
+	std::map<int, std::string>::iterator header_it;
 
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(errorCode)->second;
@@ -56,7 +57,7 @@ void	Response::errorPage(int errorCode)
 	this->response.clear();
 }
 
-void	Response::StartResponse()
+void Response::StartResponse()
 {
 	// if (request->getError() != 0)
 	// {
@@ -75,11 +76,13 @@ void	Response::StartResponse()
 		// thePostMethod(mode);
 		PostResponse();
 	}
-	//else Delete
+	else if (request->getMethdType() == DELETE)
+	{
+	}
 }
 // ******** DELETE MEthod ************
 
-bool	Response::isFile(const std::string& path)
+bool Response::isFile(const std::string &path)
 {
 	struct stat file_info;
 
@@ -88,7 +91,7 @@ bool	Response::isFile(const std::string& path)
 	return (S_ISREG(file_info.st_mode));
 }
 
-bool	Response::isDiractory(const std::string& path)
+bool Response::isDiractory(const std::string &path)
 {
 	struct stat file_info;
 
@@ -97,7 +100,7 @@ bool	Response::isDiractory(const std::string& path)
 	return (S_ISDIR(file_info.st_mode));
 }
 
-bool	Response::deleteFile(const std::string& path)
+bool Response::deleteFile(const std::string &path)
 {
 	if (access(path.c_str(), W_OK))
 		return (PERMISSION_DENIED);
@@ -106,12 +109,12 @@ bool	Response::deleteFile(const std::string& path)
 	return (SUCCESS);
 }
 
-int	Response::deleteDiractory(const std::string& path)
+int Response::DeleteMethod(const std::string &path)
 {
-	struct dirent	*entry;
-	DIR 			*dir_stream;
-	std::string		entryFullPath;
-	int 			status;
+	struct dirent *entry;
+	DIR *dir_stream;
+	std::string entryFullPath;
+	int status;
 
 	dir_stream = opendir(path.c_str());
 	if (dir_stream == NULL)
@@ -126,14 +129,14 @@ int	Response::deleteDiractory(const std::string& path)
 	while ((entry = readdir(dir_stream)) != NULL)
 	{
 		if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
-			continue ;
+			continue;
 		entryFullPath = path;
 		if (entryFullPath[entryFullPath.size() - 1] != '/')
 			entryFullPath += '/';
 		entryFullPath += entry->d_name;
 		if (isDiractory(entryFullPath.c_str()))
 		{
-			status = deleteDiractory(entryFullPath.c_str());
+			status = DeleteMethod(entryFullPath.c_str());
 			if (status)
 				return (status); //! rmdir fail
 		}
@@ -151,40 +154,18 @@ int	Response::deleteDiractory(const std::string& path)
 	return (rmdir(path.c_str()));
 }
 
+// bool deleteChecking(const std::string &path)
+// {
+	
+// }
 
-// void	Response::DeleteMethod(const std::string& path)
+// void Response::DeleteMethod(const std::string &path)
 // {
 // 	struct stat statBuf;
 
-// 	checkAllowedDelete();
-// 	if (stat(path.c_str(), &statBuf)) {
-// 		if (check_flag)
-// 		else
-// 			CALL_method();
-// 		throw std::runtime_error("");
-// 	}
+// 	if (deleteChecking(path))
+// 		return ;
+	
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const std::string&		Response::getResponse() const { return this->response; }
+const std::string &Response::getResponse() const { return this->response; }
