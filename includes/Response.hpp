@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/14 23:00:02 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/15 15:15:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ private:
 		bool				dataCopy;
 		bool				startedTheChunk;
 
+		std::vector<std::string>	CgiEnvironment;
+	
 	public :
 		Response(Request* request, t_files &files);
 		virtual ~Response(void);
@@ -95,4 +97,11 @@ private:
 		bool	isFile(const std::string&);
 		bool	isDiractory(const std::string&);
 		bool	deleteFile(const std::string&);
+
+// **************** CGI **************************
+	private:
+		void				cgi_Handler(const std::string &inFile);
+		std::string			getExtention(const std::string&) const;
+		const std::string&	getCgiPath() const;
+		void				setCgiEnvironment();			
 };

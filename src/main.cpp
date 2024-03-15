@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 00:09:27 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/15 02:42:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ Location*	getLocation1(std::string location)
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
-	loc->cgi[".py"] = "/usr/bin/python3";
+	loc->cgi[".sh"] = "/usr/bin/sh";
 
 	loc->redirectCode.push_back(301);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));

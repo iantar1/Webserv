@@ -13,3 +13,8 @@
 3.timeout , Bad request header....
 
 4. if I have two servers with same port and differnt at everything else ??
+
+5. check what directory listing on config file 
+
+<< Just remember that, for chunked request, your server needs to unchunk
+it, the CGI will expect EOF as end of the body. : SUBJECT>>

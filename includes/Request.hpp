@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 03:49:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/15 15:39:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ private:
     void	    WhichMethod(const std::string&);
     std::string skipLeadingWhitespace(const std::string&);
 
-// ***************** Error checking Method **********
+// ***************** Error checking Methods **********
     void	URI_Checking(const std::string&);
     bool	URI_ValidLength(const std::string&) const;
     bool    URI_ValidChar(const std::string&) const;
@@ -110,11 +110,13 @@ public:
     bool    getDoneServing(void) const;
     bool    getDoneHeaderReading() const;
 
-    const std::string                           &getBody(void) const;
-    const std::string                           &getChunkedBodySize(void) const;
-    const std::string                           &getOldPath() const;
-    const std::string                           &getNewPath() const;
-    const std::map<std::string, std::string>    &getRequest() const;
+    const std::string&                           getBody(void) const;
+    const std::string&                           getChunkedBodySize(void) const;
+    const std::string&                           getOldPath() const;
+    const std::string&                           getNewPath() const;
+    const std::string&                           getCgiPath(const std::string&) const;
+    const std::string&                           getMethod() const;
+    const std::map<std::string, std::string>&    getRequest() const;
     
 
 // ************* Setters ****************
