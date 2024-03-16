@@ -11,16 +11,17 @@
 #include <iostream>
 #include <sstream>
 
-class configParser
+class ConfigParser
 {
 	private:
-		configParser();
+		ConfigParser();
 		std::string filename;
 		
 
 	public:
-		configParser(std::string filename);
-		~configParser();
+		ConfigParser(std::string filename);
+		
+		~ConfigParser();
 	
 };
 
