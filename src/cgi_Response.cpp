@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/16 01:32:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 15:50:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,6 @@
 // ! parce extention .py .sh .php ...
 
 // * you should map cgi map[.sh] = path
-
-const std::string &Response::getCgiPath() const
-{
-	return (request->getCgiPath());
-}
 
 std::string Response::getExtention(const std::string &filePath) const
 {
@@ -48,17 +43,17 @@ std::string Response::getExtention(const std::string &filePath) const
 //     "REDIRECT_STATUS=200"
 // 	    "REQUEST_URI="
 
-void Response::setCgiEnvironment()
-{
-	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
-	CgiEnvironment.push_back("REDIRECT_STATUS=200");
-	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
-	CgiEnvironment.push_back("REQUEST_URI=" + request->getRequestURI());
-	CgiEnvironment.push_back("QUERY_STRING=" + getQueryString());// !start mn ? 
-	CgiEnvironment.push_back("SCRIPT_NAME=" + getScriptName());
-	CgiEnvironment.push_back("SCRIPT_FILENAME=" + getscriptFilename());
-	CgiEnvironment.push_back("PATH_INFO=" + getPathInfo());
-}
+// void Response::setCgiEnvironment()
+// {
+// 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
+// 	CgiEnvironment.push_back("REDIRECT_STATUS=200");
+// 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
+// 	CgiEnvironment.push_back("REQUEST_URI=" + request->getRequestURI());
+// 	CgiEnvironment.push_back("QUERY_STRING=" + getQueryString());// !start mn ?
+// 	CgiEnvironment.push_back("SCRIPT_NAME=" + getScriptName());
+// 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + getscriptFilename());
+// 	CgiEnvironment.push_back("PATH_INFO=" + getPathInfo());
+// }
 
 void Response::cgi_Handler(const std::string &inFile)
 {
@@ -69,13 +64,15 @@ void Response::cgi_Handler(const std::string &inFile)
 	char *env[6];
 	pid_t pid;
 
-	setCgiEnvironment();
-	for ()
+	// setCgiEnvironment();
+	// for (int i = 0; i < 6; i++)
+	// 	env[i] = NULL;
 	extention = getExtention(inFile);
 	args[0] = (char *)request->getCgiPath(extention).c_str();
 	args[1] = (char *)inFile.c_str();
 	args[3] = NULL;
-	_outFile = "/tmp/" + generateNameFile();
+	// _outFile = "/tmp/" + generateNameFile();
+	_outFile = "outPut";
 	for (size_t i = 0; i < 6; i++)
 	{
 		env[i] = (char *)CgiEnvironment[i].c_str();
@@ -87,6 +84,9 @@ void Response::cgi_Handler(const std::string &inFile)
 		if (fd < 0)
 			exit(1); // ! use a macro
 		dup2(fd, 1);
-		execve(args[0], args, env);
+		close(fd);
+		execve(args[0], args, NULL);
 	}
+	int status;
+	waitpid(pid, &status, 0);
 }

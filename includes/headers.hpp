@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:46:38 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/06 10:44:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 03:59:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <netdb.h>
 # include <sys/types.h>
 # include <string.h>
+# include <sys/wait.h>
 
 // # include "macros.hpp"
 

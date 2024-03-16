@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/15 15:15:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 04:12:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,5 @@ private:
 		void				cgi_Handler(const std::string &inFile);
 		std::string			getExtention(const std::string&) const;
 		const std::string&	getCgiPath() const;
-		void				setCgiEnvironment();			
+		//void				setCgiEnvironment();			
 };
