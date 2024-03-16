@@ -104,7 +104,7 @@ class MiniBlock{
 				}
 			}
 			if (newStr[newStr.length() - 1] == ' ')
-				newStr.pop_back();
+				newStr.erase(--newStr.end());
 			return newStr;
 		}
 
@@ -185,7 +185,7 @@ std::string removeExtraSpaces(std::string const& exp)
 		}
 	}
 	if (newStr[newStr.length() - 1] == ' ')
-		newStr.pop_back();
+		newStr.erase(--newStr.end());
 	return newStr;
 }
 
