@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/15 15:58:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 01:32:50 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ std::string Response::getExtention(const std::string &filePath) const
 
 //  	"REQUEST_METHOD="
 //     "SERVER_PROTOCOL="
-//     "QUERY_STRING=" 
+//     "QUERY_STRING="
 //     "SCRIPT_NAME="
 //     "PATH_INFO="
 
@@ -50,15 +50,14 @@ std::string Response::getExtention(const std::string &filePath) const
 
 void Response::setCgiEnvironment()
 {
+	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
+	CgiEnvironment.push_back("REDIRECT_STATUS=200");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
-	CgiEnvironment.push_back("SERVER_PROTOCOL=" + request.getServerProtocol());
-	CgiEnvironment.push_back("QUERY_STRING=" + getQueryString());
+	CgiEnvironment.push_back("REQUEST_URI=" + request->getRequestURI());
+	CgiEnvironment.push_back("QUERY_STRING=" + getQueryString());// !start mn ? 
 	CgiEnvironment.push_back("SCRIPT_NAME=" + getScriptName());
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + getscriptFilename());
 	CgiEnvironment.push_back("PATH_INFO=" + getPathInfo());
-	CgiEnvironment.push_back("REQUEST_URI=" + request->getRequestURI());
-	CgiEnvironment.push_back("REDIRECT_STATUS=200");
-	
 }
 
 void Response::cgi_Handler(const std::string &inFile)
@@ -66,11 +65,12 @@ void Response::cgi_Handler(const std::string &inFile)
 	// generate filename open it, (Outfile)
 	std::string _outFile;
 	std::string extention;
-	char		*args[3];
-	char		*env[6];
+	char *args[3];
+	char *env[6];
 	pid_t pid;
 
 	setCgiEnvironment();
+	for ()
 	extention = getExtention(inFile);
 	args[0] = (char *)request->getCgiPath(extention).c_str();
 	args[1] = (char *)inFile.c_str();

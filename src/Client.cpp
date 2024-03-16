@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/13 23:49:06 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 02:15:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	Client::ReadParseReqHeader()
 
 void	Client::ServingClient()
 {
-    // allwoed Methode , so you need to constuct Respose with Vserver
+    // allwoed Method , so you need to constuct Respose with Vserver
     
     response->StartResponse();
     

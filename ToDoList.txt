@@ -18,3 +18,8 @@
 
 << Just remember that, for chunked request, your server needs to unchunk
 it, the CGI will expect EOF as end of the body. : SUBJECT>>
+
+6. sigle() for CTRL + R, problem 
+
+7. match the longest path of location : /user/home not /user .
+8.  {"POST", "GET", "DELETE", "HEAD", ...}; there NOT IMPLEMENTED and BAD REQ

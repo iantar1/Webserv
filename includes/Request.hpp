@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/15 15:39:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 01:34:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ private:
     std::string                         oldPath;
     std::string                         HeaderReq;
     std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
+    std::string                         URI;
 
     bool                                doneServing;
     bool                                doneHeaderReading;

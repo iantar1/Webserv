@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 20:15:57 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/16 03:17:34 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ void	Response::PostResponse()
 {
 	if (!this->modeChecked)
 	{
+
 		if (this->request->getRequest().find("content-length") != this->request->getRequest().end())
+		{
 			this->mode = NORMAL;
+		}
 		else {
-			std::cout << "========||==========\n";
 			this->mode = CHUNKED;
 		}
 		this->modeChecked = true;
@@ -48,6 +50,7 @@ void	Response::thePostMethod()
 
 	if (!this->dataCopy)
 	{
+		
 		if (this->mode == NORMAL)
 		{
 			this->postType = NORMAL_POST;
@@ -55,11 +58,17 @@ void	Response::thePostMethod()
 		}
 		else
 			this->postType = CHUNKED_POST;
+		
 		this->dataCopy = true;
-		this->contentType = this->request->getRequest().find("content-type")->second;
 
-		extension = getContentExtension(this->files.mime, this->contentType);
+		if (this->request->getRequest().find("content-type") != this->request->getRequest().end()) {
+			this->contentType = this->request->getRequest().find("content-type")->second;
+			extension = getContentExtension(this->files.mime, this->contentType);
+		}
+		else
+			extension = "";
 		fileName = "Uploads/" + generateNameFile() + extension;
+
 
 		this->response = "";
 	}

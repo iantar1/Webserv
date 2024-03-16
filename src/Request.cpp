@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/15 15:34:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 02:12:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ const std::string&    Request::getMethod() const
 
 const std::string&	Request::getCgiPath(const std::string& extention) const
 {
-	return (location->cgi[extention])
+	return (location->cgi[extention]);
 }
 
 int Request::getMethdType() const
@@ -346,7 +346,7 @@ void Request::storeRequestLine(const std::string &line)
 	WhichMethod(RequestLine[0]);
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
-	oldPath = RequestLine[1]; // /hello.htmn for example
+	oldPath = RequestLine[1]; // URI
 	SetNewPath();			  // set new Path
 }
 
@@ -379,6 +379,7 @@ void Request::ReadRequest()
 {
 	try
 	{
+		std::cout << "HERE\n";
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
