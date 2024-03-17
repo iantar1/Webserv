@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 02:11:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/17 05:19:19 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,13 +163,13 @@ void	Response::thePostResponseCreate(void)
 				this->appendedRequest = this->appendedRequest.substr(eol + 2);
 				this->appendedSize = this->appendedRequest.size();
 
-				// std::cout << "xxxxx" << std::endl;
-				if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
+				if (this->chunkSize == 0) {
 					this->outFile.close();
 					this->appendedRequest.clear();
 					this->request->setDoneServing();
 					return;
 				}
+				// std::cout << "xxxxx" << std::endl;
 			}
 			else
 				return;

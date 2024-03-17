@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 04:42:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 05:30:16 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,8 @@ void Response::theGetRedirectionRequest(void)
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
 	this->redirection = this->oldPath + "/";
-	// std::cout << this->redirection << "ooooo\n";
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
-	// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 }
 
 void Response::theGetErrorBadRequest(void)
@@ -65,7 +63,6 @@ void Response::theGetErrorBadRequest(void)
 	this->body = getPageContent("defaultPages/400.htm") + "\r\n\r\n";
 	theGetHeaderResponse(BAD_REQUEST, CONTENT_LENGHT);
 	this->response += this->body;
-	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void Response::theGetErrorNotFound(void)
@@ -74,7 +71,6 @@ void Response::theGetErrorNotFound(void)
 	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
 	theGetHeaderResponse(NOT_FOUND, CONTENT_LENGHT);
 	this->response += this->body;
-	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void Response::theGetErrorForbidden(void)
@@ -83,7 +79,6 @@ void Response::theGetErrorForbidden(void)
 	this->body = getPageContent("defaultPages/403.htm") + "\r\n\r\n";
 	theGetHeaderResponse(FORBIDDEN, CONTENT_LENGHT);
 	this->response += this->body;
-	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void Response::theGetResponseOk(void)
@@ -100,15 +95,10 @@ void Response::theGetResponseOk(void)
 		std::streamsize byteRead;
 
 		signal(SIGPIPE, SIG_IGN);
-		// std::cout << "####" << std::endl;
 		this->inFile.read(buf, 1024);
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
-		{
 			this->body = "0\r\n\r\n";
-			// this->request->setDoneServing();
-			// exit(1);
-		}
 		else
 		{
 			std::string str(buf, byteRead);
@@ -130,21 +120,16 @@ void Response::directoryListing(void)
 	if ((dir = opendir(this->path.c_str())) != NULL)
 	{
 		while ((entry = readdir(dir)) != NULL)
-		{
-			// std::cout << this->oldPath << std::endl;
 			listing << "<li><a href=\"" << this->oldPath << entry->d_name << "\">" << entry->d_name << "</a></li>";
-		}
 		closedir(dir);
 	}
 
 	listing << "</ul><hr></body></html>";
 
 	this->body = listing.str();
-	// std::cout << this->body << std::endl;
 	this->contentType = "text/html";
 	theGetHeaderResponse(OK, CONTENT_LENGHT);
 	this->response += this->body;
-	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
 void Response::regularFileGet(void)
@@ -170,7 +155,6 @@ void Response::regularFileGet(void)
 	else
 		theGetResponseOk();
 
-	// std::cout << this->response << std::endl;
 	if (this->request->getDoneServing())
 		this->inFile.close();
 }
@@ -203,9 +187,6 @@ void Response::theGetMethod(void)
 	this->response.clear();
 	this->redirection.clear();
 
-	// std::cout << "body: " << this->request->getBody() << "\n";
-	// std::cout << GREEN << "REQUEST OLD PATH:\n" << this->oldPath << "\nEND REQUEST" << RESET << std::endl;
-	// std::cout << BLUE << "REQUEST NEW PATH:\n" << this->path << "\nEND REQUEST" << RESET << std::endl;
 	if (this->request->getBody() != "")
 		theGetErrorBadRequest();
 	else if (stat(this->path.c_str(), &buffer))

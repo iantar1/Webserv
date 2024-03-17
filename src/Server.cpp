@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 04:32:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 05:20:29 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void Server::DropCleint(int ClientFd)
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
 	close(ClientFd);
-	exit(1);
+	// exit(1);
 	// std::cout << RED << "Drop Client\n" << RESET;
 }
 

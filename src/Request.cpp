@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 04:45:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 05:22:00 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void Request::storeHeader(const std::string &line)
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
-	value = skipLeadingWhitespace(line.substr(index + 1, line.length() - key.size() - 2)); // ! check this !!
+	value = skipLeadingWhitespace(line.substr(index + 1, line.length() - key.size() - 1)); // ! check this !!
 	Header.insert(std::make_pair(key, value));
 }
 
@@ -356,7 +356,7 @@ void Request::SetNewPath()
 	std::cout << "old: "<< oldPath << "\n";
 	newPath = Vserver->getRootLocatin(oldPath) + oldPath;
 	std::cout << "new: "<< newPath << "\n";
-	exit(1);
+	// exit(1);
 
 }
 
