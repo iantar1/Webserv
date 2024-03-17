@@ -1,0 +1,61 @@
+
+
+
+#ifndef LOCATIONBLOCK_HPP
+# define LOCATIONBLOCK_HPP
+
+#include <string>
+#include <map>
+#include <vector>
+#include <stack>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+
+
+
+class LocationBlock
+{
+	private:
+		typedef bool (LocationBlock::*parseFunctions)(std::string);
+		std::map<std::string, parseFunctions> Fields;
+		// #######   start of LocationBlock   ########
+		std::string locationName;
+		std::string root;
+		std::vector<std::string> indexes;
+		bool autoIndex;
+		std::vector<std::string> allowMethods;
+		std::map<std::string, std::string> cgiPaths;
+		std::string uploadPath;
+		bool uploadEnable;
+		bool cgiEnable;
+		// #######   end of LocationBlock   ########
+		bool checkLocation(std::string location);
+		bool checkRoot(std::string root);
+		bool checkIndex(std::string index);
+		bool checkAutoIndex(std::string autoIndex);
+		bool checkAllowMethods(std::string allowMethods);
+		bool checkCgiPath(std::string cgiPath);
+		bool checkUploadPath(std::string uploadPath);
+		bool checkUploadEnable(std::string uploadEnable);
+		bool checkCgiEnable(std::string cgiEnable);
+	public:
+		LocationBlock();
+		~LocationBlock();
+		// getters
+		std::string const& getLocationName() const;
+		std::string const& getRoot() const;
+		std::vector<std::string> const& getIndex() const;
+		bool const& getAutoIndex() const;
+		std::vector<std::string> const& getAllowMethods() const;
+		std::map<std::string, std::string> const& getCgiPaths() const;
+		std::string const& getUploadPath() const;
+		bool const& getUploadEnable() const;
+		bool const& getCgiEnable() const;
+		// end of getters
+		void initFields();
+		bool parseLocationLine(std::string line);
+		bool checkLocation(void);
+};
+
+#endif

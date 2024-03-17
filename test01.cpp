@@ -166,14 +166,23 @@ std::ostream& operator<<(std::ostream& os, const MiniBlock& mb)
 	return os;
 }
 
-std::string removeExtraSpaces(std::string const& line)
+std::string removeExtraSpaces(std::string const& exp)
 {
 	std::string newStr;
-	std::istringstream iss(line);
-	std::string temp;
-	
-	while (iss >> temp)
-		newStr += temp + " ";
+	bool space = true;
+	for(std::size_t i = 0; i < exp.length(); i++)
+	{
+		if (isspace(exp[i]) && !space)
+		{
+				newStr.push_back(' ');
+				space =  true;
+		}
+		else if (!isspace(exp[i]))
+		{
+			space = false;
+			newStr.push_back(exp[i]);
+		}
+	}
 	if (newStr[newStr.length() - 1] == ' ')
 		newStr.erase(--newStr.end());
 	return newStr;
@@ -264,12 +273,12 @@ void print(std::istringstream &is)
 
 
 
-std::vector<std::string> split(std::string line, char delim)
+std::vector<std::string> split(std::string line)
 {
 	std::vector<std::string> result;
 	std::istringstream iss(line);
 	std::string temp;
-	while (std::getline(iss, temp, delim))
+	while (iss >> temp)
 	{
 		result.push_back(temp);
 	}
@@ -302,15 +311,8 @@ bool checkBalance(std::string line)
 
 int main()
 {
-	std::string line = "      	  listen	   	     8080      	;";
-	line = removeExtraSpaces(line);
-	std::cout << "[" << line << "]" << std::endl;
-	std::vector<std::string> result = split(line, ' ');
-	// if (*(--result.end()) == ";")
-	// 	result.pop_back();
-	// else
-	// 	std::cerr << "Error: missing semicolon" << std::endl;
-	printVector(result);
+	// std::string line = "      	  listen	   	     8080      	";
+	// line = removeExtraSpaces(line);
 	// std::istringstream iss(line);
 	// std::string temp;
 	// std::getline(iss, temp, ' ');
