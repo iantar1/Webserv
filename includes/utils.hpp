@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/12 02:32:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 00:45:55 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct	s_files
 
 std::map<std::string, std::string>	mimeTypes(void);
 size_t	find_last_of(const std::string& str, char ch);
-std::string	generateNameFile(void);
+std::string	generateNameFile(std::string &str);
 
 std::string	dec_to_hex(int decimal);
 int	hexStringToInt(const std::string& hexStr);

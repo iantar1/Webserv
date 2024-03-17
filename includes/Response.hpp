@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/16 04:12:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 00:44:26 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,20 @@
 
 class Response
 {
-private:
-	Response(const Response&);
-	Response &operator=(const Response&);
+	private:
+		Response(const Response&);
+		Response &operator=(const Response&);
 
 	private :
 		int 				socket;
 		int					contentTotalSizePosted;
 		int					chunkContentTotalSizePosted;
-		int					chunkSize;
+		size_t				chunkSize;
 		int					mode;
 		int					contentLenght;
 		int					postType;
 		int					ccl;
+		size_t				appendedSize;
 
 		Request				*request;
 		t_files				&files;
@@ -45,12 +46,15 @@ private:
 		std::string			body;
 		std::string			response;
 		std::string			strTime;
+		std::string			strTime2;
 		std::string			contentType;
 		std::string			path;
 		std::string			oldPath;
 		std::string			redirection;
 		std::string			requestBody;
+		std::string			appendedRequest;
 
+		bool				chunkStart;
 		bool				streamStart;
 		bool				outOpened;
 		bool				gotTime;
@@ -59,13 +63,12 @@ private:
 		bool				startedTheChunk;
 
 		std::vector<std::string>	CgiEnvironment;
-	
+
 	public :
 		Response(Request* request, t_files &files);
 		virtual ~Response(void);
 
 		void					errorPage(int errorCode);
-		// void					thePostMethod(void);
 		void					theDeleteMethod(void);
 		void					StartResponse();
 
@@ -90,7 +93,7 @@ private:
 		void					thePostInternalServerError(void);
 		void					thePostResponseCreatedPage(void);
 		void					thePostMethod(void);
-	
+
 // ******************** DelteMethod **************
 	private:
 		int		DeleteMethod(const std::string&);

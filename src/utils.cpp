@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/12 02:29:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 02:15:50 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,19 +121,22 @@ std::string	getContentExtension(std::map<std::string, std::string> mime, std::st
 	std::map<std::string, std::string>::iterator	it;
 
 	it = mime.begin();
+	// std::cout << RED << contentType << RESET << std::endl;
 	while (it != mime.end())
 	{
-		// std::cout << "{" << it->second << "}" << " {" << contentType << "}" << std::endl;
 		if (it->second == contentType)
+		{
+			// std::cout << "{" << it->second << "}" << " {" << contentType << "}" << std::endl;
 			return it->first;
+		}
 		it++;
 	}
 	return "";
 }
 
-std::string	generateNameFile(void)
+std::string	generateNameFile(std::string &str)
 {
-	std::string result;
+	std::string result = "file_" + str + "_";
 	const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	const int charsetSize = sizeof(charset) - 1;

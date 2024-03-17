@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/13 17:00:45 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/17 00:48:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void Response::theGetResponseOk(void)
 		std::streamsize byteRead;
 
 		signal(SIGPIPE, SIG_IGN);
-		std::cout << "####" << std::endl;
+		// std::cout << "####" << std::endl;
 		this->inFile.read(buf, 1024);
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0) {

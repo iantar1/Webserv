@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/16 02:12:46 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 02:51:08 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void Request::storeHeader(const std::string &line)
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
-	value = skipLeadingWhitespace(line.substr(index + 1, line.length() - key.length() - 2));
+	value = skipLeadingWhitespace(line.substr(index + 1, line.length() - key.size() - 2)); // ! check this !!
 	Header.insert(std::make_pair(key, value));
 }
 
@@ -206,11 +206,10 @@ void Request::checkValid_GET_Header()
 
 void Request::checkValid_POST_Header()
 {
-	if (this->Header.find("transfer-encoding") != this->Header.end()
-		&& this->Header.find("transfer-encoding")->second.compare("chunked"))
-	{
-		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
-	}
+	// if (!this->Header.find("transfer-encoding")->second.compare("chunked"))// ! what is this
+	// {
+	// 	setFlagError(NOT_IMPLEMENTED, "Not Implemented");
+	// }
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
 	{
 		setFlagError(BAD_REQ, "bad Request");
@@ -359,17 +358,20 @@ void Request::SetNewPath()
 
 bool Request::ReadCheckHeader()
 {
-	for (int i = 0; i < bytesRead; i++)
+	if (!doneHeaderReading)
 	{
-		if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
+		for (int i = 0; i < bytesRead; i++)
 		{
-			doneHeaderReading = true;
-			storeData(HeaderReq);
-			lastCharHederIndex = i + 3;
+			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
+			{
+				doneHeaderReading = true;
+				storeData(HeaderReq);
+				lastCharHederIndex = i + 4;
 
-			return (true);
+				return (true);
+			}
+			HeaderReq += buf[i];
 		}
-		HeaderReq += buf[i];
 	}
 	return (false);
 }
@@ -379,8 +381,9 @@ void Request::ReadRequest()
 {
 	try
 	{
-		std::cout << "HERE\n";
+		// std::cout << "HERE\n";
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
+		// std::cout << bytesRead << "\n===\n" << buf << std::endl;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
@@ -410,12 +413,12 @@ void Request::ReadRequest()
 void Request::printRequest()
 {
 	std::cout << "||************REQUEST HEADER************||\n";
-	// std::cout << RequestHeader << "\n";
+	std::cout << RequestHeader << "\n";
 	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
 	{
 		std::cout << it->first << ":" << it->second << "\n";
 	}
-	std::cout << "||************REQUEST Body************||\n\n";
+	std::cout << "||************REQUEST Body************||\n";
 	std::cout << body << "\n";
 	std::cout << "||************************************||\n";
 }

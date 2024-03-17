@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VirtualServer.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 22:08:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 00:49:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ const std::string&	VirtualServer::getPort() const
 {
 	return (Port);
 }
-	
+
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
 	std::cout << "look\t" << _locStr << "\n";

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/16 03:17:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 02:11:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,10 @@ void	Response::PostResponse()
 {
 	if (!this->modeChecked)
 	{
-
 		if (this->request->getRequest().find("content-length") != this->request->getRequest().end())
-		{
 			this->mode = NORMAL;
-		}
-		else {
+		else
 			this->mode = CHUNKED;
-		}
 		this->modeChecked = true;
 	}
 	thePostMethod();
@@ -41,16 +37,20 @@ void	Response::thePostMethod()
 		time_t											now;
 
 		now = time(0);
+		srand(now);
 		local_time = localtime(&now);
 		this->strTime = ToString(local_time->tm_year + 1900) + "-"
 			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
 				+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
 					+ ":" + ToString(local_time->tm_sec);
+		this->strTime2 = ToString(local_time->tm_year + 1900) + "-"
+			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
+				+ "_" + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
+					+ ":" + ToString(local_time->tm_sec);
 	}
 
 	if (!this->dataCopy)
 	{
-		
 		if (this->mode == NORMAL)
 		{
 			this->postType = NORMAL_POST;
@@ -58,8 +58,10 @@ void	Response::thePostMethod()
 		}
 		else
 			this->postType = CHUNKED_POST;
-		
 		this->dataCopy = true;
+		// this->contentType = this->request->getRequest().find("content-type")->second;
+
+
 
 		if (this->request->getRequest().find("content-type") != this->request->getRequest().end()) {
 			this->contentType = this->request->getRequest().find("content-type")->second;
@@ -67,8 +69,15 @@ void	Response::thePostMethod()
 		}
 		else
 			extension = "";
-		fileName = "Uploads/" + generateNameFile() + extension;
+		fileName = "Uploads/" + generateNameFile(this->strTime2) + extension;
 
+
+
+
+		// extension = getContentExtension(this->files.mime, this->contentType);
+		// fileName = "Uploads/" + generateNameFile() + extension;
+		// std::cout << "filename: " << fileName << std::endl;
+		// std::cout << "extension: " << extension << std::endl;
 
 		this->response = "";
 	}
@@ -132,97 +141,56 @@ void	Response::thePostResponseCreatedPage(void)
 
 void	Response::thePostResponseCreate(void)
 {
-	// std::cout << "========||==========\n";
-	// std::cout << this->request->getBody() << "\n";
-	// std::cout << "========||==========\n";
-	// this->request->printRequest();
 	if (this->postType == NORMAL_POST)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
-		// std::cout << YELLOW << "=================||=================" << RESET << std::endl;
-		// std::cout << RED << "SIZE: " << this->request->getBody().size() << RESET << "\nDATA:\n" << this->request->getBody().data() << std::endl;
-		// std::cout << YELLOW << "=================||=================" << RESET << std::endl;
+		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
-		// std::cout << YELLOW << "=================_-_-_=================" << RESET << std::endl;
-		// std::cout << BLUE << this->contentTotalSizePosted << " || " << this->contentLenght << RESET << std::endl;
-		// std::cout << YELLOW << "=================_-_-_=================" << RESET << std::endl;
-		// std::cout << RED << this->contentLenght << RESET << std::endl;
-		// std::cout << this->contentTotalSizePosted << "\n";
 		if (this->contentTotalSizePosted == this->contentLenght) {
 			this->request->setDoneServing();
 			thePostResponseCreatedPage();
 			this->outFile.close();
-			// std::cout << "||TT||TT||TT||TT||TT||TT||\n";
 		}
 	}
 	else if (this->postType == CHUNKED_POST)
 	{
-		size_t	offset = 0;
+		this->appendedRequest.append(this->request->getBody());
+		if (this->chunkStart == false) {
+			size_t	eol = this->appendedRequest.find("\r\n");
+			if (eol != std::string::npos) {
+				this->chunkSize = hexStringToInt(this->appendedRequest);
+				this->chunkStart = true;
+				this->appendedRequest = this->appendedRequest.substr(eol + 2);
+				this->appendedSize = this->appendedRequest.size();
 
-		while (offset < this->request->getBody().size()) {
-			
-			if (!this->streamStart) {
-				size_t	eol = std::string(this->request->getBody().c_str() + offset).find("\r\n");
-				this->chunkContentTotalSizePosted = 0;
-				if (eol != std::string::npos) {
-					// size_t	chunkSizeLineLength = eol - offset;
-					this->chunkSize = hexStringToInt(std::string(this->request->getBody().c_str() + offset, eol + 1)); // eol => chunkSizeLineLength
-
-					offset = eol + 2;
-					if (this->chunkSize == 0) {
-						this->outFile.close();
-						break;
-					}
-
-					int		len = std::string(this->request->getBody().c_str() + offset).size();
-					if (len <= this->chunkSize) {
-						this->outFile.write(this->request->getBody().c_str() + offset, len - 2);
-						this->contentTotalSizePosted += len - 2;
-						this->chunkContentTotalSizePosted += len - 2;
-						this->streamStart = true;
-						offset += len + 2;
-					}
-					else {
-						this->outFile.write(this->request->getBody().c_str() + offset, this->chunkSize);
-						this->contentTotalSizePosted += this->chunkSize;
-						offset += this->chunkSize + 2;
-					}
+				// std::cout << "xxxxx" << std::endl;
+				if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
+					this->outFile.close();
+					this->appendedRequest.clear();
+					this->request->setDoneServing();
+					return;
 				}
-			} // Ache nahya had tkhwira li kayna f chunkSize !!!!!
-			else {
-				size_t	eol = std::string(this->request->getBody().c_str() + offset).find("\r\n");
-				if (eol == std::string::npos)
-					eol = std::string(this->request->getBody().c_str() + offset).size() - 1;
-				this->outFile.write(this->request->getBody().c_str() + offset, eol + 1);
-				this->contentTotalSizePosted += eol;
-				this->chunkContentTotalSizePosted += eol;
-				if (this->chunkContentTotalSizePosted == this->chunkSize) {
-					this->chunkSize = 0;
-					this->streamStart = false;
-				}
-				offset += this->chunkSize + 2;	
+			}
+			else
+				return;
+		}
+		else
+			this->appendedSize = this->appendedRequest.size();
+		// std::cout << this->appendedSize << " || " << this->chunkSize << std::endl;
+		if (this->appendedSize >= this->chunkSize + 2) {
+			std::string	toWrite = this->appendedRequest.substr(0, this->chunkSize);
+			this->appendedRequest = this->appendedRequest.substr(this->chunkSize + 2);
+			this->outFile.write(toWrite.data(), this->chunkSize);
+			this->outFile << std::flush;
+			this->appendedSize = this->appendedRequest.size();
+			this->chunkStart = false;
 
-				// if (eol != std::string::npos) {
-				// 		this->outFile.write(this->request->getBody().c_str() + offset, eol);
-				// 		this->contentTotalSizePosted += eol;
-				// 		this->chunkContentTotalSizePosted += eol;
-				// 		if (this->chunkContentTotalSizePosted == this->chunkSize) {
-				// 			this->chunkSize = 0;
-				// 			this->streamStart = false;
-				// 		}
-				// 		offset += this->chunkSize + 2;
-				// }
-				// else {
-				// 		this->outFile.write(this->request->getBody().c_str() + offset, std::string(this->request->getBody().c_str() + offset).size());
-				// 		this->contentTotalSizePosted += std::string(this->request->getBody().c_str() + offset).size();
-				// 		this->chunkContentTotalSizePosted += std::string(this->request->getBody().c_str() + offset).size();
-				// 		if (this->chunkContentTotalSizePosted == this->chunkSize) {
-				// 			this->chunkSize = 0;
-				// 			this->streamStart = false;
-				// 		}
-				// 		offset += this->chunkSize + 2;
-				// }
-				
+			// std::cout << "yyyyy" << std::endl;
+			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
+				this->outFile.close();
+				this->appendedRequest.clear();
+				this->request->setDoneServing();
+				return;
 			}
 		}
 	}

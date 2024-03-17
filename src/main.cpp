@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/15 02:42:02 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 01:01:19 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ Location*	getLocation1(std::string location)
 	loc->location =  "/";
 	
 	loc->errorPage[404] = "";
-	loc->cgi[".sh"] = "/usr/bin/sh";
+	loc->cgi[".py"] = "/usr/bin/python3";
 
 	loc->redirectCode.push_back(301);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
 	
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
-	loc->setMaxbodySize(9000000);
+	loc->setMaxbodySize(90000000);
 	
 	return (loc);
 }
@@ -70,7 +70,7 @@ Location*	getLocation2(std::string location)
 	
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
-	loc->setMaxbodySize(9000000);
+	loc->setMaxbodySize(90000000);
 	
 	return (loc);
 }
