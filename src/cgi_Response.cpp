@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/16 15:50:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 04:19:44 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,13 @@ std::string Response::getExtention(const std::string &filePath) const
 
 	for (size_t i = filePath.size() - 1; i >= 0; i--)
 	{
+		result += filePath[i];
 		if (filePath[i] == '.')
 			break;
-		result += filePath[i];
 	}
-	return (filePath);
+	std::reverse(result.begin(), result.end());
+	std::cout << "file : " << result << "\n";
+	return (result);
 }
 
 //  	"REQUEST_METHOD="
@@ -57,36 +59,40 @@ std::string Response::getExtention(const std::string &filePath) const
 
 void Response::cgi_Handler(const std::string &inFile)
 {
-	// generate filename open it, (Outfile)
 	std::string _outFile;
 	std::string extention;
 	char *args[3];
-	char *env[6];
+	// char *env[6];
 	pid_t pid;
 
 	// setCgiEnvironment();
-	// for (int i = 0; i < 6; i++)
-	// 	env[i] = NULL;
 	extention = getExtention(inFile);
-	args[0] = (char *)request->getCgiPath(extention).c_str();
-	args[1] = (char *)inFile.c_str();
-	args[3] = NULL;
-	// _outFile = "/tmp/" + generateNameFile();
-	_outFile = "outPut";
-	for (size_t i = 0; i < 6; i++)
-	{
-		env[i] = (char *)CgiEnvironment[i].c_str();
-	}
+	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
+	args[1] = (char *)inFile.c_str();						  // ! use access to check if the file exist
+	args[2] = NULL;
+
+	_outFile = "outPut~";// + generateNameFile();
+	// for (int i = 0; i < 6; i++)
+	// {
+	// 	env[i] = (char *)CgiEnvironment[i].c_str();
+	// }
 	pid = fork();
 	if (pid == 0)
 	{
-		int fd = open(_outFile.c_str(), O_WRONLY);
+		int fd = open(_outFile.c_str(), O_WRONLY | O_CREAT, 0666);
 		if (fd < 0)
-			exit(1); // ! use a macro
+		{
+			std::cout << "can'topen\n";
+			exit(19); // ! use a macro
+		}
+		std::cout << "HEE\n";
+		printf("-> %s , , %s\n", args[0], args[1]);
 		dup2(fd, 1);
 		close(fd);
 		execve(args[0], args, NULL);
 	}
 	int status;
 	waitpid(pid, &status, 0);
+	// ! check status
+	// ! tuimeout
 }

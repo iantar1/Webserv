@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 00:48:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/17 04:42:19 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
 
-void		Response::theGetHeaderResponse(int code, int transferType)
+void Response::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
@@ -40,8 +40,7 @@ void		Response::theGetHeaderResponse(int code, int transferType)
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
-			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 			this->response += header_it->second + "\r\n";
 		header_it++;
 	}
@@ -104,9 +103,11 @@ void Response::theGetResponseOk(void)
 		// std::cout << "####" << std::endl;
 		this->inFile.read(buf, 1024);
 		byteRead = this->inFile.gcount();
-		if (byteRead <= 0) {
+		if (byteRead <= 0)
+		{
 			this->body = "0\r\n\r\n";
-			this->request->setDoneServing();
+			// this->request->setDoneServing();
+			// exit(1);
 		}
 		else
 		{
@@ -117,17 +118,19 @@ void Response::theGetResponseOk(void)
 	}
 }
 
-void			Response::directoryListing(void)
+void Response::directoryListing(void)
 {
-	DIR*				dir;
-	struct dirent*		entry;
-	std::ostringstream	listing;
+	DIR *dir;
+	struct dirent *entry;
+	std::ostringstream listing;
 
 	listing << "<html><head><title>Index of " << this->oldPath << "</title></head><body>";
 	listing << "<h1>Index of " << this->oldPath << "</h1><hr><ul>";
 
-	if ((dir = opendir(this->path.c_str())) != NULL) {
-		while ((entry = readdir(dir)) != NULL) {
+	if ((dir = opendir(this->path.c_str())) != NULL)
+	{
+		while ((entry = readdir(dir)) != NULL)
+		{
 			// std::cout << this->oldPath << std::endl;
 			listing << "<li><a href=\"" << this->oldPath << entry->d_name << "\">" << entry->d_name << "</a></li>";
 		}
@@ -141,52 +144,48 @@ void			Response::directoryListing(void)
 	this->contentType = "text/html";
 	theGetHeaderResponse(OK, CONTENT_LENGHT);
 	this->response += this->body;
-
 	// write(this->socket, this->response.c_str(), this->response.size());
 }
 
-void			Response::regularFileGet(void)
+void Response::regularFileGet(void)
 {
-		std::string										extension;
-		std::map<std::string, std::string>::iterator	mime_it;
+	std::string extension;
+	std::map<std::string, std::string>::iterator mime_it;
 
-		extension = getFileExtension(this->path);
-		if (extension != "")
-		{
-			mime_it = this->files.mime.find(extension);
-			if (mime_it != this->files.mime.end())
-				this->contentType = mime_it->second;
-		}
-		else
-			this->contentType = "applocation/octet-stream";
+	extension = getFileExtension(this->path);
+	if (extension != "")
+	{
+		mime_it = this->files.mime.find(extension);
+		if (mime_it != this->files.mime.end())
+			this->contentType = mime_it->second;
+	}
+	else
+		this->contentType = "applocation/octet-stream";
 
-		if (!this->streamStart)
-			this->inFile.open(this->path.c_str());
+	if (!this->streamStart)
+		this->inFile.open(this->path.c_str());
 
-		if (!this->inFile.is_open())
-			theGetErrorNotFound();
-		else
-			theGetResponseOk();
+	if (!this->inFile.is_open())
+		theGetErrorNotFound();
+	else
+		theGetResponseOk();
 
-		// std::cout << this->response << std::endl;
-		if (this->request->getDoneServing())
-			this->inFile.close();
+	// std::cout << this->response << std::endl;
+	if (this->request->getDoneServing())
+		this->inFile.close();
 }
 
 void Response::theGetMethod(void)
 {
-	if (!this->gotTime) 
+	if (!this->gotTime)
 	{
-		tm				*local_time;
-		time_t			now;
+		tm *local_time;
+		time_t now;
 
 		now = time(0);
 		local_time = localtime(&now);
 
-		this->strTime = ToString(local_time->tm_year + 1900) + "-"
-			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
-				+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
-					+ ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
 
@@ -194,10 +193,12 @@ void Response::theGetMethod(void)
 	{
 		this->path = this->request->getNewPath();
 		this->oldPath = this->request->getOldPath();
+		std::cout << "Path : " << this->path << std::endl;
+		std::cout << "Old Path : " << this->oldPath << std::endl;
 		this->dataCopy = true;
 	}
 
-	struct stat		buffer;
+	struct stat buffer;
 
 	this->response.clear();
 	this->redirection.clear();
@@ -225,4 +226,5 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
+	this->request->setDoneServing();
 }

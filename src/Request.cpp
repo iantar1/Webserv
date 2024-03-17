@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 02:51:08 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/17 04:45:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::string Request::Methods[] = {"POST", "GET", "DELETE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
-											SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
+													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	MethodType = 0;
 	lastCharHederIndex = 0;
@@ -30,12 +30,12 @@ Request::~Request()
 
 // ************ Getters **************
 
-const std::string&    Request::getMethod() const
+const std::string &Request::getMethod() const
 {
 	return (Methods[MethodType - 1]);
 }
 
-const std::string&	Request::getCgiPath(const std::string& extention) const
+const std::string &Request::getCgiPath(const std::string &extention) const
 {
 	return (location->cgi[extention]);
 }
@@ -123,7 +123,9 @@ std::string Request::skipLeadingWhitespace(const std::string &str)
 	std::string result;
 	size_t index;
 
-	for (index = 0; index < str.length() && isspace(str[index]); ++index) {}
+	for (index = 0; index < str.length() && isspace(str[index]); ++index)
+	{
+	}
 	return (str.substr(index));
 }
 
@@ -143,8 +145,8 @@ void Request::storeHeader(const std::string &line)
 
 void Request::storeData(const std::string &dataRequest)
 {
-	std::istringstream	iss(dataRequest);
-	std::string			line;
+	std::istringstream iss(dataRequest);
+	std::string line;
 
 	for (int i = 0; std::getline(iss, line); i++)
 	{
@@ -265,8 +267,7 @@ bool Request::URI_ValidChar(const std::string &uri) const
 {
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i])
-			&& validChars.find(uri[i]) == std::string::npos)
+		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i]) && validChars.find(uri[i]) == std::string::npos)
 		{
 			return (1);
 		}
@@ -341,6 +342,7 @@ void Request::storeRequestLine(const std::string &line)
 		if (i == 3)
 			setFlagError(BAD_REQ, "BAD REQUEST");
 		RequestLine.push_back(word);
+		std::cout << "i == " << i << word << "\n";
 	}
 	WhichMethod(RequestLine[0]);
 	URI_Checking(RequestLine[1]);
@@ -351,7 +353,11 @@ void Request::storeRequestLine(const std::string &line)
 
 void Request::SetNewPath()
 {
+	std::cout << "old: "<< oldPath << "\n";
 	newPath = Vserver->getRootLocatin(oldPath) + oldPath;
+	std::cout << "new: "<< newPath << "\n";
+	exit(1);
+
 }
 
 // ************** Main Methods *******************
@@ -376,7 +382,6 @@ bool Request::ReadCheckHeader()
 	return (false);
 }
 
-
 void Request::ReadRequest()
 {
 	try
@@ -400,7 +405,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		printRequest();
+		// printRequest();
 	}
 	catch (const std::exception &e)
 	{
