@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 05:22:00 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/17 07:15:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,10 @@ std::string Request::skipLeadingWhitespace(const std::string &str)
 	return (str.substr(index));
 }
 
+/// @brief I check if there is /r at the last of any line, and ":" ater any key
+/// and I map evry key with its value, afeter removing "\r"
+/// @param line : the hole line from the heaader without "\n"
+
 void Request::storeHeader(const std::string &line)
 {
 	std::string key;
@@ -136,10 +140,13 @@ void Request::storeHeader(const std::string &line)
 	size_t index;
 
 	index = line.find(":");
+	std::cout << "here :" << line << "\n";
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
-	value = skipLeadingWhitespace(line.substr(index + 1, line.length() - key.size() - 1)); // ! check this !!
+	value = skipLeadingWhitespace(line.substr(index + 1)); // ! check this !!
+	if (value.size() > 0)
+		value.erase(value.size() - 1);
 	Header.insert(std::make_pair(key, value));
 }
 
@@ -147,12 +154,18 @@ void Request::storeData(const std::string &dataRequest)
 {
 	std::istringstream iss(dataRequest);
 	std::string line;
+	size_t index;
 
 	for (int i = 0; std::getline(iss, line); i++)
 	{
+		index = line.find("1\r");
+		std::cout << "line:" << line << "\n";
+		std::cout << "index: " << index << " LINE SIZE:" << line.size() << " \n";
+		if (index != line.size() - 1)
+			setFlagError(BAD_REQ, "BAD REQUEST-");
 		if (i == 0)
 		{
-			storeRequestLine(line);
+			storeRequestLine(line.substr(0, index));
 		}
 		else if (line == "\r")
 		{
@@ -208,13 +221,14 @@ void Request::checkValid_GET_Header()
 
 void Request::checkValid_POST_Header()
 {
-	// if (!this->Header.find("transfer-encoding")->second.compare("chunked"))// ! what is this
-	// {
-	// 	setFlagError(NOT_IMPLEMENTED, "Not Implemented");
-	// }
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
 	{
 		setFlagError(BAD_REQ, "bad Request");
+	}
+	if (this->Header.find("transfer-encoding") != Header.end() && Header["transfer-encoding"] != "chunked") // ! what is this
+	{
+		std::cout << "debug: " << Header["transfer-encoding"].size() << "\n";
+		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("content-length") != Header.end())
 	{
@@ -353,11 +367,10 @@ void Request::storeRequestLine(const std::string &line)
 
 void Request::SetNewPath()
 {
-	std::cout << "old: "<< oldPath << "\n";
+	std::cout << "old: " << oldPath << "\n";
 	newPath = Vserver->getRootLocatin(oldPath) + oldPath;
-	std::cout << "new: "<< newPath << "\n";
+	std::cout << "new: " << newPath << "\n";
 	// exit(1);
-
 }
 
 // ************** Main Methods *******************
@@ -370,6 +383,7 @@ bool Request::ReadCheckHeader()
 		{
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
+				HeaderReq += "\r\n\r\n";
 				doneHeaderReading = true;
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
