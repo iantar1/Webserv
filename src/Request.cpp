@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 07:15:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 16:54:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,8 +158,10 @@ void Request::storeData(const std::string &dataRequest)
 
 	for (int i = 0; std::getline(iss, line); i++)
 	{
-		index = line.find("1\r");
-		std::cout << "line:" << line << "\n";
+		index = line.find("\r");
+		std::cout << "line: " << line << "\n";
+		std::cout << (int)line[line.size() - 2] << "\n";
+		// std::cout << "linesize: " << line.size() << "\n";
 		std::cout << "index: " << index << " LINE SIZE:" << line.size() << " \n";
 		if (index != line.size() - 1)
 			setFlagError(BAD_REQ, "BAD REQUEST-");
@@ -383,7 +385,9 @@ bool Request::ReadCheckHeader()
 		{
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
-				HeaderReq += "\r\n\r\n";
+				// HeaderReq += "\r\n\r\n";
+				std::cout << HeaderReq << std::flush;
+				std::cout << "here:" << HeaderReq.size() << std::endl;
 				doneHeaderReading = true;
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
