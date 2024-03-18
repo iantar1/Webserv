@@ -197,11 +197,13 @@ class parse{
 		void parseBlock(std::ifstream& configFile, std::string context)
 		{
 			std::string line;
+			std::vector<std::string> splitedLine;
 			while (std::getline(configFile, line))
 			{
 				if (line.empty() || line.find("#") == 0)
 					continue;
 				line = removeExtraSpaces(line);
+				splitedLine = split(line, ' ');
 				if (line == "{")
 				{
 					balance.push('{');

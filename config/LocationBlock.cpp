@@ -2,10 +2,11 @@
 
 
 #include "LocationBlock.hpp"
-
+#include "utils.hpp"
 
 LocationBlock::LocationBlock()
 {
+	initFieldsMap();
 	initFields();
 }
 
@@ -13,7 +14,7 @@ LocationBlock::~LocationBlock()
 {
 }
 
-void LocationBlock::initFields()
+void LocationBlock::initFieldsMap()
 {
 	Fields["location"] = &LocationBlock::checkLocation;
 	Fields["root"] = &LocationBlock::checkRoot;
@@ -26,122 +27,159 @@ void LocationBlock::initFields()
 	Fields["cgi_enable"] = &LocationBlock::checkCgiEnable;
 }
 
+void LocationBlock::initFields()
+{
+	locationName = "";
+	root = "";
+	indexes.clear();
+	autoIndex = false;
+	allowMethods.clear();
+	cgiPaths.clear();
+	uploadPath = "";
+	uploadEnable = false;
+	cgiEnable = false;
+}
+
 bool LocationBlock::parseLocationLine(std::string line)
 {
-	std::size_t found = line.find(" ");
-	if (found == std::string::npos)
+	std::vector<std::string> lineParts = split(line, ' ');
+	if (Fields.find(lineParts[0]) == Fields.end())
+	{
+		std::cerr << "Invalid directive: " << lineParts[0] << std::endl;
 		return false;
-	std::string field = line.substr(0, found);
-	std::string value = line.substr(found + 1);
-	if (Fields.find(field) == Fields.end())
-		return false;
-	return (this->*Fields[field])(value);
+	}
+	return (this->*Fields[lineParts[0]])(lineParts);
 }
 
-bool LocationBlock::checkLocation(std::string location)
+bool LocationBlock::checkLocation(std::vector<std::string> location)
 {
-	location = getvalue(location);
-	if (location.empty())
+	std::string locationName;
+	if (location.size() != 2)
 		return false;
-	this->locationName = location;
+	locationName = location[1];
+	if (locationName.empty())
+		return false;
+	this->locationName = locationName;
+	return true;	
+}
+
+bool LocationBlock::checkRoot(std::vector<std::string> root)
+{
+	std::string rootPath;
+	if (root.size() != 3 || *(root.end() - 1) != ";")
+		return false;
+	rootPath = root[1];
+	if (rootPath.empty())
+		return false;
+	this->root = rootPath;
 	return true;
 }
 
-bool LocationBlock::checkRoot(std::string root)
+bool LocationBlock::checkIndex(std::vector<std::string> index)
 {
-	root = getvalue(root);
-	if (root.empty())
+	std::vector<std::string> indexes;
+	if (index.size() < 3 || *(index.end() - 1) != ";")
 		return false;
-	this->root = root;
+	for (std::size_t i = 1; i < index.size() - 1; i++)
+	{
+		if (index[i].empty())
+			return false;
+		indexes.push_back(index[i]);
+	}
+	this->indexes = indexes;
 	return true;
 }
 
-bool LocationBlock::checkIndex(std::string index)
+bool LocationBlock::checkAutoIndex(std::vector<std::string> autoIndex)
 {
-	index = getvalue(index);
-	if (index.empty())
+	bool autoIndexBool;
+	if (autoIndex.size() != 3 || *(autoIndex.end() - 1) != ";")
 		return false;
-	std::istringstream iss(index);
-	std::string temp;
-	while (iss >> temp)
-		this->indexes.push_back(temp);
-	return true;
-}
-
-bool LocationBlock::checkAutoIndex(std::string autoIndex)
-{
-	autoIndex = getvalue(autoIndex);
-	if (autoIndex.empty())
-		return false;
-	if (autoIndex == "on")
-		this->autoIndex = true;
-	else if (autoIndex == "off")
-		this->autoIndex = false;
+	if (autoIndex[1] == "on")
+		autoIndexBool = true;
+	else if (autoIndex[1] == "off")
+		autoIndexBool = false;
 	else
 		return false;
+	this->autoIndex = autoIndexBool;
 	return true;
 }
 
-bool LocationBlock::checkAllowMethods(std::string allowMethods)
+bool LocationBlock::checkAllowMethods(std::vector<std::string> allowMethods)
 {
-	allowMethods = getvalue(allowMethods);
-	if (allowMethods.empty())
+	std::vector<std::string> methods;
+	std::vector<std::string> allowedMethods;
+	methods.push_back("GET");
+	methods.push_back("POST");
+	methods.push_back("DELETE");
+	if (allowMethods.size() < 3 || *(allowMethods.end() - 1) != ";")
 		return false;
-	std::istringstream iss(allowMethods);
-	std::string temp;
-	while (iss >> temp)
-		this->allowMethods.push_back(temp);
+	for (std::size_t i = 1; i < allowMethods.size() - 1; i++)
+	{
+		if (std::find(methods.begin(), methods.end(), allowMethods[i]) == methods.end())
+			return false;
+		allowedMethods.push_back(allowMethods[i]);
+	}
+	this->allowMethods = allowedMethods;
 	return true;
 }
 
-bool LocationBlock::checkCgiPath(std::string cgiPath)
+bool LocationBlock::checkCgiPath(std::vector<std::string> cgiPath)
 {
-	cgiPath = getvalue(cgiPath);
-	if (cgiPath.empty())
+	std::string cgiPathStr;
+	std::string cgiExt;
+	if (cgiPath.size() != 4 || *(cgiPath.end() - 1) != ";")
 		return false;
-	std::size_t found = cgiPath.find(" ");
-	if (found == std::string::npos)
+	cgiExt = cgiPath[1];
+	cgiPathStr = cgiPath[2];
+	if (cgiExt.empty() || cgiPathStr.empty())
 		return false;
-	std::string method = cgiPath.substr(0, found);
-	std::string path = cgiPath.substr(found + 1);
-	this->cgiPaths[method] = path;
+	this->cgiPaths[cgiExt] = cgiPathStr;
 	return true;
 }
 
-bool LocationBlock::checkUploadPath(std::string uploadPath)
+bool LocationBlock::checkUploadPath(std::vector<std::string> uploadPath)
 {
-	uploadPath = getvalue(uploadPath);
-	if (uploadPath.empty())
+	bool uploadPathBool;
+	if (uploadPath.size() != 3 || *(uploadPath.end() - 1) != ";")
 		return false;
-	this->uploadPath = uploadPath;
-	return true;
-}
-
-bool LocationBlock::checkUploadEnable(std::string uploadEnable)
-{
-	uploadEnable = getvalue(uploadEnable);
-	if (uploadEnable.empty())
-		return false;
-	if (uploadEnable == "on")
-		this->uploadEnable = true;
-	else if (uploadEnable == "off")
-		this->uploadEnable = false;
+	if (uploadPath[1] == "on")
+		uploadPathBool = true;
+	else if (uploadPath[1] == "off")
+		uploadPathBool = false;
 	else
 		return false;
+	this->uploadEnable = uploadPathBool;
 	return true;
 }
 
-bool LocationBlock::checkCgiEnable(std::string cgiEnable)
+bool LocationBlock::checkUploadEnable(std::vector<std::string> uploadEnable)
 {
-	cgiEnable = getvalue(cgiEnable);
-	if (cgiEnable.empty())
+	bool uploadEnableBool;
+	if (uploadEnable.size() != 3 || *(uploadEnable.end() - 1) != ";")
 		return false;
-	if (cgiEnable == "on")
-		this->cgiEnable = true;
-	else if (cgiEnable == "off")
-		this->cgiEnable = false;
+	if (uploadEnable[1] == "on")
+		uploadEnableBool = true;
+	else if (uploadEnable[1] == "off")
+		uploadEnableBool = false;
 	else
 		return false;
+	this->uploadEnable = uploadEnableBool;
+	return true;
+}
+
+bool LocationBlock::checkCgiEnable(std::vector<std::string> cgiEnable)
+{
+	bool cgiEnableBool;
+	if (cgiEnable.size() != 3 || *(cgiEnable.end() - 1) != ";")
+		return false;
+	if (cgiEnable[1] == "on")
+		cgiEnableBool = true;
+	else if (cgiEnable[1] == "off")
+		cgiEnableBool = false;
+	else
+		return false;
+	this->cgiEnable = cgiEnableBool;
 	return true;
 }
 
@@ -190,5 +228,26 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
-
+std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock)
+{
+	outstream << "location: " << locationBlock.getLocationName() << std::endl;
+	outstream << "root: " << locationBlock.getRoot() << std::endl;
+	outstream << "index: ";
+	for (std::size_t i = 0; i < locationBlock.getIndex().size(); i++)
+		outstream << locationBlock.getIndex()[i] << " ";
+	outstream << std::endl;
+	outstream << "autoindex: " << locationBlock.getAutoIndex() << std::endl;
+	outstream << "allow_methods: ";
+	for (std::size_t i = 0; i < locationBlock.getAllowMethods().size(); i++)
+		outstream << locationBlock.getAllowMethods()[i] << " ";
+	outstream << std::endl;
+	outstream << "cgi_paths: ";
+	for (std::map<std::string, std::string>::const_iterator it = locationBlock.getCgiPaths().begin(); it != locationBlock.getCgiPaths().end(); it++)
+		outstream << it->first << " " << it->second << " ";
+	outstream << std::endl;
+	outstream << "upload_path: " << locationBlock.getUploadPath() << std::endl;
+	outstream << "upload_enable: " << locationBlock.getUploadEnable() << std::endl;
+	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
+	return outstream;
+}
 

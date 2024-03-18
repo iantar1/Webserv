@@ -1,18 +1,17 @@
 
 
 #include "ServerBlock.hpp"
-
+#include "utils.hpp"
 
 ServerBlock::ServerBlock()
 {
+	initFieldsMap();
 	initFields();
 }
 
-ServerBlock::~ServerBlock()
-{
-}
+ServerBlock::~ServerBlock(){}
 
-void ServerBlock::initFields()
+void ServerBlock::initFieldsMap()
 {
 	Fields["listen"] = &ServerBlock::checkListen;
 	Fields["host"] = &ServerBlock::checkHost;
@@ -23,91 +22,127 @@ void ServerBlock::initFields()
 	Fields["max_body_size"] = &ServerBlock::checkMaxBodySize;
 }
 
+void ServerBlock::initFields()
+{
+	listen = 0;
+	host = "";
+	serverName.clear();
+	root = "";
+	indexes.clear();
+	errorPages.clear();
+	maxBodySize = 0;
+	locations.clear();
+}
+
 bool ServerBlock::parseServerLine(std::string line)
 {
-	std::size_t found = line.find(" ");
-	if (found == std::string::npos)
+	std::vector<std::string> lineParts = split(line, ' ');
+	if (Fields.find(lineParts[0]) == Fields.end())
+	{
+		std::cerr << "Invalid directive: " << lineParts[0] << std::endl;
 		return false;
-	std::string field = line.substr(0, found);
-	std::string value = line.substr(found + 1);
-	if (Fields.find(field) == Fields.end())
-		return false;
-	return (this->*Fields[field])(value);
+	}
+	bool result = (this->*Fields[lineParts[0]])(lineParts);
+	return result;
 }
 
-bool ServerBlock::checkListen(std::string listen)
+bool ServerBlock::checkListen(std::vector<std::string> listen)
 {
-	listen = getvalue(listen);
-	if (listen.empty())
+	int listenPort;
+	if (listen.size() != 3 || *(listen.end() - 1) != ";")
 		return false;
-	this->listen = std::stoi(listen);
+	if (!isPosNumber(listen[1]))
+		return false;
+	listenPort = stringToPosInt(listen[1]);
+	if (listenPort < 0 || listenPort > 65535)
+		return false;
+	this->listen = listenPort;
 	return true;
 }
 
-bool ServerBlock::checkHost(std::string host)
+bool ServerBlock::checkHost(std::vector<std::string> host)
 {
-	host = getvalue(host);
-	if (host.empty())
+	std::string hostName;
+	if (host.size() != 3 || *(host.end() - 1) != ";")
 		return false;
-	this->host = host;
+	hostName = host[1];
+	if (hostName.empty())
+		return false;
+	if (hostName != "localhost" && !checkIp(hostName))
+		return false;
+	this->host = hostName;
 	return true;
 }
 
-bool ServerBlock::checkServerName(std::string serverName)
+bool ServerBlock::checkServerName(std::vector<std::string> serverName)
 {
-	serverName = getvalue(serverName);
-	if (serverName.empty())
+	std::string serverNameStr;
+	if (serverName.size() < 3 || *(serverName.end() - 1) != ";")
 		return false;
-	std::istringstream iss(serverName);
-	std::string temp;
-	while (iss >> temp)
-		this->serverName.push_back(temp);
+	for (std::size_t i = 1; i < serverName.size() - 1; i++)
+	{
+		if (serverName[i].empty())
+			return false;
+		this->serverName.push_back(serverName[i]);
+	}
 	return true;
 }
 
-bool ServerBlock::checkRoot(std::string root)
+bool ServerBlock::checkRoot(std::vector<std::string> root)
 {
-	root = getvalue(root);
-	if (root.empty())
+	std::string rootStr;
+	if (root.size() != 3 || *(root.end() - 1) != ";")
 		return false;
-	this->root = root;
+	rootStr = root[1];
+	if (rootStr.empty())
+		return false;
+	this->root = rootStr;
 	return true;
 }
 
-bool ServerBlock::checkIndex(std::string index)
+bool ServerBlock::checkIndex(std::vector<std::string> index)
 {
-	index = getvalue(index);
-	if (index.empty())
+	std::string indexStr;
+	if (index.size() < 3 || *(index.end() - 1) != ";")
 		return false;
-	std::istringstream iss(index);
-	std::string temp;
-	while (iss >> temp)
-		this->indexes.push_back(temp);
+	for (std::size_t i = 1; i < index.size() - 1; i++)
+	{
+		if (index[i].empty())
+			return false;
+		this->indexes.push_back(index[i]);
+	}
 	return true;
 }
 
-bool ServerBlock::checkErrorPage(std::string errorPage)
+bool ServerBlock::checkErrorPage(std::vector<std::string> errorPage)
 {
-	errorPage = getvalue(errorPage);
-	if (errorPage.empty())
+	std::string errorPageStr;
+	int errorCode;
+	if (errorPage.size() != 4 || *(errorPage.end() - 1) != ";")
 		return false;
-	std::size_t found = errorPage.find(" ");
-	if (found == std::string::npos)
+	if (!isPosNumber(errorPage[1]))
 		return false;
-	std::string code = errorPage.substr(0, found);
-	std::string page = errorPage.substr(found + 1);
-	if (code.empty() || page.empty())
+	errorCode = stringToPosInt(errorPage[1]);
+	if (errorCode < 100 || errorCode > 599)
 		return false;
-	this->errorPages[std::stoi(code)] = page;
+	errorPageStr = errorPage[2];
+	if (errorPageStr.empty())
+		return false;
+	this->errorPages[errorCode] = errorPageStr;
 	return true;
 }
 
-bool ServerBlock::checkMaxBodySize(std::string maxBodySize)
+bool ServerBlock::checkMaxBodySize(std::vector<std::string> maxBodySize)
 {
-	maxBodySize = getvalue(maxBodySize);
-	if (maxBodySize.empty())
+	int maxBodySizeInt;
+	if (maxBodySize.size() != 3 || *(maxBodySize.end() - 1) != ";")
 		return false;
-	this->maxBodySize = std::stoi(maxBodySize);
+	if (!isPosNumber(maxBodySize[1]))
+		return false;
+	maxBodySizeInt = stringToPosInt(maxBodySize[1]);
+	if (maxBodySizeInt < 0)
+		return false;
+	this->maxBodySize = maxBodySizeInt;
 	return true;
 }
 
@@ -163,4 +198,30 @@ void ServerBlock::addLocation(LocationBlock const& location)
 	this->locations.push_back(location);
 }
 
-
+std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock)
+{
+	outstream << "listen: " << serverBlock.getListen() << std::endl;
+	outstream << "host: " << serverBlock.getHost() << std::endl;
+	outstream << "server_name: ";
+	for (std::size_t i = 0; i < serverBlock.getServerName().size(); i++)
+		outstream << serverBlock.getServerName()[i] << " ";
+	outstream << std::endl;
+	outstream << "root: " << serverBlock.getRoot() << std::endl;
+	outstream << "indexes: ";
+	for (std::size_t i = 0; i < serverBlock.getIndexes().size(); i++)
+		outstream << serverBlock.getIndexes()[i] << " ";
+	outstream << std::endl;
+	outstream << "error_pages: ";
+	for (std::map<int, std::string>::const_iterator it = serverBlock.getErrorPages().begin(); it != serverBlock.getErrorPages().end(); it++)
+		outstream << it->first << " " << it->second << " ";
+	outstream << std::endl;
+	outstream << "max_body_size: " << serverBlock.getMaxBodySize() << std::endl;
+	outstream << "locations: " << std::endl;
+	std::vector<LocationBlock> locations = serverBlock.getLocations();
+	for (std::size_t i = 0; i < locations.size(); i++)
+	{
+		std::cout << "###########  Location " << i << " ###########" << std::endl;
+		outstream << locations[i] << std::endl;
+	}
+	return outstream;
+}

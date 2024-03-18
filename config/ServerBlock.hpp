@@ -17,7 +17,7 @@
 class ServerBlock
 {
 	private:
-		typedef bool (ServerBlock::*parseFunctions)(std::string);
+		typedef bool (ServerBlock::*parseFunctions)(std::vector<std::string>);
 		std::map<std::string, parseFunctions> Fields;
 		// #######   start of ServerBlock   ########
 		int listen;
@@ -29,13 +29,13 @@ class ServerBlock
 		int maxBodySize;
 		std::vector<LocationBlock> locations;
 		// #######   end of ServerBlock   ########
-		bool checkListen(std::string listen);
-		bool checkHost(std::string host);
-		bool checkServerName(std::string serverName);
-		bool checkRoot(std::string root);
-		bool checkIndex(std::string index);
-		bool checkErrorPage(std::string errorPage);
-		bool checkMaxBodySize(std::string maxBodySize);
+		bool checkListen(std::vector<std::string> listen);
+		bool checkHost(std::vector<std::string> host);
+		bool checkServerName(std::vector<std::string> serverName);
+		bool checkRoot(std::vector<std::string> root);
+		bool checkIndex(std::vector<std::string> index);
+		bool checkErrorPage(std::vector<std::string> errorPage);
+		bool checkMaxBodySize(std::vector<std::string> maxBodySize);
 	public:
 		ServerBlock();
 		~ServerBlock();
@@ -50,10 +50,13 @@ class ServerBlock
 		std::vector<LocationBlock> const& getLocations() const;
 		// end of getters
 		void addLocation(LocationBlock const& location);
+		void initFieldsMap();
 		void initFields();
 		bool parseServerLine(std::string line);
 		bool checkServer(void);
 	
 };
+
+std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock);
 
 #endif

@@ -17,7 +17,7 @@
 class LocationBlock
 {
 	private:
-		typedef bool (LocationBlock::*parseFunctions)(std::string);
+		typedef bool (LocationBlock::*parseFunctions)(std::vector<std::string>);
 		std::map<std::string, parseFunctions> Fields;
 		// #######   start of LocationBlock   ########
 		std::string locationName;
@@ -30,15 +30,15 @@ class LocationBlock
 		bool uploadEnable;
 		bool cgiEnable;
 		// #######   end of LocationBlock   ########
-		bool checkLocation(std::string location);
-		bool checkRoot(std::string root);
-		bool checkIndex(std::string index);
-		bool checkAutoIndex(std::string autoIndex);
-		bool checkAllowMethods(std::string allowMethods);
-		bool checkCgiPath(std::string cgiPath);
-		bool checkUploadPath(std::string uploadPath);
-		bool checkUploadEnable(std::string uploadEnable);
-		bool checkCgiEnable(std::string cgiEnable);
+		bool checkLocation(std::vector<std::string> location);
+		bool checkRoot(std::vector<std::string> root);
+		bool checkIndex(std::vector<std::string> index);
+		bool checkAutoIndex(std::vector<std::string> autoIndex);
+		bool checkAllowMethods(std::vector<std::string> allowMethods);
+		bool checkCgiPath(std::vector<std::string> cgiPath);
+		bool checkUploadPath(std::vector<std::string> uploadPath);
+		bool checkUploadEnable(std::vector<std::string> uploadEnable);
+		bool checkCgiEnable(std::vector<std::string> cgiEnable);
 	public:
 		LocationBlock();
 		~LocationBlock();
@@ -53,9 +53,13 @@ class LocationBlock
 		bool const& getUploadEnable() const;
 		bool const& getCgiEnable() const;
 		// end of getters
+		void initFieldsMap();
 		void initFields();
 		bool parseLocationLine(std::string line);
 		bool checkLocation(void);
 };
+
+// << operator overload
+std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock);
 
 #endif
