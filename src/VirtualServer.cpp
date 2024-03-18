@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   VirtualServer.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 15:09:29 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 05:41:30 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/18 01:21:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ const std::string&	VirtualServer::getPort() const
 
 const std::string& VirtualServer::getRootLocatin(const std::string& _locStr)
 {
-	std::cout << "look\t" << _locStr << "\n";
 	mapIterType	 it = getLocationsBeginIterMap();
 	mapIterType	 it_end = getLocationsEndIterMap();
 

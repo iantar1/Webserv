@@ -30,3 +30,6 @@ it, the CGI will expect EOF as end of the body. : SUBJECT>>
 10. nabboune needs to check the ErrorFlag varible first (when the request is unvalid he dosn't set done serving)
 
 11.we do need to check for the host in the request header since it may the same port ad host, but differet serverName 
+
+12. match location with it's client
+

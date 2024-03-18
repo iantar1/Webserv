@@ -3,100 +3,100 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 01:01:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/18 02:33:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/headers.hpp"
-# include "../includes/macros.hpp"
-# include "../includes/VirtualServer.hpp"
-# include <iostream>
-# define PORT 8080
-# define CONNECTIN_QUEUE 100
+#include "../includes/headers.hpp"
+#include "../includes/macros.hpp"
+#include "../includes/VirtualServer.hpp"
+#include <iostream>
+#define PORT 8080
+#define CONNECTIN_QUEUE 100
 
-# include "../includes/Server.hpp"
+#include "../includes/Server.hpp"
 
-Location*	getLocation1(std::string location)
+Location *getLocation1(std::string location)
 {
-	Location* loc = new Location(location);
+	Location *loc = new Location(location);
 
 	loc->allowedMethods.push_back("POST");
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
-	
+
 	loc->uploadPath = "/nfs/homes/iantar/Desktop/WebservServ";
 	loc->uploadPost = "/nfs/homes/iantar/Desktop/WebservServ/";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/iantar/Desktop/WebservServ/";
-	loc->location =  "/";
-	
+	loc->root = "/nfs/homes/iantar/Desktop/WebservServ"; // ! it must came without / at the end
+	loc->location = location;
+
 	loc->errorPage[404] = "";
 	loc->cgi[".py"] = "/usr/bin/python3";
 
 	loc->redirectCode.push_back(301);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
-	
+
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
 	loc->setMaxbodySize(90000000);
-	
+
 	return (loc);
 }
 
 // /nfs/homes/iantar/Desktop/Webserv
 
-Location*	getLocation2(std::string location)
+Location *getLocation2(std::string location)
 {
-	Location* loc = new Location(location);
+	Location *loc = new Location(location);
 
 	loc->allowedMethods.push_back("POST");
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
-	
+
 	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
 	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
 	loc->index = "page.html";
 	loc->root = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->location =  "/";
+	loc->location = location;
 
 	loc->errorPage[404] = "";
 	loc->cgi[".py"] = "/usr/bin/python3";
 
 	loc->redirectCode.push_back(301);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
-	
+
 	loc->redirectCode.push_back(302);
 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
 	loc->setMaxbodySize(90000000);
-	
+
 	return (loc);
 }
 
-void fillVector(std::vector<VirtualServer*>& Vser)
+void fillVector(std::vector<VirtualServer *> &Vser)
 {
-	VirtualServer	*Vser2 = new VirtualServer();
+	VirtualServer *Vser2 = new VirtualServer();
 	Vser2->SetLocation(getLocation2("/"), "/");
 	Vser2->Port = "8080";
-	Vser2->HostAddress = "localhost";
+	Vser2->HostAddress = "0.0.0.0";
 	Vser.push_back(Vser2);
 
-	VirtualServer	*Vser1 = new VirtualServer();
-	Vser1->SetLocation(getLocation1("/"), "/");
-	Vser1->Port = "8081";
-	Vser1->HostAddress = "localhost";
+	VirtualServer *Vser1 = new VirtualServer();
+	Vser1->SetLocation(getLocation1("/user"), "/user");
+	Vser1->Port = "8080";
+	Vser1->HostAddress = "0.0.0.0";
 	Vser.push_back(Vser1);
 }
 
-int	main(int ac, char **av)
+int main(int ac, char **av)
 {
 	try
 	{
-		std::vector<VirtualServer*> Vserv;
+		std::vector<VirtualServer *> Vserv;
 
-		fillVector(Vserv);// Ibrahim
+		fillVector(Vserv); // Ibrahim
 		Server webserv(Vserv);
 
 		webserv.ServerCore();

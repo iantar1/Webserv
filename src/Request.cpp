@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 16:54:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/18 02:40:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,27 @@ Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
 
 Request::~Request()
 {
+}
+
+// ************** utils ***********
+
+// encoding
+
+std::string hexToSting(const std::string &hex)
+{
+	(void)hex;
+	return (hex);
+}
+
+void encodinString(std::string &str) // ! to do
+{
+	size_t index;
+	std::string result;
+
+	while ((index = str.find("%")) < str.size() - 2)
+	{
+		str = str.substr(0, index) + hexToSting(str.substr(index + 1, 2)) + str.substr(index + 3);
+	}
 }
 
 // ************ Getters **************
@@ -154,31 +175,19 @@ void Request::storeData(const std::string &dataRequest)
 {
 	std::istringstream iss(dataRequest);
 	std::string line;
-	size_t index;
 
 	for (int i = 0; std::getline(iss, line); i++)
 	{
-		index = line.find("\r");
-		std::cout << "line: " << line << "\n";
-		std::cout << (int)line[line.size() - 2] << "\n";
-		// std::cout << "linesize: " << line.size() << "\n";
-		std::cout << "index: " << index << " LINE SIZE:" << line.size() << " \n";
-		if (index != line.size() - 1)
-			setFlagError(BAD_REQ, "BAD REQUEST-");
 		if (i == 0)
 		{
-			storeRequestLine(line.substr(0, index));
-		}
-		else if (line == "\r")
-		{
-			break;
+			storeRequestLine(line);
 		}
 		else
 		{
 			storeHeader(line);
 		}
 	}
-	doneHeaderReading = true;
+	// doneHeaderReading = true;
 }
 
 void Request::saveFirstChuckBody()
@@ -348,6 +357,20 @@ void Request::WhichMethod(const std::string &method)
 	setFlagError(NOT_IMPLEMENTED, "Invalid Method");
 }
 
+void Request::parseURI_QueryString(const std::string &client_uri)
+{
+	size_t index;
+
+	if ((index = client_uri.find("?")) != std::string::npos)
+	{
+		this->URI = client_uri.substr(0, index);
+		if (index != client_uri.size() - 1)
+			this->QueryString = client_uri.substr(index + 1);
+	}
+	else
+		this->URI = client_uri;
+}
+
 void Request::storeRequestLine(const std::string &line)
 {
 	std::stringstream sstr(line);
@@ -358,25 +381,46 @@ void Request::storeRequestLine(const std::string &line)
 		if (i == 3)
 			setFlagError(BAD_REQ, "BAD REQUEST");
 		RequestLine.push_back(word);
-		std::cout << "i == " << i << word << "\n";
 	}
+	// * I don't like these lines ,
 	WhichMethod(RequestLine[0]);
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
-	oldPath = RequestLine[1]; // URI
-	SetNewPath();			  // set new Path
+	parseURI_QueryString(RequestLine[1]);
+	oldPath = this->URI; // URI
+	SetNewPath();		 // set new Path
 }
 
-void Request::SetNewPath()
+void Request::SetNewPath() // ! match location and change this
 {
 	std::cout << "old: " << oldPath << "\n";
-	newPath = Vserver->getRootLocatin(oldPath) + oldPath;
+	// ! use location->getRootLOcation() instead
+	newPath = location->getRoot() + oldPath; // * u need to handle when there is / at last of the root
 	std::cout << "new: " << newPath << "\n";
 	// exit(1);
 }
 
 // ************** Main Methods *******************
 
+void Request::matchClients()
+{
+	mapIterType iter;
+
+	iter = Vserver->getLocationsEndIterMap();
+	iter--;
+	while (1)
+	{
+		if (iter->first.compare(0, iter->first.size(), URI.c_str()) == 0)
+		{
+			location = iter->second;
+			return;
+		}
+		if (iter == Vserver->getLocationsBeginIterMap())
+			return;
+		iter--;
+	}
+	location = iter->second;
+}
 bool Request::ReadCheckHeader()
 {
 	if (!doneHeaderReading)
@@ -385,16 +429,14 @@ bool Request::ReadCheckHeader()
 		{
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
-				// HeaderReq += "\r\n\r\n";
-				std::cout << HeaderReq << std::flush;
-				std::cout << "here:" << HeaderReq.size() << std::endl;
-				doneHeaderReading = true;
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
-
+				doneHeaderReading = true;
+				matchClients();
 				return (true);
 			}
-			HeaderReq += buf[i];
+			if (buf[i] != '\r')
+				HeaderReq += buf[i];
 		}
 	}
 	return (false);
@@ -404,14 +446,12 @@ void Request::ReadRequest()
 {
 	try
 	{
-		// std::cout << "HERE\n";
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-		// std::cout << bytesRead << "\n===\n" << buf << std::endl;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
 			setFlagError(BAD_REQ, "thre is No \\r\\n\\r\\n");
-
+		//* if ReadCheckHeader() return false , the reading request is done
 		if (ReadCheckHeader())
 		{
 			checkValidMethod();
@@ -423,7 +463,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{

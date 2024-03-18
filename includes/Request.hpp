@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/16 01:34:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/18 01:06:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ private:
     std::string                         HeaderReq;
     std::string                         location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
     std::string                         URI;
+    std::string                         QueryString;// * include ? at the begining
 
     bool                                doneServing;
     bool                                doneHeaderReading;
@@ -79,6 +80,8 @@ private:
     void	    storeBody();
     void	    WhichMethod(const std::string&);
     std::string skipLeadingWhitespace(const std::string&);
+    void	    parseURI_QueryString(const std::string&);
+    void	    matchClients();
 
 // ***************** Error checking Methods **********
     void	URI_Checking(const std::string&);

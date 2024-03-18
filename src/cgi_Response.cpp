@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 04:19:44 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/17 23:31:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ std::string Response::getExtention(const std::string &filePath) const
 {
 	std::string result;
 
-	for (size_t i = filePath.size() - 1; i >= 0; i--)
+	for (int i = filePath.size() - 1; i >= 0; i--)
 	{
 		result += filePath[i];
 		if (filePath[i] == '.')
@@ -71,7 +71,7 @@ void Response::cgi_Handler(const std::string &inFile)
 	args[1] = (char *)inFile.c_str();						  // ! use access to check if the file exist
 	args[2] = NULL;
 
-	_outFile = "outPut~";// + generateNameFile();
+	_outFile = "outPut~"; // + generateNameFile();
 	// for (int i = 0; i < 6; i++)
 	// {
 	// 	env[i] = (char *)CgiEnvironment[i].c_str();
