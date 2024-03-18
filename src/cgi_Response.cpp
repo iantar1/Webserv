@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/17 23:31:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/18 04:42:12 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ std::string Response::getExtention(const std::string &filePath) const
 // 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
 // 	CgiEnvironment.push_back("REDIRECT_STATUS=200");
 // 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
-// 	CgiEnvironment.push_back("REQUEST_URI=" + request->getRequestURI());
-// 	CgiEnvironment.push_back("QUERY_STRING=" + getQueryString());// !start mn ?
+// 	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
+// 	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString());// !start mn ?
 // 	CgiEnvironment.push_back("SCRIPT_NAME=" + getScriptName());
 // 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + getscriptFilename());
 // 	CgiEnvironment.push_back("PATH_INFO=" + getPathInfo());

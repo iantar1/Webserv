@@ -41,3 +41,7 @@ TCP and IP protocols are normally part of the protocol stack within the kernel.
   
 
   * socket():
+
+
+-> CGI : Common Gateway Interface 
+  

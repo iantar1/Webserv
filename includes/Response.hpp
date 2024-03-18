@@ -3,108 +3,104 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 00:44:26 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/18 04:44:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 // #include "Webserv.hpp"
-# include "Request.hpp"
+#include "Request.hpp"
 #include "utils.hpp"
-
-
 
 class Response
 {
-	private:
-		Response(const Response&);
-		Response &operator=(const Response&);
+private:
+	Response(const Response &);
+	Response &operator=(const Response &);
 
-	private :
-		int 				socket;
-		int					contentTotalSizePosted;
-		int					chunkContentTotalSizePosted;
-		size_t				chunkSize;
-		int					mode;
-		int					contentLenght;
-		int					postType;
-		int					ccl;
-		size_t				appendedSize;
+private:
+	int socket;
+	int contentTotalSizePosted;
+	int chunkContentTotalSizePosted;
+	size_t chunkSize;
+	int mode;
+	int contentLenght;
+	int postType;
+	int ccl;
+	size_t appendedSize;
 
-		Request				*request;
-		t_files				&files;
+	Request *request;
+	t_files &files;
 
-		std::ifstream		inFile;
-		std::ofstream		outFile;
+	std::ifstream inFile;
+	std::ofstream outFile;
 
-		std::string			responseBody;
-		std::string			header;
-		std::string			body;
-		std::string			response;
-		std::string			strTime;
-		std::string			strTime2;
-		std::string			contentType;
-		std::string			path;
-		std::string			oldPath;
-		std::string			redirection;
-		std::string			requestBody;
-		std::string			appendedRequest;
+	std::string responseBody;
+	std::string header;
+	std::string body;
+	std::string response;
+	std::string strTime;
+	std::string strTime2;
+	std::string contentType;
+	std::string path;
+	std::string oldPath;
+	std::string redirection;
+	std::string requestBody;
+	std::string appendedRequest;
 
-		bool				chunkStart;
-		bool				streamStart;
-		bool				outOpened;
-		bool				gotTime;
-		bool				modeChecked;
-		bool				dataCopy;
-		bool				startedTheChunk;
+	bool chunkStart;
+	bool streamStart;
+	bool outOpened;
+	bool gotTime;
+	bool modeChecked;
+	bool dataCopy;
+	bool startedTheChunk;
 
-		std::vector<std::string>	CgiEnvironment;
+	std::vector<std::string> CgiEnvironment;
 
-	public :
-		Response(Request* request, t_files &files);
-		virtual ~Response(void);
+public:
+	Response(Request *request, t_files &files);
+	virtual ~Response(void);
 
-		void					errorPage(int errorCode);
-		void					theDeleteMethod(void);
-		void					StartResponse();
+	void errorPage(int errorCode);
+	void theDeleteMethod(void);
+	void StartResponse();
 
+	void theGetHeaderResponse(int code, int transferType);
+	void theGetRedirectionRequest(void);
+	void theGetErrorBadRequest(void);
+	void theGetErrorForbidden(void);
+	void theGetErrorNotFound(void);
+	void theGetResponseOk(void);
+	void directoryListing(void);
+	void regularFileGet(void);
+	void theGetMethod(void);
+	void Delete();
 
-		void					theGetHeaderResponse(int code, int transferType);
-		void					theGetRedirectionRequest(void);
-		void					theGetErrorBadRequest(void);
-		void					theGetErrorForbidden(void);
-		void					theGetErrorNotFound(void);
-		void					theGetResponseOk(void);
-		void					directoryListing(void);
-		void					regularFileGet(void);
-		void					theGetMethod(void);
-		void					Delete();
+	const std::string &getResponse() const;
+	void PostResponse();
 
+	void thePostHeaderResponse(int code, int transferType);
+	void thePostResponseCreate(void);
+	void thePostInternalServerError(void);
+	void thePostResponseCreatedPage(void);
+	void thePostMethod(void);
 
-		const std::string		&getResponse() const;
-		void					PostResponse();
+	// ******************** DelteMethod **************
+private:
+	int DeleteMethod(const std::string &);
+	bool isFile(const std::string &);
+	bool isDiractory(const std::string &);
+	bool deleteFile(const std::string &);
 
-		void					thePostHeaderResponse(int code, int transferType);
-		void					thePostResponseCreate(void);
-		void					thePostInternalServerError(void);
-		void					thePostResponseCreatedPage(void);
-		void					thePostMethod(void);
-
-// ******************** DelteMethod **************
-	private:
-		int		DeleteMethod(const std::string&);
-		bool	isFile(const std::string&);
-		bool	isDiractory(const std::string&);
-		bool	deleteFile(const std::string&);
-
-// **************** CGI **************************
-	private:
-		void				cgi_Handler(const std::string &inFile);
-		std::string			getExtention(const std::string&) const;
-		const std::string&	getCgiPath() const;
-		//void				setCgiEnvironment();			
+	// **************** CGI **************************
+private:
+	void cgi_Handler(const std::string &inFile);
+	std::string getExtention(const std::string &) const;
+	const std::string &getCgiPath() const;
+	void				setCgiEnvironment();
 };

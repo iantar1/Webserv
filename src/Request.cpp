@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/18 02:41:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/18 03:44:31 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ void encodinString(std::string &str) // ! to do
 }
 
 // ************ Getters **************
+
+const std::string &Request::getURI() const
+{
+	return (this->URI);
+}
 
 const std::string &Request::getMethod() const
 {
@@ -116,6 +121,10 @@ const std::map<std::string, std::string> &Request::getRequest() const
 	return (this->Header);
 }
 
+const std::string &Request::getQueryString() const
+{
+	return (this->QueryString);	
+}
 // ************* Setters *************
 
 void Request::setDoneServing()
@@ -476,11 +485,15 @@ void Request::ReadRequest()
 void Request::printRequest()
 {
 	std::cout << "||************REQUEST HEADER************||\n";
-	std::cout << RequestHeader << "\n";
+	std::cout << "Method: " << Methods[MethodType - 1] << "\n";
+	std::cout << "URI: " << URI << "\n";
+	// std::cout << "URI: " << URI << "\n";
+	
 	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
 	{
 		std::cout << it->first << ":" << it->second << "\n";
 	}
+	std::cout << "query sting: " << getQueryString() << "\n";
 	std::cout << "||************REQUEST Body************||\n";
 	std::cout << body << "\n";
 	std::cout << "||************************************||\n";
