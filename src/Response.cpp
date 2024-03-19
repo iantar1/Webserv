@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/19 03:40:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 07:00:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 #include "../includes/utils.hpp"
 
 Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
-													   request(request), files(files), streamStart(false), outOpened(false),
-													   gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false)
+													request(request), files(files), streamStart(false), outOpened(false),
+													gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false),
+													doneCGI(false)
 {
+	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();
 }
 
@@ -65,17 +67,17 @@ void Response::StartResponse()
 	// 	return ;
 	// }
 
+	if (isCGI() == true)
+		cgi_Handler();
 	if (request->getMethdType() == GET)
 	{
 		// std::cout << "=========================================================\n";
-		cgi_Handler("/nfs/homes/iantar/Desktop/Webserv/ph.php");
 		theGetMethod();
 		// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	else if (request->getMethdType() == POST)
 	{
 		// thePostMethod(mode);
-		cgi_Handler("/nfs/homes/iantar/Desktop/Webserv/ph.php");
 		PostResponse();
 	}
 	else if (request->getMethdType() == DELETE)
@@ -170,4 +172,14 @@ int Response::DeleteMethod(const std::string &path)
 
 // }
 
-const std::string &Response::getResponse() const { return this->response; }
+const std::string &Response::getResponse() const
+{
+	return this->response;
+}
+
+// *************** Seters *********
+
+void	Response::setURI()
+{
+	this->uri  = this->request->getURI();
+}

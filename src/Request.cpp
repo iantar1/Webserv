@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 00:00:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 06:49:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
 													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
+	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
 	lastCharHederIndex = 0;
 }
@@ -50,6 +51,11 @@ void encodinString(std::string &str) // ! to do
 }
 
 // ************ Getters **************
+
+const Location*     Request::getLocation() const
+{
+	return (location);
+}
 
 const std::string &Request::getURI() const
 {
@@ -374,6 +380,8 @@ void Request::parseURI_QueryString(const std::string &client_uri)
 	if ((index = client_uri.find("?")) != std::string::npos)
 	{
 		this->URI = client_uri.substr(0, index);
+		// std::cout << "URI: "<< URI << std::endl;
+		// std::cout << "index; " << index << "\n";
 		if (index != client_uri.size() - 1)
 			this->QueryString = client_uri.substr(index + 1);
 	}
@@ -395,6 +403,7 @@ void Request::storeRequestLine(const std::string &line)
 		
 	WhichMethod(RequestLine[0]);
 	parseURI_QueryString(RequestLine[1]);
+	std::cout << "||||||+++++++++++++++||||||||||||\n";
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
 	oldPath = this->URI; // URI
@@ -440,7 +449,6 @@ bool Request::ReadCheckHeader()
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
 				storeData(HeaderReq);
-				// exit(1);
 				lastCharHederIndex = i + 4;
 				doneHeaderReading = true;
 				matchClients();
@@ -448,12 +456,10 @@ bool Request::ReadCheckHeader()
 			}
 			if (buf[i] != '\r')
 			{
-				// std::cout << buf[i] << std::flush;
 				HeaderReq += buf[i];
 			}
 		}
 	}
-	std::cout << RED << std::endl <<"DONE\n";
 	return (false);
 }
 

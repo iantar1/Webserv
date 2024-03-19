@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 03:22:27 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 07:00:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 
 // * you should map cgi map[.sh] = path
 
-std::string Response::getExtention(const std::string &filePath) const
+std::string Response::getExtention() const
 {
 	std::string result;
 
-	for (int i = filePath.size() - 1; i >= 0; i--)
+	for (int i = uri.size() - 1; i >= 0; i--)
 	{
-		result += filePath[i];
-		if (filePath[i] == '.')
+		result += uri[i];
+		if (uri[i] == '.')
 			break;
 	}
 	std::reverse(result.begin(), result.end());
@@ -103,7 +103,31 @@ void	Response::storeUserInput()
 	input.close();
 }
 
-void Response::cgi_Handler(const std::string &inFile)
+std::string	cgiExtention[] = {".sh", ".py", ".php"};// ! static varible
+
+bool	Response::isCGI()
+{
+	if (doneCGI)
+		return (false);
+	for (size_t i = 0; i < cgiExtention->size(); i++)
+	{
+		if (uri.find(cgiExtention[i]) == uri.size() - cgiExtention[i].size())
+			return (validCGI(getExtention()));
+	}
+	return (false);
+}
+
+bool	Response::validCGI(const std::string& extention)
+{
+	const Location*	loc = request->getLocation();
+	
+	if ((loc->getCGI_Map()).find(extention) != (loc->getCGI_Map()).end())
+		return (true);
+	
+	return (false);
+}
+
+void Response::cgi_Handler()
 {
 	std::string _outFile;
 	std::string extention;
@@ -112,7 +136,7 @@ void Response::cgi_Handler(const std::string &inFile)
 	pid_t pid;
 
 	setCgiEnvironment();
-	extention = getExtention(request->getURI());
+	extention = getExtention();
 	std::cout << extention << "\n";
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
 	args[1] = (char *)(request->getNewPath().c_str());//(char *)inFile.c_str();						  // ! use access to check if the file exist
@@ -145,6 +169,7 @@ void Response::cgi_Handler(const std::string &inFile)
 	}
 	int status;
 	waitpid(pid, &status, 0);
+	doneCGI = true;
 	std::cout << "child done\n";
 	if (status)
 	{
@@ -156,4 +181,11 @@ void Response::cgi_Handler(const std::string &inFile)
 	// ! tuimeout
 	std::cout << "output: " << _outFile << std::endl;
 	(void)inFile;
+}
+
+// ************ Getters *********************
+
+const Request*	Response::getRequest() const
+{
+	return (request);
 }

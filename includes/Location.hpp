@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/08 22:07:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 06:15:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ public:
 	const std::string&	getRoot() const;
 	const std::string&	getLocation() const;
 	long				getMaxBodySize() const;
+	const std::map<std::string, std::string>&	getCGI_Map() const;
 
 // ************ Setters *****************
 	void	setMaxbodySize(long);

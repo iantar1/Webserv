@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/19 03:16:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 06:56:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ private:
 	Response &operator=(const Response &);
 
 private:
-	int socket;
-	int contentTotalSizePosted;
-	int chunkContentTotalSizePosted;
+	int 	socket;
+	int 	contentTotalSizePosted;
+	int 	chunkContentTotalSizePosted;
 	size_t chunkSize;
-	int mode;
-	int contentLenght;
-	int postType;
-	int ccl;
-	size_t appendedSize;
+	int 	mode;
+	int 	contentLenght;
+	int 	postType;
+	int 	ccl;
+	size_t 	appendedSize;
 
 	Request *request;
 	t_files &files;
@@ -51,14 +51,16 @@ private:
 	std::string redirection;
 	std::string requestBody;
 	std::string appendedRequest;
+	std::string	uri;
 
-	bool chunkStart;
-	bool streamStart;
-	bool outOpened;
-	bool gotTime;
-	bool modeChecked;
-	bool dataCopy;
-	bool startedTheChunk;
+	bool 	chunkStart;
+	bool 	streamStart;
+	bool 	outOpened;
+	bool 	gotTime;
+	bool 	modeChecked;
+	bool 	dataCopy;
+	bool 	startedTheChunk;
+	bool	doneCGI;
 
 	std::vector<std::string> CgiEnvironment;
 
@@ -99,13 +101,21 @@ private:
 
 	// **************** CGI **************************
 private:
-	void				cgi_Handler(const std::string &inFile);
-	std::string			getExtention(const std::string &) const;
+	void				cgi_Handler();
+	std::string			getExtention() const;
 	const std::string	&getCgiPath() const;
 	void				setCgiEnvironment();
 	std::string			getScriptName();
 	void				storeUserInput();
-// debug
+	bool				validCGI(const std::string&);
+	bool				isCGI();
+// *** debug
 	void	print_CGI_env();
-	
+
+// *************** Getters ***************
+public:
+	const Request*	getRequest() const;
+
+// ******************* setters ********************
+	void	setURI();
 };
