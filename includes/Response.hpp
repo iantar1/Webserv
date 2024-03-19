@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/18 23:04:58 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 03:16:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ private:
 	const std::string	&getCgiPath() const;
 	void				setCgiEnvironment();
 	std::string			getScriptName();
+	void				storeUserInput();
 // debug
 	void	print_CGI_env();
 	

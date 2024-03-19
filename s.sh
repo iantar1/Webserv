@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "hello"
+echo "sh"
 
 echo "Success"

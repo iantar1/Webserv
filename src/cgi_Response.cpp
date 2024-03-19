@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 01:27:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 03:22:27 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,18 @@ std::string	RandomName()
 	return result;
 }
 
+void	Response::storeUserInput()
+{
+	std::ofstream	input;
+
+	input.open("DataBase/infile");
+	if (request->getMethdType() == GET)
+		input << this->request->getQueryString();
+	if (request->getMethdType() == POST)
+		input << this->request->getBody();
+	input.close();
+}
+
 void Response::cgi_Handler(const std::string &inFile)
 {
 	std::string _outFile;
@@ -100,15 +112,17 @@ void Response::cgi_Handler(const std::string &inFile)
 	pid_t pid;
 
 	setCgiEnvironment();
-	extention = getExtention(inFile);
+	extention = getExtention(request->getURI());
+	std::cout << extention << "\n";
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
-	args[1] = (char *)inFile.c_str();						  // ! use access to check if the file exist
+	args[1] = (char *)(request->getNewPath().c_str());//(char *)inFile.c_str();						  // ! use access to check if the file exist
 	args[2] = NULL;
 	std::cout << "arg[0]: "<< args[0] << std::endl;
 	std::cout << "arg[1]: "<< args[1] << std::endl;
 	// std::cout << "arg[2]: "<< args[2] << std::endl;
 
 	_outFile = RandomName();
+	storeUserInput();
 	for (size_t i = 0; i < 8; i++)
 	{
 		env[i] = (char *)CgiEnvironment[i].c_str();
@@ -117,13 +131,15 @@ void Response::cgi_Handler(const std::string &inFile)
 	pid = fork();
 	if (pid == 0)
 	{
-		int fd = open(_outFile.c_str(), O_WRONLY | O_CREAT, 0666);
-		if (fd < 0)
+		int fd_out = open(_outFile.c_str(), O_WRONLY | O_CREAT, 0666);
+		int fd_in = open("DataBase/infile", O_RDONLY | O_CREAT, 0666);
+		if (fd_in < 0 || fd_out < 0)
 		{
 			std::cout << "can'topen\n";
 			exit(19); // ! use a macro
 		}
-		dup2(fd, 1);
+		dup2(fd_out, 1);
+		dup2(fd_in, 0);
 		// close(fd);
 		execve(args[0], args, NULL);
 	}
@@ -138,4 +154,6 @@ void Response::cgi_Handler(const std::string &inFile)
 	// * change the file path to _outfile
 	// ! check status
 	// ! tuimeout
+	std::cout << "output: " << _outFile << std::endl;
+	(void)inFile;
 }
