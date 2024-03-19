@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 04:25:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/18 23:34:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{
 		// std::cout << "=========================================================\n";
-		// cgi_Handler("../script.sh");
+		// cgi_Handler("script.sh");
 		theGetMethod();
 		// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}

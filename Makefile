@@ -16,7 +16,7 @@ SRC =	./src/VirtualServer.cpp \
 		./src/main.cpp \
 		./src/Post.cpp \
 		./src/Get.cpp \
-		# ./src/cgi_Response.cpp \
+		./src/cgi_Response.cpp \
 		
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@

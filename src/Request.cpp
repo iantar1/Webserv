@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/18 03:44:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 00:00:15 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,6 @@ void Request::storeHeader(const std::string &line)
 	size_t index;
 
 	index = line.find(":");
-	std::cout << "here :" << line << "\n";
 	if (index == std::string::npos)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
@@ -301,7 +300,8 @@ bool Request::URI_ValidChar(const std::string &uri) const
 {
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i]) && validChars.find(uri[i]) == std::string::npos)
+		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i])
+			&& validChars.find(uri[i]) == std::string::npos)
 		{
 			return (1);
 		}
@@ -316,6 +316,7 @@ bool Request::URI_ValidLocation(const std::string &uri)
 
 	for (; it != it_end; ++it)
 	{
+		std::cout << it->first << "\n";
 		if (uri.compare(0, (it->first).size(), it->first) == 0)
 		{
 			location_str = std::string(it->first);
@@ -387,15 +388,15 @@ void Request::storeRequestLine(const std::string &line)
 
 	for (int i = 0; sstr >> word; i++)
 	{
-		if (i == 3)
-			setFlagError(BAD_REQ, "BAD REQUEST");
 		RequestLine.push_back(word);
 	}
-	// * I don't like these lines ,
+	if (RequestLine.size() != 3)
+			setFlagError(BAD_REQ, "BAD REQUEST");
+		
 	WhichMethod(RequestLine[0]);
+	parseURI_QueryString(RequestLine[1]);
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
-	parseURI_QueryString(RequestLine[1]);
 	oldPath = this->URI; // URI
 	SetNewPath();		 // set new Path
 }
@@ -439,15 +440,20 @@ bool Request::ReadCheckHeader()
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
 				storeData(HeaderReq);
+				// exit(1);
 				lastCharHederIndex = i + 4;
 				doneHeaderReading = true;
 				matchClients();
 				return (true);
 			}
 			if (buf[i] != '\r')
+			{
+				// std::cout << buf[i] << std::flush;
 				HeaderReq += buf[i];
+			}
 		}
 	}
+	std::cout << RED << std::endl <<"DONE\n";
 	return (false);
 }
 
@@ -472,7 +478,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		printRequest();
+		// printRequest();
 	}
 	catch (const std::exception &e)
 	{
