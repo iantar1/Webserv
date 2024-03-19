@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/19 01:07:50 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 03:40:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		// thePostMethod(mode);
+		cgi_Handler("/nfs/homes/iantar/Desktop/Webserv/ph.php");
 		PostResponse();
 	}
 	else if (request->getMethdType() == DELETE)
