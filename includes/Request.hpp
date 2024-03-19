@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/18 22:28:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 01:16:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ private:
     std::string RequestHeader;
     std::string chunkedBodySize;
     std::string body;
-    std::string newPath;
+    // std::string newPath;
     std::string oldPath;
     std::string HeaderReq;
     std::string location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
@@ -68,6 +68,7 @@ public:
     // ************ Constructor destructor ****************
     Request(int, VirtualServer *);
     ~Request();
+    std::string newPath;// ! tmp
 
 private:
     // ***************** Private Methodes **************

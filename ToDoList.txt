@@ -33,3 +33,8 @@ it, the CGI will expect EOF as end of the body. : SUBJECT>>
 
 12. match location with it's client
 
+
+  ============================================================================
+ | if it's CGI , change the URI , from the file being execute to it's result  |
+ |
+ |

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/18 23:16:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 01:27:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,20 @@ void Response::setCgiEnvironment()
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
 	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
 	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString());// !start mn ?
-	CgiEnvironment.push_back("SCRIPT_NAME=" + getScriptName());// * The name of the CGI script
+	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());// * The name of the CGI script
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath()); // * The full path to the CGI script
 	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());// * path for cgi script
+}
+
+std::string	RandomName()
+{
+	std::string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	std::string	result = "/tmp/";
+
+	srand(time(0));
+	for (int i = 0; i < 5; i++)
+		result += str[rand() % str.size()];
+	return result;
 }
 
 void Response::cgi_Handler(const std::string &inFile)
@@ -93,12 +104,16 @@ void Response::cgi_Handler(const std::string &inFile)
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
 	args[1] = (char *)inFile.c_str();						  // ! use access to check if the file exist
 	args[2] = NULL;
+	std::cout << "arg[0]: "<< args[0] << std::endl;
+	std::cout << "arg[1]: "<< args[1] << std::endl;
+	// std::cout << "arg[2]: "<< args[2] << std::endl;
 
-	_outFile = "outPut~"; // + generateNameFile();
+	_outFile = RandomName();
 	for (size_t i = 0; i < 8; i++)
 	{
 		env[i] = (char *)CgiEnvironment[i].c_str();
 	}
+	print_CGI_env();
 	pid = fork();
 	if (pid == 0)
 	{
@@ -108,14 +123,19 @@ void Response::cgi_Handler(const std::string &inFile)
 			std::cout << "can'topen\n";
 			exit(19); // ! use a macro
 		}
-		std::cout << "HEE\n";
-		printf("-> %s , , %s\n", args[0], args[1]);
 		dup2(fd, 1);
-		close(fd);
+		// close(fd);
 		execve(args[0], args, NULL);
 	}
 	int status;
 	waitpid(pid, &status, 0);
+	std::cout << "child done\n";
+	if (status)
+	{
+		std::cout << "status: " << status << std::endl;
+		exit(1);
+	}
+	// * change the file path to _outfile
 	// ! check status
 	// ! tuimeout
 }
