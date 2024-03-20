@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 04:52:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 06:26:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,11 @@ bool deleteChecking(const std::string &path)
 	return (true);
 }
 
-static const std::string	filePath[] = {"delete.htm", "delete.htm", "delete.htm"};
+static const std::string	filePath[] = {"204.htm", "403.htm", "500.htm"};
+
+// A 202 (Accepted) status code if the action will likely succeed but has not yet been enacted.
+// A 204 (No Content) status code if the action has been enacted and no further information is to be supplied.
+// A 200 (OK) status code if the action has been enacted and the response message includes a representation describing the status.
 
 void Response::DeleteMethod()
 {
@@ -119,8 +123,11 @@ void Response::DeleteMethod()
 		status = DeleteDiractory(request->getNewPath());
 	}
 	std::cout << "this->path: "<< request->getNewPath() << "\n";
-	// std::strin
-	file.open((std::string("defaultPages/") + filePath[status]).c_str());
+	std::cout << "status: "<< status << "\n";
+	// file.open((std::string("defaultPages/") + filePath[status]).c_str());
+	file.open("defaultPages/204.htm");
     buffer << file.rdbuf();
 	response = buffer.str() + "\r\n\r\n";
+	std::cout << response;
+	file.close();
 }
