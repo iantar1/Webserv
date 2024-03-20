@@ -1,6 +1,6 @@
 NAME = a.out
 
-SRC = main.cpp
+SRC = test.cpp
 
 CXX = c++
 

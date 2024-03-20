@@ -1,6 +1,6 @@
 NAME = a.out
 
-SRC = main.cpp ServerBlock.cpp LocationBlock.cpp utils.cpp
+SRC = main.cpp ServerBlock.cpp LocationBlock.cpp Config.cpp utils.cpp
 
 CXX = c++
 

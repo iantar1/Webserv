@@ -52,7 +52,7 @@ class ServerBlock
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();
 		void initFields();
-		bool parseServerLine(std::string line);
+		bool parseServerLine(std::vector<std::string> line);
 		bool checkServer(void);
 	
 };

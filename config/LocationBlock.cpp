@@ -40,15 +40,14 @@ void LocationBlock::initFields()
 	cgiEnable = false;
 }
 
-bool LocationBlock::parseLocationLine(std::string line)
+bool LocationBlock::parseLocationLine(std::vector<std::string> line)
 {
-	std::vector<std::string> lineParts = split(line, ' ');
-	if (Fields.find(lineParts[0]) == Fields.end())
+	if (Fields.find(line[0]) == Fields.end())
 	{
-		std::cerr << "Invalid directive: " << lineParts[0] << std::endl;
+		std::cerr << "Invalid directive: " << line[0] << std::endl;
 		return false;
 	}
-	return (this->*Fields[lineParts[0]])(lineParts);
+	return (this->*Fields[line[0]])(line);
 }
 
 bool LocationBlock::checkLocation(std::vector<std::string> location)

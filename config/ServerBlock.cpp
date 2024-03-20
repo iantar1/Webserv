@@ -34,15 +34,14 @@ void ServerBlock::initFields()
 	locations.clear();
 }
 
-bool ServerBlock::parseServerLine(std::string line)
+bool ServerBlock::parseServerLine(std::vector<std::string> line)
 {
-	std::vector<std::string> lineParts = split(line, ' ');
-	if (Fields.find(lineParts[0]) == Fields.end())
+	if (Fields.find(line[0]) == Fields.end())
 	{
-		std::cerr << "Invalid directive: " << lineParts[0] << std::endl;
+		std::cerr << "Invalid directive: " << line[0] << std::endl;
 		return false;
 	}
-	bool result = (this->*Fields[lineParts[0]])(lineParts);
+	bool result = (this->*Fields[line[0]])(line);
 	return result;
 }
 

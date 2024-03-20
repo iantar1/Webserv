@@ -55,7 +55,7 @@ class LocationBlock
 		// end of getters
 		void initFieldsMap();
 		void initFields();
-		bool parseLocationLine(std::string line);
+		bool parseLocationLine(std::vector<std::string> line);
 		bool checkLocation(void);
 };
 
