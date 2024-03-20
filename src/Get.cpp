@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/19 04:42:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 00:07:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,12 @@ void Response::theGetMethod(void)
 		now = time(0);
 		local_time = localtime(&now);
 
-		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900)
+			+ "-" + ToString(local_time->tm_mon + 1)
+				+ "-" + ToString(local_time->tm_mday)
+					+ " " + ToString(local_time->tm_hour)
+						+ ":" + ToString(local_time->tm_min)
+							+ ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
 

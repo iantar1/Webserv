@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/19 06:56:13 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 01:39:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,11 @@ public:
 
 	// ******************** DelteMethod **************
 private:
-	int DeleteMethod(const std::string &);
-	bool isFile(const std::string &);
-	bool isDiractory(const std::string &);
-	bool deleteFile(const std::string &);
+	void	DeleteMethod();
+	int		DeleteDiractory(const std::string &);
+	bool	isFile(const std::string &);
+	bool	isDiractory(const std::string &);
+	bool	deleteFile(const std::string &);
 
 	// **************** CGI **************************
 private:

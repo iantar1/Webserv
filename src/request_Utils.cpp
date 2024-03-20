@@ -6,18 +6,17 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:30:16 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 23:39:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/19 23:44:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../includes/headers.hpp"
 #include "../includes/Request.hpp"
 #include "../includes/utils.hpp"
 
-const std::string hex = "0123456789abcdef0123456789ABCDEF";
+static const std::string hex = "0123456789abcdef0123456789ABCDEF";
 
-int convert(char a, char b)
+static int convert(char a, char b)
 {
     int res;
 
@@ -27,7 +26,7 @@ int convert(char a, char b)
     return (res);
 }
 
-bool    isHex(char a, char b)
+static bool    isHex(char a, char b)
 {
     return (hex.find(a) != std::string::npos && hex.find(b) != std::string::npos);
 }
