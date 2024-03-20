@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 02:14:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:13:34 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Response::StartResponse()
 	{
 		// * check valid path
 		DeleteMethod();
-		this->request->setDoneServing();
+		this->request->setDoneServing(); // ! to edit later 
 	}
 }
 // ******** DELETE MEthod ************

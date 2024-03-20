@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 06:49:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 07:07:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,8 +180,7 @@ void Request::storeHeader(const std::string &line)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
 	value = skipLeadingWhitespace(line.substr(index + 1)); // ! check this !!
-	if (value.size() > 0)
-		value.erase(value.size() - 1);
+	std::cout << "value:"<< value << std::endl;
 	Header.insert(std::make_pair(key, value));
 }
 
@@ -252,7 +251,7 @@ void Request::checkValid_POST_Header()
 	}
 	if (this->Header.find("transfer-encoding") != Header.end() && Header["transfer-encoding"] != "chunked") // ! what is this
 	{
-		std::cout << "debug: " << Header["transfer-encoding"].size() << "\n";
+		std::cout << "debug: " << Header["transfer-encoding"] << "\n";
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("content-length") != Header.end())
@@ -380,8 +379,6 @@ void Request::parseURI_QueryString(const std::string &client_uri)
 	if ((index = client_uri.find("?")) != std::string::npos)
 	{
 		this->URI = client_uri.substr(0, index);
-		// std::cout << "URI: "<< URI << std::endl;
-		// std::cout << "index; " << index << "\n";
 		if (index != client_uri.size() - 1)
 			this->QueryString = client_uri.substr(index + 1);
 	}
@@ -403,7 +400,6 @@ void Request::storeRequestLine(const std::string &line)
 		
 	WhichMethod(RequestLine[0]);
 	parseURI_QueryString(RequestLine[1]);
-	std::cout << "||||||+++++++++++++++||||||||||||\n";
 	URI_Checking(RequestLine[1]);
 	httpVersionCheck(RequestLine[2]);
 	oldPath = this->URI; // URI
@@ -484,7 +480,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{

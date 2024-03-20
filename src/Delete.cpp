@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 06:26:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 06:35:32 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,7 @@ void Response::DeleteMethod()
 	}
 	std::cout << "this->path: "<< request->getNewPath() << "\n";
 	std::cout << "status: "<< status << "\n";
-	// file.open((std::string("defaultPages/") + filePath[status]).c_str());
-	file.open("defaultPages/204.htm");
+	file.open((std::string("defaultPages/") + filePath[status]).c_str());
     buffer << file.rdbuf();
 	response = buffer.str() + "\r\n\r\n";
 	std::cout << response;
