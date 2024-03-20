@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 01:14:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 02:13:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,10 @@ void Server::ServeClients(int index)
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
+		if (clients[events[index].data.fd]->getRequest()->getMethdType() == DELETE)
+		{
+			clients[events[index].data.fd]->ServingClient();
+		}
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == GET)
 		{
 			clients[events[index].data.fd]->ServingClient();

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 02:06:00 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 02:12:10 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,11 @@ int Response::DeleteDiractory(const std::string &path)
 
 bool deleteChecking(const std::string &path)
 {
-	
+	(void)path;
+	return (1);
 }
 
-static const std::string	filePath[] = {"delete.htm", "delete.htm", "delete.htm"};
+static const std::string	filePath[] = {"defaultPages/delete.htm", "delete.htm", "delete.htm"};
 
 void Response::DeleteMethod()
 {
@@ -104,9 +105,10 @@ void Response::DeleteMethod()
 
 	// if (deleteChecking(uri))
 	// 	status = DeleteDiractory(uri);
-	file.open("defaultPages/" + filePath[0]);
+	file.open("defaultPages/delete.htm");
     buffer << file.rdbuf();
-	response = buffer.str();
+	response = buffer.str() + "\r\n\r\n";
+	std::cout << "*********************************\n";
 	// if (deleteChecking(path))
 	// open file, 
 	
