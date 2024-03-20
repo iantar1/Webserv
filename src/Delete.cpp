@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 02:12:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 04:46:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,24 +91,38 @@ int Response::DeleteDiractory(const std::string &path)
 
 bool deleteChecking(const std::string &path)
 {
-	(void)path;
-	return (1);
+	if (std::strncmp(path.c_str(), "/To_Delete/", 10) != 0)
+		return (false);
+	if (path.size() == 10)
+		return (false);
+	return (true);
 }
 
-static const std::string	filePath[] = {"defaultPages/delete.htm", "delete.htm", "delete.htm"};
+static const std::string	filePath[] = {"delete.htm", "delete.htm", "delete.htm"};
 
 void Response::DeleteMethod()
 {
 	std::ifstream	file;
 	std::stringstream buffer;
-	// int	status = 0;
+	int	status = 0;
 
-	// if (deleteChecking(uri))
-	// 	status = DeleteDiractory(uri);
-	file.open("defaultPages/delete.htm");
+	std::cout<< RED << uri<< RESET << "\n";
+	// exit(1);
+	if (deleteChecking(uri) == false)
+		return ;
+	if (isFile(uri))
+	{
+		status = deleteFile(uri);
+	}
+	else
+	{
+		status = DeleteDiractory(request->getNewPath());
+	}
+	std::cout << "this->path: "<< request->getNewPath() << "\n";
+	// std::strin
+	file.open((std::string("defaultPages/") + filePath[status]).c_str());
     buffer << file.rdbuf();
 	response = buffer.str() + "\r\n\r\n";
-	std::cout << "*********************************\n";
 	// if (deleteChecking(path))
 	// open file, 
 	
