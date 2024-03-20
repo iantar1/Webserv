@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/17 05:19:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/20 07:24:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,14 @@ void	Response::PostResponse()
 {
 	if (!this->modeChecked)
 	{
-		if (this->request->getRequest().find("content-length") != this->request->getRequest().end())
-			this->mode = NORMAL;
-		else
+		if (this->request->getRequest().find("transfer-encoding") != this->request->getRequest().end())
 			this->mode = CHUNKED;
+		else
+			this->mode = NORMAL;
+		// if (this->request->getRequest().find("content-length") != this->request->getRequest().end())
+		// 	this->mode = NORMAL;
+		// else
+		// 	this->mode = CHUNKED;
 		this->modeChecked = true;
 	}
 	thePostMethod();
