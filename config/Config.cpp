@@ -25,11 +25,37 @@ void Config::pushBlock(std::string context)
 	}
 }
 
+void Config::parseContextLine(std::vector<std::string> line, std::string context)
+{
+	if (contexts.size() != braces.size())
+		throw std::runtime_error("Config Error: check braces #3");
+	if (context == "server")
+		server.parseServerLine(line);
+	else if (context == "location")
+		location.parseLocationLine(line);
+}
+
 bool isBrace(std::string line)
 {
 	if (!line.empty() && (line.at(0) == '{' || line.at(0) == '}'))
 		return true;
 	return false;
+}
+
+void Config::addServerToContexts(std::vector<std::string> line)
+{
+	if (line.size() != 1)
+		throw std::runtime_error("Config Error: check server context");
+	if (contexts.empty() == false)
+		throw std::runtime_error("Config Error: server is inside another context");
+	contexts.push(line[0]);
+}
+
+void Config::addLocationToContexts(std::vector<std::string> line)
+{
+	if (contexts.empty() || contexts.top() != "server")
+		throw std::runtime_error("Config Error: location must be inside server context");
+	contexts.push(line[0]);
 }
 
 bool Config::checkBraces(std::vector<std::string> line, std::string context)
@@ -55,24 +81,6 @@ bool Config::checkBraces(std::vector<std::string> line, std::string context)
 	}
 	return 0;
 }
-void printContexts(std::stack<std::string> contexts)
-{
-	std::stack<std::string> temp = contexts;
-	while (!temp.empty())
-	{
-		std::cout << temp.top() << std::endl;
-		temp.pop();
-	}
-}
-void printBraces(std::stack<char> braces)
-{
-	std::stack<char> temp = braces;
-	while (!temp.empty())
-	{
-		std::cout << temp.top() << std::endl;
-		temp.pop();
-	}
-}
 
 void Config::parseBlock(std::ifstream& configFile, std::string context)
 {
@@ -92,34 +100,17 @@ void Config::parseBlock(std::ifstream& configFile, std::string context)
 			return;
 		else if (splitedLine[0] == "server")
 		{
-			if (splitedLine.size() != 1 || contexts.empty() == false)
-				throw std::runtime_error("Config Error: check server context");
-			contexts.push(splitedLine[0]);
+			addServerToContexts(splitedLine);
 			parseBlock(configFile, "server");
 		}
 		else if (splitedLine[0] == "location")
 		{
-			if (contexts.empty())
-				throw std::runtime_error("Config Error: location is outside server context");
-			else if (contexts.top() != "server")
-				throw std::runtime_error("Config Error: location is inside another location context");
-			contexts.push(splitedLine[0]);
+			addLocationToContexts(splitedLine);
 			location.parseLocationLine(splitedLine);
 			parseBlock(configFile, "location");
 		}
 		else
-		{
-			if (contexts.size() != braces.size())
-				throw std::runtime_error("Config Error: check braces #3");
-			if (context == "server")
-			{
-				server.parseServerLine(splitedLine);
-			}
-			else if (context == "location")
-			{
-				location.parseLocationLine(splitedLine);
-			}
-		}
+			parseContextLine(splitedLine, context);
 	}
 	if (!std::getline(configFile, line) && (!braces.empty() || !contexts.empty()))
 		throw std::runtime_error("Config Error: check braces #4");
