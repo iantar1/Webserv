@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 06:07:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 02:09:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,11 @@ public:
     const Location*     getLocation() const;    
 
     // ************* Setters ****************
-    void setDoneServing();
-    void setDoneHeaderReading();
-    void setLocation_str(std::string);
-    void setFlagError(int, const std::string &);
+    void    setDoneServing();
+    void    setDoneHeaderReading();
+    void    setLocation_str(std::string);
+    void    setFlagError(int, const std::string &);
+    void    setPath(std::string);
 
     // ************* Debug ****************
     void printRequest();

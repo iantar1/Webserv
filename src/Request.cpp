@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 00:06:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 02:10:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,11 @@ const std::string &Request::getQueryString() const
 	return (this->QueryString);	
 }
 // ************* Setters *************
+
+void	Request::setPath(std::string str)
+{
+	this->newPath = str;
+}
 
 void Request::setDoneServing()
 {

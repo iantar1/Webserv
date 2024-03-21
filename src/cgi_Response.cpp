@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 07:00:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 04:09:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,17 @@ std::string Response::getExtention() const
 //     "SCRIPT_FILENAME="
 //     "REDIRECT_STATUS=200"
 // 	    "REQUEST_URI="
-std::string	Response::getScriptName()
+std::string Response::getScriptName()
 {
-	std::string	result;
-	std::string	uri;
+	std::string result;
+	std::string uri;
 
 	uri = request->getURI();
 	std::cout << "fr: " << uri << "\n";
 	for (size_t i = uri.size() - 1; i >= 0; i--)
 	{
 		if (uri[i] == '/')
-			break ;
+			break;
 		result += uri[i];
 	}
 	return (result);
@@ -74,26 +74,27 @@ void Response::setCgiEnvironment()
 	CgiEnvironment.push_back("REDIRECT_STATUS=200");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
 	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
-	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString());// !start mn ?
-	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());// * The name of the CGI script
-	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath()); // * The full path to the CGI script
-	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());// * path for cgi script
+	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString()); // !start mn ?
+	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());		   // * The name of the CGI script
+	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath());  // * The full path to the CGI script
+	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());		   // * path for cgi script
 }
 
-std::string	RandomName()
+std::string RandomName()
 {
 	std::string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	std::string	result = "/tmp/";
+	std::string result = "/nfs/homes/iantar/Desktop/Webserv/Uploads/";
 
 	srand(time(0));
 	for (int i = 0; i < 5; i++)
 		result += str[rand() % str.size()];
+	result += ".txt";
 	return result;
 }
 
-void	Response::storeUserInput()
+void Response::storeUserInput()
 {
-	std::ofstream	input;
+	std::ofstream input;
 
 	input.open("DataBase/infile");
 	if (request->getMethdType() == GET)
@@ -103,9 +104,9 @@ void	Response::storeUserInput()
 	input.close();
 }
 
-std::string	cgiExtention[] = {".sh", ".py", ".php"};// ! static varible
+std::string cgiExtention[] = {".sh", ".py", ".php"}; // ! static varible
 
-bool	Response::isCGI()
+bool Response::isCGI()
 {
 	if (doneCGI)
 		return (false);
@@ -117,13 +118,13 @@ bool	Response::isCGI()
 	return (false);
 }
 
-bool	Response::validCGI(const std::string& extention)
+bool Response::validCGI(const std::string &extention)
 {
-	const Location*	loc = request->getLocation();
-	
+	const Location *loc = request->getLocation();
+
 	if ((loc->getCGI_Map()).find(extention) != (loc->getCGI_Map()).end())
 		return (true);
-	
+
 	return (false);
 }
 
@@ -139,10 +140,10 @@ void Response::cgi_Handler()
 	extention = getExtention();
 	std::cout << extention << "\n";
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
-	args[1] = (char *)(request->getNewPath().c_str());//(char *)inFile.c_str();						  // ! use access to check if the file exist
+	args[1] = (char *)(request->getNewPath().c_str());		  //(char *)inFile.c_str();						  // ! use access to check if the file exist
 	args[2] = NULL;
-	std::cout << "arg[0]: "<< args[0] << std::endl;
-	std::cout << "arg[1]: "<< args[1] << std::endl;
+	std::cout << "arg[0]: " << args[0] << std::endl;
+	std::cout << "arg[1]: " << args[1] << std::endl;
 	// std::cout << "arg[2]: "<< args[2] << std::endl;
 
 	_outFile = RandomName();
@@ -171,21 +172,20 @@ void Response::cgi_Handler()
 	waitpid(pid, &status, 0);
 	doneCGI = true;
 	std::cout << "child done\n";
-	if (status)
+	if (!status)
 	{
 		std::cout << "status: " << status << std::endl;
-		exit(1);
+		request->setPath(_outFile);
 	}
 	// * change the file path to _outfile
 	// ! check status
 	// ! tuimeout
 	std::cout << "output: " << _outFile << std::endl;
-	(void)inFile;
 }
 
 // ************ Getters *********************
 
-const Request*	Response::getRequest() const
+const Request *Response::getRequest() const
 {
 	return (request);
 }

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/21 00:20:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 03:35:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
-			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 		{
 			this->response += header_it->second + "\r\n";
 		}
@@ -49,9 +48,9 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	}
 
 	this->response += "\r\n";
-	std::cout << RED <<  "*********************** response header *******************\n" << 
-	response << "******************************************************\n"<<
-	 RESET;
+	std::cout << RED << "*********************** response header *******************\n"
+			  << response << "******************************************************\n"
+			  << RESET;
 }
 
 void Response::theGetRedirectionRequest(void)
@@ -145,6 +144,7 @@ void Response::regularFileGet(void)
 	std::map<std::string, std::string>::iterator mime_it;
 
 	extension = getFileExtension(this->path);
+	std::cout << "path_ino: " << this->path << std::endl;
 	if (extension != "")
 	{
 		mime_it = this->files.mime.find(extension);
@@ -166,6 +166,11 @@ void Response::regularFileGet(void)
 		this->inFile.close();
 }
 
+// std::string	getStrTime()
+// {
+
+// }
+
 void Response::theGetMethod(void)
 {
 	if (!this->gotTime)
@@ -176,12 +181,7 @@ void Response::theGetMethod(void)
 		now = time(0);
 		local_time = localtime(&now);
 
-		this->strTime = ToString(local_time->tm_year + 1900)
-			+ "-" + ToString(local_time->tm_mon + 1)
-				+ "-" + ToString(local_time->tm_mday)
-					+ " " + ToString(local_time->tm_hour)
-						+ ":" + ToString(local_time->tm_min)
-							+ ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
 
@@ -219,5 +219,5 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
-	// this->request->setDoneServing();
+	// this->request->setDoneServing();// ! fix this
 }

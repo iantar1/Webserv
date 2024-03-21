@@ -6,18 +6,18 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/21 00:02:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 03:36:50 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/macros.hpp"
 #include "../includes/Response.hpp"
 #include "../includes/utils.hpp"
-
+										
 Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
-													request(request), files(files), streamStart(false), outOpened(false),
-													gotTime(false), modeChecked(false), dataCopy(false), startedTheChunk(false),
-													doneCGI(false)
+                                                    request(request), files(files), chunkStart(false), streamStart(false),
+                                                    outOpened(false), gotTime(false), modeChecked(false), dataCopy(false),
+                                                    startedTheChunk(false), doneCGI(false)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();

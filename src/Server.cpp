@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 02:13:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 03:40:06 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void Server::DropCleint(int ClientFd)
 }
 
 // ! Desing Timeget.getResponse()
-
 void Server::ServeClients(int index)
 {
 	if (events[index].events & EPOLLIN)
@@ -123,6 +122,10 @@ void Server::ServeClients(int index)
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
+		if (clients[events[index].data.fd]->getDoneServing())
+			write(this->clients[events[index].data.fd]->getSocketFd(),
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
