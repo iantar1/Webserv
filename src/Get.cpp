@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 00:07:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 00:20:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	}
 
 	this->response += "\r\n";
+	std::cout << RED <<  "*********************** response header *******************\n" << 
+	response << "******************************************************\n"<<
+	 RESET;
 }
 
 void Response::theGetRedirectionRequest(void)
@@ -99,6 +102,7 @@ void Response::theGetResponseOk(void)
 
 		signal(SIGPIPE, SIG_IGN);
 		this->inFile.read(buf, 1024);
+		// std::cout << YELLOW << "buf : \n" << buf<< RESET << "\n";
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
 			this->body = "0\r\n\r\n";
@@ -215,5 +219,5 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
-	this->request->setDoneServing();
+	// this->request->setDoneServing();
 }

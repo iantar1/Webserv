@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 07:24:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/20 22:31:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void	Response::thePostResponseCreate(void)
 			this->chunkStart = false;
 
 			// std::cout << "yyyyy" << std::endl;
-			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
+			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {// ! dyalax 0
 				this->outFile.close();
 				this->appendedRequest.clear();
 				this->request->setDoneServing();

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 07:20:49 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 00:06:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ void Request::storeHeader(const std::string &line)
 		setFlagError(BAD_REQ, "bad Request");
 	key = toLower(line.substr(0, index));
 	value = skipLeadingWhitespace(line.substr(index + 1)); // ! check this !!
-	std::cout << "key:" << key << " value:"<< value << std::endl;
+	// std::cout << "key:" << key << " value:"<< value << std::endl;
 	Header.insert(std::make_pair(key, value));
 }
 

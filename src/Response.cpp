@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 07:13:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 00:02:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,11 @@ void Response::StartResponse()
 		cgi_Handler();
 	if (request->getMethdType() == GET)
 	{
-		// std::cout << "=========================================================\n";
 		theGetMethod();
+		// std::cout << "***************************************************\n";
+		// std::cout << this->response;
+		// std::cout << "\n***************************************************\n";
+		
 		// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	else if (request->getMethdType() == POST)
