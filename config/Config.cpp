@@ -54,7 +54,7 @@ void Config::parseBlock(std::ifstream& configFile, std::string context)
 		}
 		else if (splitedLine[0] == "server")
 		{
-			if (contexts.empty() == false)
+			if (splitedLine.size() != 1 || contexts.empty() == false)
 				throw std::runtime_error("Config Error: check server context");
 			contexts.push(splitedLine[0]);
 			parseBlock(configFile, "server");

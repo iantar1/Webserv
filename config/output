@@ -1,0 +1,58 @@
+End of context: location
+End of context: location
+End of context: server
+End of context: location
+End of context: server
+>>>>>>>>>>>  Server 0 <<<<<<<<<<<
+listen: 5985
+host: 127.0.0.1
+server_name: www.example.com 
+root: /var/www/example.com
+indexes: index.html 
+error_pages: 404 /404.html 
+max_body_size: 0
+locations: 
+###########  Location 0 ###########
+location: /
+root: /var/www/example.com
+index: index.html index.php 
+autoindex: 0
+allow_methods: GET POST 
+cgi_paths: 
+upload_path: 
+upload_enable: 0
+cgi_enable: 0
+
+###########  Location 1 ###########
+location: /location1
+root: /var/www/example.com
+index: index.htm index.php 
+autoindex: 1
+allow_methods: GET POST DELETE 
+cgi_paths: .php /usr/bin/php-cgi .sh /usr/bin/bash 
+upload_path: 
+upload_enable: 0
+cgi_enable: 0
+
+
+>>>>>>>>>>>  Server 1 <<<<<<<<<<<
+listen: 4800
+host: localhost
+server_name: www.webserv.com 
+root: /var/www/webserv.com
+indexes: index.html 
+error_pages: 
+max_body_size: 0
+locations: 
+###########  Location 0 ###########
+location: /
+root: /var/www/webserver.com
+index: index.html index.py 
+autoindex: 0
+allow_methods: GET POST 
+cgi_paths: 
+upload_path: 
+upload_enable: 0
+cgi_enable: 0
+
+

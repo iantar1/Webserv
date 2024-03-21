@@ -40,14 +40,13 @@ void LocationBlock::initFields()
 	cgiEnable = false;
 }
 
-bool LocationBlock::parseLocationLine(std::vector<std::string> line)
+void LocationBlock::parseLocationLine(std::vector<std::string> line)
 {
 	if (Fields.find(line[0]) == Fields.end())
-	{
-		std::cerr << "Invalid directive: " << line[0] << std::endl;
-		return false;
-	}
-	return (this->*Fields[line[0]])(line);
+		throw std::runtime_error("Unknown field in location block: " + line[0]);
+	bool result = (this->*Fields[line[0]])(line);
+	if (!result)
+		throw std::runtime_error("Invalid field in location block: " + line[0]);
 }
 
 bool LocationBlock::checkLocation(std::vector<std::string> location)

@@ -105,11 +105,16 @@ int main()
 	{
 		std::cout << ">>>>>>>>>>>  Server " << i << " <<<<<<<<<<<" << std::endl;
 		std::cout << p.servers[i] << std::endl;
+		// std::cout << p.servers[i].getLocations()[i].getLocationName() << std::endl;
 	}
 	// std::cout << p.servers[3].getHost()<< std::endl;
 	return 0;
 }
 
+// map["/user/ibel-har"] = newLocation("/");
+// map["/user"] = newLocation("/");
+// map["/"] = newLocation("/");
+// map["/"] = newLocation("/");
 
 // server
 // {

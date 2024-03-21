@@ -28,7 +28,7 @@ class Config
 		void pushBlock(std::string context);	
 	public:
 		std::ifstream configFile;
-		std::vector<ServerBlock> servers;
+		std::vector<ServerBlock> servers; 
 		Config(std::string const& filename);
 		~Config();
 		void parseBlock(std::ifstream& configFile, std::string context);

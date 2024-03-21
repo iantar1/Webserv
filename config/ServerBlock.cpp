@@ -34,15 +34,13 @@ void ServerBlock::initFields()
 	locations.clear();
 }
 
-bool ServerBlock::parseServerLine(std::vector<std::string> line)
+void ServerBlock::parseServerLine(std::vector<std::string> line)
 {
 	if (Fields.find(line[0]) == Fields.end())
-	{
-		std::cerr << "Invalid directive: " << line[0] << std::endl;
-		return false;
-	}
+		throw std::runtime_error("Unknown field in server block: " + line[0]);
 	bool result = (this->*Fields[line[0]])(line);
-	return result;
+	if (!result)
+		throw std::runtime_error("Invalid field in server block: " + line[0]);
 }
 
 bool ServerBlock::checkListen(std::vector<std::string> listen)
