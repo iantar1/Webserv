@@ -51,6 +51,7 @@ class ServerBlock
 		std::map<int, std::string> const& getErrorPages() const;
 		int const& getMaxBodySize() const;
 		std::vector<LocationBlock> const& getLocations() const;
+		LocationBlock *getLocation(std::string const& locationName) const;
 		// end of getters
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();

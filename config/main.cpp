@@ -101,13 +101,19 @@ int main()
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}
-	for (std::size_t i = 0; i < p.servers.size(); i++)
-	{
-		std::cout << ">>>>>>>>>>>  Server " << i << " <<<<<<<<<<<" << std::endl;
-		std::cout << p.servers[i] << std::endl;
-		// std::cout << p.servers[i].getLocations()[i].getLocationName() << std::endl;
-	}
-	// std::cout << p.servers[3].getHost()<< std::endl;
+	// for (std::size_t i = 0; i < p.servers.size(); i++)
+	// {
+	// 	std::cout << ">>>>>>>>>>>  Server " << i << " <<<<<<<<<<<" << std::endl;
+	// 	std::cout << p.servers[i] << std::endl;
+	// 	// std::cout << p.servers[i].getLocations()[i].getLocationName() << std::endl;
+	// }
+	// // std::cout << p.servers[3].getHost()<< std::endl;
+	std::cout << ">>>>>>>>>>>  Server " << 0 << " <<<<<<<<<<<" << std::endl;
+	LocationBlock *location = p.servers[0].getLocation("/");
+	if (location)
+		std::cout << *location << std::endl;
+	else
+		std::cout << "Location not found" << std::endl;
 	return 0;
 }
 

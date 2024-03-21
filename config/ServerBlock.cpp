@@ -190,6 +190,18 @@ std::vector<LocationBlock> const& ServerBlock::getLocations() const
 	return this->locations;
 }
 
+LocationBlock  *ServerBlock::getLocation(std::string const& locationName) const
+{
+	if (locationName.empty())
+		return NULL;
+	for (std::size_t i = 0; i < this->locations.size(); i++)
+	{
+		if (this->locations[i].getLocationName() == locationName)
+			return const_cast<LocationBlock*>(&this->locations[i]);
+	}
+	return NULL;
+}
+
 void ServerBlock::addLocation(LocationBlock const& location)
 {
 	this->locations.push_back(location);

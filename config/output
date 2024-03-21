@@ -1,0 +1,16 @@
+End of context: location
+End of context: location
+End of context: server
+End of context: location
+End of context: server
+>>>>>>>>>>>  Server 0 <<<<<<<<<<<
+location: /
+root: /var/www/example.com
+index: index.html index.php 
+autoindex: 0
+allow_methods: GET POST 
+cgi_paths: 
+upload_path: 
+upload_enable: 0
+cgi_enable: 0
+
