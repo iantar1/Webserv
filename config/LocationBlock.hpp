@@ -11,6 +11,9 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cctype>
+#include <stdexcept>
+#include <algorithm>
 
 
 

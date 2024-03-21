@@ -25,33 +25,71 @@ void Config::pushBlock(std::string context)
 	}
 }
 
+bool isBrace(std::string line)
+{
+	if (!line.empty() && (line.at(0) == '{' || line.at(0) == '}'))
+		return true;
+	return false;
+}
+
+bool Config::checkBraces(std::vector<std::string> line, std::string context)
+{
+	if ((line[0] == "{" || line[0] == "}") && line.size() != 1)
+		throw std::runtime_error("Config Error: check braces #1");
+	if (line[0] == "{" && contexts.empty() == false)
+		braces.push('{');
+	else if (line[0] == "}" && braces.empty())
+			throw std::runtime_error("Config Error: check closing braces or braces with no context #1");
+	else if (line[0] == "}" && braces.empty() == false)
+	{
+		braces.pop();
+		if (contexts.empty() == false)
+		{
+			std::cout << "End of context: " << contexts.top() << std::endl;
+			contexts.pop();
+		}
+		if (braces.size() != contexts.size())
+			throw std::runtime_error("Config Error: check closing braces or balanced braces with no context #2");
+		pushBlock(context);
+		return 1;
+	}
+	return 0;
+}
+void printContexts(std::stack<std::string> contexts)
+{
+	std::stack<std::string> temp = contexts;
+	while (!temp.empty())
+	{
+		std::cout << temp.top() << std::endl;
+		temp.pop();
+	}
+}
+void printBraces(std::stack<char> braces)
+{
+	std::stack<char> temp = braces;
+	while (!temp.empty())
+	{
+		std::cout << temp.top() << std::endl;
+		temp.pop();
+	}
+}
+
 void Config::parseBlock(std::ifstream& configFile, std::string context)
 {
 	std::string line;
 	std::vector<std::string> splitedLine;
+	bool endOfBlock = false;
 	while (std::getline(configFile, line))
 	{
 		line = removeExtraSpaces(line);
 		splitedLine = split(line, ' ');
 		if (line.empty() || line[0] == '#')
 			continue;
-		if (splitedLine[0] == "{" && contexts.empty() == false)
-			braces.push('{');
-		else if (splitedLine[0] == "}" && braces.empty())
-				throw std::runtime_error("Config Error: check closing braces or braces with no context #1");
-		else if (splitedLine[0] == "}" && braces.empty() == false)
-		{
-			braces.pop();
-			if (contexts.empty() == false)
-			{
-				std::cout << "End of context: " << contexts.top() << std::endl;
-				contexts.pop();
-			}
-			if (braces.size() != contexts.size())
-				throw std::runtime_error("Config Error: check closing braces or balanced braces with no context #2");
-			pushBlock(context);
+		endOfBlock = checkBraces(splitedLine, context);
+		if (isBrace(line) && !endOfBlock)
+			continue;
+		else if (isBrace(line) && endOfBlock)
 			return;
-		}
 		else if (splitedLine[0] == "server")
 		{
 			if (splitedLine.size() != 1 || contexts.empty() == false)

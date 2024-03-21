@@ -1,0 +1,5 @@
+
+*.out
+*.o
+config/*.out
+config/*.o
