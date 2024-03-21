@@ -26,7 +26,7 @@ class Config
 		std::stack<char> braces;
 		std::stack<std::string> contexts;
 		void pushBlock(std::string context);
-		int ckeckBraces(std::vector<std::string> line, std::string context);
+		bool checkBraces(std::vector<std::string> line, std::string context);
 	public:
 		std::ifstream configFile;
 		std::vector<ServerBlock> servers;
