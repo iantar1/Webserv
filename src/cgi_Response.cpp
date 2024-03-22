@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/22 06:44:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 08:18:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,14 @@ std::string Response::RandomName()
 void	Response::redirectCgiInput()
 {
 	int fd_in;
-	std::cout << "input_file: "<< input_file << "\n";
 
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
-		throw std::runtime_error("open system call failed");
-	
+		exit(1);// ! INTERNAL_SERVER_ERROR 
+	std::cout << "body: " << body << std::endl;
+	if (write(fd_in, body.c_str(), body.size()) == -1)
+		exit(1);// ! INTERNAL_SERVER_ERROR 
 	if (dup2(fd_in, 0) == -1)
-		throw std::runtime_error("dup2 system call failed");
+		exit(1);// ! INTERNAL_SERVER_ERROR 
 	close(fd_in);
 }
 
@@ -106,12 +107,11 @@ void	Response::redirectCgiOutput()
 {
 	int fd_out;
 
-	std::cout << "output_file: "<< output_file << "\n";
-	if ((fd_out = open(output_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
-		throw std::runtime_error("open system call failed");// ! set a INTERNAL_SERVER_ERROR 
+	if ((fd_out = open(output_file.c_str(), O_WRONLY | O_CREAT, 0666)) == -1)
+		exit(1);// ! INTERNAL_SERVER_ERROR 
 	
 	if (dup2(fd_out, 1) == -1)
-		throw std::runtime_error("dup2 system call failed");
+		exit(1);// ! INTERNAL_SERVER_ERROR 
 	close(fd_out);
 }
 
@@ -148,7 +148,9 @@ void	Response::set_args(char **args)
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
 	args[1] = (char *)(request->getNewPath().c_str());		  //(char *)inFile.c_str();						  // ! use access to check if the file exist
 	args[2] = NULL;
+	
 }
+
 
 void Response::cgi_Handler()
 {
@@ -156,34 +158,37 @@ void Response::cgi_Handler()
 	char		*env[9];
 	pid_t		pid;
 	int 		status;
-	try
-	{
-		setCgiEnvironment(env);
-		set_args(args);
-		print_CGI_env(env);
-		input_file = RandomName();
-		output_file = RandomName();
-		pid = fork();
-		if (pid == -1)
-			throw std::runtime_error("fork sys call failed");//  ! set a INTERNAL_SERVER_ERROR 
-		if (pid == 0)
-		{
-			if (request->getMethdType() == POST)
-				redirectCgiInput();
-			redirectCgiOutput();
-			execve(args[0], args, env);
-		}
-		waitpid(pid, &status, 0);// ! timeout
-		doneCGI = true;
-		if (!status)
-			request->setPath(output_file);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << e.what() << '\n';
-		exit(1);
-	}
 
+	setCgiEnvironment(env);
+	set_args(args);
+
+	output_file = RandomName();
+	if (request->getMethdType() == POST)
+	{
+		input_file = RandomName();
+	}
+	std::cout << "here: " << body << "\n";
+	print_CGI_env(env);
+	pid = fork();
+	// if (pid)
+	// 	sleep(1);
+	if (pid == 0)
+	{
+		if (request->getMethdType() == POST)
+				redirectCgiInput();
+		redirectCgiOutput();
+		execve(args[0], args, env);
+		exit(EXIT_FAILURE);
+	}
+	waitpid(pid, &status, 0);
+	doneCGI = true;
+	if (!status)
+	{
+		request->setPath(output_file);
+	}
+	// * change the file path to _outfile
+	// ! check status
+	// ! tuimeout
 }
 
 // ************ Getters *********************
@@ -192,60 +197,6 @@ const Request *Response::getRequest() const
 {
 	return (request);
 }
-
-
-// void Response::cgi_Handler()
-// {
-// 	std::string	_outFile;
-// 	std::string	extention;
-// 	char		*args[3];
-// 	char		*env[9];
-// 	pid_t		pid;
-// 	int 		status;
-
-// 	setCgiEnvironment();
-// 	extention = getExtention();
-// 	std::cout << extention << "\n";
-// 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
-// 	args[1] = (char *)(request->getNewPath().c_str());		  //(char *)inFile.c_str();						  // ! use access to check if the file exist
-// 	args[2] = NULL;
-// 	std::cout << "arg[0]: " << args[0] << std::endl;
-// 	std::cout << "arg[1]: " << args[1] << std::endl;
-// 	// std::cout << "arg[2]: "<< args[2] << std::endl;
-
-// 	_outFile = RandomName();
-// 	storeUserInput();
-// 	for (size_t i = 0; i < 8; i++)
-// 	{
-// 		env[i] = (char *)CgiEnvironment[i].c_str();
-// 	}
-// 	env[8] = NULL;
-// 	print_CGI_env(env);
-// 	pid = fork();
-// 	if (pid == 0)
-// 	{
-// 		int fd_out = open(_outFile.c_str(), O_WRONLY | O_CREAT, 0666);
-// 		int fd_in = open("DataBase/infile", O_RDONLY | O_CREAT, 0666);
-// 		if (fd_in < 0 || fd_out < 0)
-// 		{
-// 			std::cout << "can'topen\n";
-// 			exit(19); // ! use a macro
-// 		}
-// 		dup2(fd_out, 1);
-// 		dup2(fd_in, 0);
-// 		close(fd_out);
-// 		close(fd_in);
-// 		execve(args[0], args, env);
-// 	}
-// 	waitpid(pid, &status, 0);
-// 	doneCGI = true;
-// 	if (!status)
-// 	{
-// 		std::cout << "status: " << status << std::endl;
-// 		request->setPath(_outFile);
-// 	}
-// 	// * change the file path to _outfile
-// 	// ! check status
-// 	// ! tuimeout
-// 	std::cout << "output: " << _outFile << std::endl;
-// }
+read the subject
+cgi for post
+he CGI should be run in the correct directory for relative path file access

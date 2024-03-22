@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/22 06:49:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 07:06:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ void Server::addCleintToEpoll(int index)
 
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
+	std::cout << YELLOW << "new Cleint added ,fd: " << fd << "\n"
+							  << RESET;
 }
 
 bool Server::NewClient(int index)
@@ -165,8 +167,8 @@ int Server::ServerCore()
 			{
 				if (NewClient(i)) // add new client
 				{
-					std::cout << YELLOW << "new Cleint added ,fd: " << events[i].data.fd << "\n"
-							  << RESET;
+					// std::cout << YELLOW << "new Cleint added ,fd: " << events[i].data.fd << "\n"
+					// 		  << RESET;
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
