@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 04:08:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 06:32:53 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ private:
 	std::string appendedRequest;
 	std::string	uri;
 // cgi inpit/output
-	std::string	inputFile;
-	std::string	outputFile;
+	std::string	input_file;
+	std::string	output_file;
 
 	bool 	chunkStart;
 	bool 	streamStart;
@@ -108,14 +108,14 @@ private:
 	void				cgi_Handler();
 	std::string			getExtention() const;
 	const std::string	&getCgiPath() const;
-	void				setCgiEnvironment();
+	void				setCgiEnvironment(char**);
 	std::string			getScriptName();
-	void				storeUserInput();
 	bool				validCGI(const std::string&);
 	bool				isCGI();
 	std::string			RandomName();
 	void				redirectCgiInput();
 	void				redirectCgiOutput();
+	void				set_args(char**);
 // *** debug
 	void	print_CGI_env(char **);
 

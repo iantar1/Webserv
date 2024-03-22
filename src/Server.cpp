@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 03:40:06 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 06:49:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void Server::ServeClients(int index)
 	if (events[index].events & EPOLLIN)
 	{
 		clients[events[index].data.fd]->ReadParseReqHeader();
-		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST)
+		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST)// ! i need to set donServing
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
@@ -126,6 +126,8 @@ void Server::ServeClients(int index)
 			write(this->clients[events[index].data.fd]->getSocketFd(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+		// set done serving to false
+		
 	}
 	else if (events[index].events & EPOLLOUT)
 	{

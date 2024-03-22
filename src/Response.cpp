@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 03:28:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 06:32:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ Response::~Response(void)
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
 // if it fails , ana mali
-	!inputFile.empty() && unlink(inputFile.c_str());
-	!inputFile.empty() && unlink(outputFile.c_str());
+	!input_file.empty() && unlink(input_file.c_str());
+	!output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
