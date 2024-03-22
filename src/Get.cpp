@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 00:51:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 02:35:35 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ void Response::regularFileGet(void)
 	std::map<std::string, std::string>::iterator mime_it;
 
 	extension = getFileExtension(this->path);
-	std::cout << "path_ino: " << this->path << std::endl;
+	// std::cout << "path_ino: " << this->path << std::endl;
 	if (extension != "")
 	{
 		mime_it = this->files.mime.find(extension);
@@ -219,5 +219,6 @@ void Response::theGetMethod(void)
 		else
 			regularFileGet();
 	}
-	// this->request->setDoneServing();// ! fix this
+	// if (content_length == 0)
+		// this->request->setDoneServing();// ! fix this
 }
