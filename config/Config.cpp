@@ -35,13 +35,6 @@ void Config::parseContextLine(std::vector<std::string> line, std::string context
 		location.parseLocationLine(line);
 }
 
-bool isBrace(std::string line)
-{
-	if (!line.empty() && (line.at(0) == '{' || line.at(0) == '}'))
-		return true;
-	return false;
-}
-
 void Config::addServerToContexts(std::vector<std::string> line)
 {
 	if (line.size() != 1)
@@ -57,7 +50,7 @@ void Config::addLocationToContexts(std::vector<std::string> line)
 		throw std::runtime_error("Config Error: location must be inside server context");
 	contexts.push(line[0]);
 }
-
+// check signle braces : {{}}
 bool Config::checkBraces(std::vector<std::string> line, std::string context)
 {
 	if ((line[0] == "{" || line[0] == "}") && line.size() != 1)
@@ -90,9 +83,11 @@ void Config::parseBlock(std::ifstream& configFile, std::string context)
 	while (std::getline(configFile, line))
 	{
 		line = removeExtraSpaces(line);
+		// std::cout << "Line: " << line << std::endl;
 		splitedLine = split(line, ' ');
 		if (line.empty() || line[0] == '#')
 			continue;
+		// std::cout << "Splited Line: " << splitedLine[0] << std::endl;
 		endOfBlock = checkBraces(splitedLine, context);
 		if (isBrace(line) && !endOfBlock)
 			continue;
@@ -114,4 +109,12 @@ void Config::parseBlock(std::ifstream& configFile, std::string context)
 	}
 	if (!std::getline(configFile, line) && (!braces.empty() || !contexts.empty()))
 		throw std::runtime_error("Config Error: check braces #4");
+}
+
+void Config::parseConfig(void)
+{
+	parseBlock(configFile, "server");
+	if (servers.empty())
+		throw std::runtime_error("Config Error: no server blocks found");
+	
 }

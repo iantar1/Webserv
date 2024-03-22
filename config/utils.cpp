@@ -73,3 +73,10 @@ bool checkEnable(std::string enable)
 		return false;
 	return false;
 }
+
+bool isBrace(std::string line)
+{
+	if (line.length() == 1 && (line.at(0) == '{' || line.at(0) == '}'))
+		return true;
+	return false;
+}

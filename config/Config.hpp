@@ -36,6 +36,7 @@ class Config
 		Config(std::string const& filename);
 		~Config();
 		void parseBlock(std::ifstream& configFile, std::string context);
+		void parseConfig(void);
 };
 
 

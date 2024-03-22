@@ -20,6 +20,7 @@ bool isPosNumber(std::string const& str);
 int stringToPosInt(std::string const& str);
 bool checkIp(std::string ip);
 bool checkEnable(std::string enable);
+bool isBrace(std::string line);
 
 // check if the
 

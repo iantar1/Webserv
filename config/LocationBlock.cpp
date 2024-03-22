@@ -239,10 +239,9 @@ std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationB
 	for (std::size_t i = 0; i < locationBlock.getAllowMethods().size(); i++)
 		outstream << locationBlock.getAllowMethods()[i] << " ";
 	outstream << std::endl;
-	outstream << "cgi_paths: ";
+	outstream << "cgi_paths: " << std::endl;
 	for (std::map<std::string, std::string>::const_iterator it = locationBlock.getCgiPaths().begin(); it != locationBlock.getCgiPaths().end(); it++)
-		outstream << it->first << " " << it->second << " ";
-	outstream << std::endl;
+		outstream << it->first << " " << it->second << std::endl;
 	outstream << "upload_path: " << locationBlock.getUploadPath() << std::endl;
 	outstream << "upload_enable: " << locationBlock.getUploadEnable() << std::endl;
 	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
