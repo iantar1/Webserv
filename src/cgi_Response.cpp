@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 04:09:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 00:50:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ std::string Response::getScriptName()
 	return (result);
 }
 
-void Response::print_CGI_env()
+void Response::print_CGI_env(char **env)
 {
-	for (size_t i = 0; i < CgiEnvironment.size(); i++)
+	for (size_t i = 0; i < 8; i++)
 	{
-		std::cout << CgiEnvironment[i] << std::endl;
+		std::cout << env[i] << std::endl;
 	}
 }
 
@@ -97,8 +97,6 @@ void Response::storeUserInput()
 	std::ofstream input;
 
 	input.open("DataBase/infile");
-	if (request->getMethdType() == GET)
-		input << this->request->getQueryString();
 	if (request->getMethdType() == POST)
 		input << this->request->getBody();
 	input.close();
@@ -152,7 +150,7 @@ void Response::cgi_Handler()
 	{
 		env[i] = (char *)CgiEnvironment[i].c_str();
 	}
-	print_CGI_env();
+	print_CGI_env(env);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -164,7 +162,7 @@ void Response::cgi_Handler()
 			exit(19); // ! use a macro
 		}
 		dup2(fd_out, 1);
-		dup2(fd_in, 0);
+		// dup2(fd_in, 0);
 		// close(fd);
 		execve(args[0], args, NULL);
 	}

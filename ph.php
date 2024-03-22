@@ -1,5 +1,5 @@
 <?php
-echo "Hello, World!, this PHP";
 
-echo $_GET["name"]
+echo $_GET["name"];
+echo "name";
 ?>

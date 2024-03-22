@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 02:10:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/21 22:44:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -389,6 +389,7 @@ void Request::parseURI_QueryString(const std::string &client_uri)
 	}
 	else
 		this->URI = client_uri;
+	encoding(this->URI);
 }
 
 void Request::storeRequestLine(const std::string &line)

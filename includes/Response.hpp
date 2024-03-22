@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 01:39:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 00:47:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ private:
 	bool				validCGI(const std::string&);
 	bool				isCGI();
 // *** debug
-	void	print_CGI_env();
+	void	print_CGI_env(char **);
 
 // *************** Getters ***************
 public:
