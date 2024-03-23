@@ -6,11 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 07:30:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 07:50:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
+
+// you should tell me where can I send to had zmmer Content-type: text/html; charset=UTF-8   from CGI 
+
 
 void Response::theGetHeaderResponse(int code, int transferType)
 {

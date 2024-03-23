@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 07:40:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 07:57:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,14 @@ void Response::print_CGI_env(char **env)
 void Response::setCgiEnvironment(char **env)
 {
 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
-	CgiEnvironment.push_back("REDIRECT_STATUS=200");
+	CgiEnvironment.push_back("REDIRECT_STATUS=CGI");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
 	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
 	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString()); // !start mn ?
 	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());		   // * The name of the CGI script
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath());  // * The full path to the CGI script
 	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());		   // * path for cgi script
+	// ! HTTP_COOKIE=
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -175,6 +176,8 @@ void Response::cgi_Handler()
 		if (request->getMethdType() == POST)
 				redirectCgiInput();
 		redirectCgiOutput();
+		// if (chdir() == -1) // check subject////////////////////
+		// 	exit(EXIT_FAILURE);
 		execve(args[0], args, env);
 		exit(EXIT_FAILURE);
 	}
@@ -184,8 +187,6 @@ void Response::cgi_Handler()
 	{
 		request->setPath(output_file);
 	}
-	// * change the file path to _outfile
-	// ! check status
 	// ! tuimeout
 }
 
