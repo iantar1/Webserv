@@ -226,6 +226,8 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
+
+
 std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock)
 {
 	outstream << "location: " << locationBlock.getLocationName() << std::endl;

@@ -30,6 +30,7 @@ class Config
 		void addServerToContexts(std::vector<std::string> line);
 		void addLocationToContexts(std::vector<std::string> line);
 		bool checkBraces(std::vector<std::string> line, std::string context);
+		void insertLocationRoot(void);
 	public:
 		std::ifstream configFile;
 		std::vector<ServerBlock> servers; 

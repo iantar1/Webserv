@@ -59,7 +59,7 @@ class LocationBlock
 		void initFieldsMap();
 		void initFields();
 		void parseLocationLine(std::vector<std::string> line);
-		bool checkLocation(void);
+		void checkLocation(void);
 };
 
 // << operator overload

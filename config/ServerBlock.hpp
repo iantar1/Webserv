@@ -53,11 +53,13 @@ class ServerBlock
 		std::vector<LocationBlock> const& getLocations() const;
 		LocationBlock *getLocation(std::string const& locationName) const;
 		// end of getters
+		// operator == overload
+		bool operator==(ServerBlock const& serverBlock) const;
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();
 		void initFields();
 		void parseServerLine(std::vector<std::string> line);
-		bool checkServer(void);
+		void checkServer(void);
 	
 };
 

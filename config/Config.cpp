@@ -11,15 +11,25 @@ Config::Config(std::string const& filename)
 
 Config::~Config(){configFile.close();}
 
+void Config::insertLocationRoot(void)
+{
+	std::string root = "root " + server.getRoot() + " ;";
+	std::vector<std::string> rootLine = split(root, ' ');
+	if (location.getRoot().empty())
+		location.parseLocationLine(rootLine);
+}
+
 void Config::pushBlock(std::string context)
 {
 	if (context == "server")
 	{
+		server.checkServer();
 		servers.push_back(server);
 		server = ServerBlock();
 	}
 	else if (context == "location")
 	{
+		insertLocationRoot();
 		server.addLocation(location);
 		location = LocationBlock();
 	}
@@ -29,10 +39,14 @@ void Config::parseContextLine(std::vector<std::string> line, std::string context
 {
 	if (contexts.size() != braces.size())
 		throw std::runtime_error("Config Error: check braces #3");
-	if (context == "server")
-		server.parseServerLine(line);
-	else if (context == "location")
+	if (context == "location")
 		location.parseLocationLine(line);
+	else if (context == "server" && server.getLocations().empty())
+	{
+		server.parseServerLine(line);
+	}
+	else
+		throw std::runtime_error("Config Error: server directives must be before location blocks");
 }
 
 void Config::addServerToContexts(std::vector<std::string> line)

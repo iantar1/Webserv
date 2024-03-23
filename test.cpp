@@ -115,6 +115,7 @@ void checkBraces(std::string const& configFile)
 		throw std::runtime_error("Config Error: check braces #4");
 }
 
+
 int main() {
     
 	try

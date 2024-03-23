@@ -24,7 +24,7 @@ void ServerBlock::initFieldsMap()
 
 void ServerBlock::initFields()
 {
-	listen = 0;
+	listen = -1;
 	host = "";
 	serverName.clear();
 	root = "";
@@ -143,13 +143,6 @@ bool ServerBlock::checkMaxBodySize(std::vector<std::string> maxBodySize)
 	return true;
 }
 
-bool ServerBlock::checkServer(void)
-{
-	if (this->listen == 0 || this->host.empty() || this->serverName.empty() || this->root.empty() || this->indexes.empty() || this->errorPages.empty() || this->maxBodySize == 0)
-		return false;
-	return true;
-}
-
 int const& ServerBlock::getListen() const
 {
 	return this->listen;
@@ -205,6 +198,24 @@ LocationBlock  *ServerBlock::getLocation(std::string const& locationName) const
 void ServerBlock::addLocation(LocationBlock const& location)
 {
 	this->locations.push_back(location);
+}
+
+void ServerBlock::checkServer(void)
+{
+	if (this->listen < 0 || this->host.empty() || this->root.empty())
+		throw std::runtime_error("Error: required fields are missing in server block");
+	if (this->locations.empty())
+		throw std::runtime_error("Error: no location block found in server block");
+}
+
+bool ServerBlock::operator==(ServerBlock const& serverBlock) const
+{
+	if (this->listen != serverBlock.listen)
+		return false;
+	if (this->host != serverBlock.host)
+		return false;
+	return true;
+	
 }
 
 std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock)
