@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 00:38:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 03:45:39 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Response::~Response(void)
 			  << RESET;
 // if it fails , ana mali
 	!input_file.empty() && unlink(input_file.c_str());
-	!output_file.empty() && unlink(output_file.c_str());
+	// !output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -70,18 +70,23 @@ void Response::StartResponse()
 	// 	return ;
 	// }
 
-	if (isCGI() == true)
-	{
-		std::cout << "cci\n";
-		cgi_Handler();
-	}
 	if (request->getMethdType() == GET)
 	{
+		if (isCGI() == true)
+		{
+			std::cout << "cci\n";
+			cgi_Handler();
+		}
 		theGetMethod();
 	}
 	else if (request->getMethdType() == POST)
 	{
 		PostResponse();
+		if (isCGI() == true)
+		{
+			std::cout << "cci\n";
+			cgi_Handler();
+		}
 	}
 	else if (request->getMethdType() == DELETE)
 	{

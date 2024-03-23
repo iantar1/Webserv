@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 00:27:35 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 03:05:45 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,6 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	}
 
 	this->response += "\r\n";
-	std::cout << RED << "*********************** response header *******************\n"
-			  << response << "******************************************************\n"
-			  << RESET;
 }
 
 void Response::theGetRedirectionRequest(void)
@@ -102,7 +99,6 @@ void Response::theGetResponseOk(void)
 
 		signal(SIGPIPE, SIG_IGN);
 		this->inFile.read(buf, 1024);
-		// std::cout << YELLOW << "buf : \n" << buf<< RESET << "\n";
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
 		{
@@ -148,7 +144,6 @@ void Response::regularFileGet(void)
 	std::map<std::string, std::string>::iterator mime_it;
 
 	extension = getFileExtension(this->path);
-	// std::cout << "path_ino: " << this->path << std::endl;
 	if (extension != "")
 	{
 		mime_it = this->files.mime.find(extension);
@@ -193,8 +188,6 @@ void Response::theGetMethod(void)
 	{
 		this->path = this->request->getNewPath();
 		this->oldPath = this->request->getOldPath();
-		std::cout << "Path : " << this->path << std::endl;
-		std::cout << "Old Path : " << this->oldPath << std::endl;
 		this->dataCopy = true;
 	}
 

@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 02:45:17 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/23 03:36:27 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	Response::PostResponse()
 
 void	Response::thePostMethod()
 {
-	std::string										extension, fileName;
+	std::string										extension;
 	std::map<std::string, std::string>				mime;
 	std::map<std::string, std::string>::iterator	mime_it;
 
@@ -66,13 +66,13 @@ void	Response::thePostMethod()
 		}
 		else
 			extension = "";
-		fileName = "Uploads/" + generateNameFile(this->strTime2) + extension;
+		this->uploadedFileName = "Uploads/" + generateNameFile(this->strTime2) + extension;
 
 		this->response = "";
 	}
 
 	if (!this->outOpened) {
-		this->outFile.open(fileName.c_str(), std::ios::app);
+		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
 	}
 
