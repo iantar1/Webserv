@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:57:42 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/19 06:15:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 22:39:19 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,16 @@ private:
 
 
 public: // you will change this later to private
+	std::map<int, std::string>	error_pages;
 	std::vector<std::string>	allowedMethods;
 	bool		autoIndex;
 	long		maxBodySize;
 	std::string	uploadPost;
 	std::string	uploadPath;
+	std::string	indexPage;
+	std::string	location;
 	std::string	index;
 	std::string	root;
-	std::string	location;
 
 	std::map<int, std::string>			errorPage;
 	std::map<std::string, std::string>	cgi;
@@ -51,10 +53,15 @@ public:
 
 	
 // ************* Getters *****************
-	const std::string&	getRoot() const;
-	const std::string&	getLocation() const;
-	long				getMaxBodySize() const;
+	const std::string							&getRoot() const;
+	const std::string							&getLocation() const;
+	long										getMaxBodySize() const;
 	const std::map<std::string, std::string>&	getCGI_Map() const;
+	const std::string							&getUploadPath() const;
+	bool										getAutoIndex() const;
+	const std::string							&getIndexPage() const;
+	const std::map<int, std::string>			&getErrorPages() const;
+	
 
 // ************ Setters *****************
 	void	setMaxbodySize(long);

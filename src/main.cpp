@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 07:42:59 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 21:42:39 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ Location *getLocation1(std::string location)
 	Location *loc = new Location(location);
 
 	loc->allowedMethods.push_back("POST");
-	loc->allowedMethods.push_back("GET");
+	// loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 
-	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
+	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
+	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/iantar/Desktop/Webserv"; // ! it must came without / at the end
+	loc->root = "/nfs/homes/nabboune/Desktop/Projects/Webserv"; // ! it must came without / at the end
 	loc->location = location;
 
 	loc->errorPage[404] = "";
@@ -48,8 +48,8 @@ Location *getLocation1(std::string location)
 	return (loc);
 }
 
-// /nfs/homes/iantar/Desktop/Webserv
-// /nfs/homes/iantar/Desktop/Webserv
+// /nfs/homes/nabboune/Desktop/Projects/Webserv
+// /nfs/homes/nabboune/Desktop/Projects/Webserv
 
 Location *getLocation2(std::string location)
 {
@@ -59,10 +59,10 @@ Location *getLocation2(std::string location)
 	loc->allowedMethods.push_back("GET");
 	loc->allowedMethods.push_back("DELETE");
 
-	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
+	loc->uploadPath = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
+	loc->uploadPost = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
 	loc->index = "page.html";
-	loc->root = "/nfs/homes/iantar/Desktop/Webserv";
+	loc->root = "/nfs/homes/nabboune/Desktop/Projects/Webserv";
 	loc->location = location;
 
 	loc->errorPage[404] = "";

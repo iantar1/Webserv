@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 07:50:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 22:20:12 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,12 +199,6 @@ void Response::theGetMethod(void)
 	this->response.clear();
 	this->redirection.clear();
 
-// ! you don't need so 
-	// if (this->request->getBody() != "")
-	// {
-	// 	theGetErrorBadRequest();
-	// 	this->request->setDoneServing();
-	// }
 	if (stat(this->path.c_str(), &buffer))
 	{
 		theGetErrorNotFound();
