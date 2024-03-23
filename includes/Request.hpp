@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 22:37:17 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 09:16:51 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ private:
     bool doneHeaderReading;
 
     // *************  static attrebuites **************
-    static std::string Methods[3];
+    static std::string Methods[8];
     static std::string validChars;
 
 public:
@@ -82,16 +82,17 @@ private:
     void        matchClients();
 
     // ***************** Error checking Methods **********
-    void URI_Checking(const std::string &);
-    bool URI_ValidLength(const std::string &) const;
-    bool URI_ValidChar(const std::string &) const;
-    bool URI_ValidLocation(const std::string &);
-    void checkValidMethod();
-    void checkValid_GET_Header();
-    void checkValid_POST_Header();
-    void checkValid_DELETE_Header();
-    void checkValidHeader();
-    void httpVersionCheck(const std::string &);
+    void    URI_Checking(const std::string &);
+    bool    URI_ValidLength(const std::string &) const;
+    bool    URI_ValidChar(const std::string &) const;
+    bool    URI_ValidLocation(const std::string &);
+    void    checkValidMethod();
+    void    checkValid_GET_Header();
+    void    checkValid_POST_Header();
+    void    checkValid_DELETE_Header();
+    void    checkValidHeader();
+    void    httpVersionCheck(const std::string &);
+    bool    is_allowed_Method(const std::string&) const;
 
 public:
     // ********** Public Methods ************

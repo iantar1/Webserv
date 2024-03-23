@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 08:37:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 09:49:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../includes/Request.hpp"
 #include "../includes/utils.hpp"
 
-std::string Request::Methods[] = {"POST", "GET", "DELETE"};
+std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
 Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
@@ -233,26 +233,32 @@ void Request::storeBody()
 void Request::checkValidHeader()
 {
 }
-
-void Request::checkValid_GET_Header()
+bool	Request::is_allowed_Method(const std::string& method) const
 {
 	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
 	{
-		if (location->allowedMethods[i].compare("GET") == 0)
-			return;
+		if (location->allowedMethods[i].compare(method) == 0)
+			return true;
 	}
-	setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
+	return (false);
+}
+
+void Request::checkValid_GET_Header()
+{
+	if (is_allowed_Method("GET") == false)
+		setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 }
 
 void Request::checkValid_POST_Header()
 {
+	if (is_allowed_Method("POST") == false)
+		setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
 	{
 		setFlagError(BAD_REQ, "bad Request3");
 	}
 	if (this->Header.find("transfer-encoding") != Header.end() && Header["transfer-encoding"] != "chunked") // ! what is this
 	{
-		// std::cout << "debug: " << Header["transfer-encoding"] << "\n";
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("content-length") != Header.end())
@@ -266,11 +272,8 @@ void Request::checkValid_POST_Header()
 
 void Request::checkValid_DELETE_Header()
 {
-	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
-	{
-		if (location->allowedMethods[i].compare("DELETE") == 0)
-			return;
-	}
+	if (is_allowed_Method("DELETE") == false)
+		setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 	setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 }
 
@@ -357,15 +360,17 @@ void Request::httpVersionCheck(const std::string &http)
 
 void Request::WhichMethod(const std::string &method)// ! add other methods
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (Methods[i].compare(method) == 0)
 		{
+			if (i > 2)
+				setFlagError(NOT_IMPLEMENTED, "Invalid Method");
 			MethodType = i + 1;
 			return;
 		}
 	}
-	setFlagError(NOT_IMPLEMENTED, "Invalid Method");
+	setFlagError(BAD_REQUEST, "bad Request.");
 }
 
 void Request::parseURI_QueryString(const std::string &client_uri)
@@ -438,6 +443,7 @@ void Request::matchClients()
 	}
 	location = iter->second;
 }
+// ! debug this
 bool Request::ReadCheckHeader()
 {
 	if (!doneHeaderReading)
@@ -446,7 +452,6 @@ bool Request::ReadCheckHeader()
 		{
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
-				// std::cout << "here\n";
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
 				doneHeaderReading = true;
@@ -462,12 +467,42 @@ bool Request::ReadCheckHeader()
 	return (false);
 }
 
+// bool Request::ReadCheckHeader()
+// {
+// 	std::string str = std::string(buf, bytesRead);
+
+// 	if (!doneHeaderReading)
+// 	{
+// 		for (int i = 0; i < bytesRead; i++)
+// 		{
+// 			// if (str.find("\r\n\r\n") != std::string::npos)
+// 			// 	exit(87);
+// 			if (i + 3 < bytesRead && str.substr(i, 4) == "\r\n\r\n")
+// 			{
+// 				std::cout 
+// 				storeData(HeaderReq);
+// 				lastCharHederIndex = i + 4;
+// 				doneHeaderReading = true;
+// 				matchClients();
+// 				return (true);
+// 			}
+// 			if (buf[i] != '\r')
+// 			{
+// 				HeaderReq += buf[i];
+// 			}
+// 		}
+// 	}
+// 	return (false);
+// }
+
 void Request::ReadRequest()
 {
 	try
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-		// std::cout << "buf: " << buf;
+		buf[bytesRead] = '\0';
+		std::cout  << "byte: " << bytesRead << "\n";
+		std::cout << "buf: " << buf << std::endl;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
@@ -486,7 +521,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		printRequest();
+		// printRequest();
 	}
 	catch (const std::exception &e)
 	{
