@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 06:32:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 02:27:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ private:
 	bool	isFile(const std::string &);
 	bool	isDiractory(const std::string &);
 	bool	deleteFile(const std::string &);
+	void	theDeleteHeaderResponse(int, int);
 
 	// **************** CGI **************************
 private:

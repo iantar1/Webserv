@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/20 06:35:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 02:26:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool deleteChecking(const std::string &path)
 	return (true);
 }
 
-static const std::string	filePath[] = {"204.htm", "403.htm", "500.htm"};
+static const std::string filePath[] = {"204.htm", "403.htm", "500.htm"};
 
 // A 202 (Accepted) status code if the action will likely succeed but has not yet been enacted.
 // A 204 (No Content) status code if the action has been enacted and no further information is to be supplied.
@@ -106,14 +106,26 @@ static const std::string	filePath[] = {"204.htm", "403.htm", "500.htm"};
 
 void Response::DeleteMethod()
 {
-	std::ifstream	file;
+	std::ifstream file;
 	std::stringstream buffer;
-	int	status = 0;
+	int status = 0;
 
-	std::cout<< RED << uri<< RESET << "\n";
+	if (!this->gotTime)
+	{
+		tm *local_time;
+		time_t now;
+
+		now = time(0);
+		local_time = localtime(&now);
+
+		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+		this->gotTime = true;
+	}
+
+	// std::cout << RED << uri << RESET << "\n";
 	// exit(1);
 	if (deleteChecking(uri) == false)
-		return ;
+		return;
 	if (isFile(uri))
 	{
 		status = deleteFile(uri);
@@ -122,11 +134,49 @@ void Response::DeleteMethod()
 	{
 		status = DeleteDiractory(request->getNewPath());
 	}
-	std::cout << "this->path: "<< request->getNewPath() << "\n";
-	std::cout << "status: "<< status << "\n";
-	file.open((std::string("defaultPages/") + filePath[status]).c_str());
-    buffer << file.rdbuf();
-	response = buffer.str() + "\r\n\r\n";
-	std::cout << response;
-	file.close();
+	std::cout << "this->path: " << request->getNewPath() << "\n";
+	std::cout << "status: " << status << "\n";
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/204.htm") + "\r\n\r\n";
+	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
+	this->response += this->body;
+	std::cout << response ;
+}
+
+void Response::theDeleteHeaderResponse(int code, int transferType)
+{
+	std::map<int, std::string>::iterator header_it;
+
+	header_it = this->files.headers.find(RESPONSE_STATUS);
+	header_it->second += this->files.status.find(code)->second;
+
+	header_it = this->files.headers.find(DATE);
+	header_it->second += this->strTime;
+
+	header_it = this->files.headers.find(CONTENT_TYPE);
+	header_it->second += this->contentType;
+
+	if (this->redirection != "")
+	{
+		header_it = this->files.headers.find(LOCATION);
+		header_it->second += this->redirection;
+	}
+
+	if (transferType == CONTENT_LENGHT)
+	{
+		header_it = this->files.headers.find(CONTENT_LENGHT);
+		header_it->second += ToString(this->body.size());
+	}
+
+	header_it = this->files.headers.begin();
+	while (header_it != this->files.headers.end())
+	{
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		{
+			this->response += header_it->second + "\r\n";
+		}
+		header_it++;
+	}
+
+	this->response += "\r\n";
 }
