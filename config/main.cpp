@@ -94,7 +94,7 @@ int main()
 	Config p("config.conf");
 	try
 	{
-		p.parseBlock(p.configFile, "server");
+		p.parse();
 	}
 	catch (std::runtime_error const& e)
 	{

@@ -39,6 +39,7 @@ class ServerBlock
 		bool checkIndex(std::vector<std::string> index);
 		bool checkErrorPage(std::vector<std::string> errorPage);
 		bool checkMaxBodySize(std::vector<std::string> maxBodySize);
+		bool compareServerName(ServerBlock const& rhs) const;
 	public:
 		ServerBlock();
 		~ServerBlock();
@@ -54,7 +55,7 @@ class ServerBlock
 		LocationBlock *getLocation(std::string const& locationName) const;
 		// end of getters
 		// operator == overload
-		bool operator==(ServerBlock const& serverBlock) const;
+		bool operator==(ServerBlock const& rhs) const;
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();
 		void initFields();

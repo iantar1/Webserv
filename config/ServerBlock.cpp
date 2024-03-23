@@ -1,6 +1,7 @@
 
 
 #include "ServerBlock.hpp"
+#include <set>
 #include "utils.hpp"
 
 ServerBlock::ServerBlock()
@@ -208,14 +209,27 @@ void ServerBlock::checkServer(void)
 		throw std::runtime_error("Error: no location block found in server block");
 }
 
-bool ServerBlock::operator==(ServerBlock const& serverBlock) const
+bool ServerBlock::compareServerName(ServerBlock const& rhs) const
 {
-	if (this->listen != serverBlock.listen)
+	std::vector<std::string> rhsServerName = rhs.serverName;
+	if (this->serverName.empty() || rhsServerName.empty())
 		return false;
-	if (this->host != serverBlock.host)
+	std::set<std::string> thisSet(this->serverName.begin(), this->serverName.end());
+	std::set<std::string> rhsSet(rhsServerName.begin(), rhsServerName.end());
+	std::size_t namesSize = thisSet.size() + rhsSet.size();
+	std::set<std::string> serverNamesSet;
+	serverNamesSet.insert(thisSet.begin(), thisSet.end());
+	serverNamesSet.insert(rhsSet.begin(), rhsSet.end());
+	if (serverNamesSet.size() != namesSize)
 		return false;
 	return true;
-	
+}
+
+bool ServerBlock::operator==(ServerBlock const& rhs) const
+{
+	if (this->listen != rhs.listen || this->host != rhs.host || compareServerName(rhs))
+		return false;
+	return true;
 }
 
 std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock)

@@ -1,6 +1,7 @@
 
 
 #include "Config.hpp"
+#include <set>
 
 Config::Config(std::string const& filename)
 {
@@ -24,6 +25,11 @@ void Config::pushBlock(std::string context)
 	if (context == "server")
 	{
 		server.checkServer();
+		for (size_t i = 0; i < servers.size(); i++)
+		{
+			if (server == servers[i])
+				throw std::runtime_error("Error: duplicate server block");
+		}
 		servers.push_back(server);
 		server = ServerBlock();
 	}
@@ -125,10 +131,9 @@ void Config::parseBlock(std::ifstream& configFile, std::string context)
 		throw std::runtime_error("Config Error: check braces #4");
 }
 
-void Config::parseConfig(void)
+void Config::parse(void)
 {
 	parseBlock(configFile, "server");
 	if (servers.empty())
-		throw std::runtime_error("Config Error: no server blocks found");
-	
+		throw std::runtime_error("Config Error: no server blocks found");	
 }
