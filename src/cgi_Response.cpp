@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi_Response.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 03:51:50 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/23 07:40:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 // ! parce extention .py .sh .php ...
 
 // * you should map cgi map[.sh] = path
+
+static std::string cgiExtention[] = {".sh", ".py", ".php"}; // ! static varible
 
 std::string Response::getExtention() const
 {
@@ -95,9 +97,6 @@ void	Response::redirectCgiInput()
 
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
 		exit(1);// ! INTERNAL_SERVER_ERROR 
-	// std::cout << "body: " << body << std::endl;
-	// if (write(fd_in, body.c_str(), body.size()) == -1)
-	// 	exit(1);// ! INTERNAL_SERVER_ERROR 
 	if (dup2(fd_in, 0) == -1)
 		exit(1);// ! INTERNAL_SERVER_ERROR 
 	close(fd_in);
@@ -116,7 +115,6 @@ void	Response::redirectCgiOutput()
 }
 
 
-std::string cgiExtention[] = {".sh", ".py", ".php"}; // ! static varible
 
 bool Response::isCGI()
 {
@@ -176,9 +174,7 @@ void Response::cgi_Handler()
 	{
 		if (request->getMethdType() == POST)
 				redirectCgiInput();
-		std::cout <<  "here: " << this->uploadedFileName;
 		redirectCgiOutput();
-		print_CGI_env(env);
 		execve(args[0], args, env);
 		exit(EXIT_FAILURE);
 	}
