@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 07:30:57 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 00:38:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ Response::~Response(void)
 			  << RESET;
 // if it fails , ana mali
 	!input_file.empty() && unlink(input_file.c_str());
-	// !output_file.empty() && unlink(output_file.c_str());
+	!output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -78,15 +78,9 @@ void Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{
 		theGetMethod();
-		// std::cout << "***************************************************\n";
-		// std::cout << this->response;
-		// std::cout << "\n***************************************************\n";
-		
-		// write(this->request->getFdSocket(), this->response.c_str(), this->response.size());
 	}
 	else if (request->getMethdType() == POST)
 	{
-		// thePostMethod(mode);
 		PostResponse();
 	}
 	else if (request->getMethdType() == DELETE)

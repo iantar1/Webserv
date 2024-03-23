@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/22 08:20:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 00:28:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,6 @@ const Request *Response::getRequest() const
 {
 	return (request);
 }
-read the subject
-cgi for post
-he CGI should be run in the correct directory for relative path file access
+// read the subject
+// cgi for post
+// he CGI should be run in the correct directory for relative path file access

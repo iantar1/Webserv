@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/22 06:40:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 00:27:35 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void Response::theGetErrorNotFound(void)
 	this->body = getPageContent("defaultPages/404.htm") + "\r\n\r\n";
 	theGetHeaderResponse(NOT_FOUND, CONTENT_LENGHT);
 	this->response += this->body;
+	this->request->setDoneServing();
 }
 
 void Response::theGetErrorForbidden(void)
@@ -104,7 +105,10 @@ void Response::theGetResponseOk(void)
 		// std::cout << YELLOW << "buf : \n" << buf<< RESET << "\n";
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
+		{
 			this->body = "0\r\n\r\n";
+			this->request->setDoneServing();
+		}
 		else
 		{
 			std::string str(buf, byteRead);
@@ -200,10 +204,14 @@ void Response::theGetMethod(void)
 	this->redirection.clear();
 
 	if (this->request->getBody() != "")
+	{
 		theGetErrorBadRequest();
+		this->request->setDoneServing();
+	}
 	else if (stat(this->path.c_str(), &buffer))
 	{
 		theGetErrorNotFound();
+		this->request->setDoneServing();
 	}
 	else
 	{
@@ -213,12 +221,14 @@ void Response::theGetMethod(void)
 				theGetRedirectionRequest();
 			else
 				directoryListing();
+			this->request->setDoneServing();
 		}
 		else if (!(buffer.st_mode & S_IRUSR))
+		{
 			theGetErrorForbidden();
+			this->request->setDoneServing();
+		}
 		else
 			regularFileGet();
 	}
-	// if (content_length == 0)
-		// this->request->setDoneServing();// ! fix this
 }
