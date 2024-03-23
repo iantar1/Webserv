@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 07:35:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 08:37:31 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -477,7 +477,6 @@ void Request::ReadRequest()
 		//* if ReadCheckHeader() return false , the reading request is done
 		if (ReadCheckHeader())
 		{
-			storeBody();
 			checkValidMethod();
 		}
 		if (doneHeaderReading)
@@ -487,7 +486,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{
