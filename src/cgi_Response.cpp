@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/22 08:18:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/22 08:20:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,8 @@ void Response::cgi_Handler()
 	output_file = RandomName();
 	if (request->getMethdType() == POST)
 	{
-		input_file = RandomName();
+		input_file = RandomName();// ! you need to generate a random file , just use 
+		// ! nabboune /Uplodes/ to read from
 	}
 	std::cout << "here: " << body << "\n";
 	print_CGI_env(env);
