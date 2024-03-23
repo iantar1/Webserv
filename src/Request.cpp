@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/21 22:44:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 07:35:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void encodinString(std::string &str) // ! to do
 
 // ************ Getters **************
 
-const Location*     Request::getLocation() const
+const Location *Request::getLocation() const
 {
 	return (location);
 }
@@ -129,11 +129,11 @@ const std::map<std::string, std::string> &Request::getRequest() const
 
 const std::string &Request::getQueryString() const
 {
-	return (this->QueryString);	
+	return (this->QueryString);
 }
 // ************* Setters *************
 
-void	Request::setPath(std::string str)
+void Request::setPath(std::string str)
 {
 	this->newPath = str;
 }
@@ -156,6 +156,7 @@ void Request::setLocation_str(std::string _location_str)
 void Request::setFlagError(int error_flag, const std::string &mes)
 {
 	ErrorFlag = error_flag;
+	setDoneServing();
 	throw std::runtime_error(mes);
 }
 
@@ -182,10 +183,9 @@ void Request::storeHeader(const std::string &line)
 
 	index = line.find(":");
 	if (index == std::string::npos)
-		setFlagError(BAD_REQ, "bad Request");
+		setFlagError(BAD_REQ, "bad Request1");
 	key = toLower(line.substr(0, index));
-	value = skipLeadingWhitespace(line.substr(index + 1)); // ! check this !!
-	// std::cout << "key:" << key << " value:"<< value << std::endl;
+	value = skipLeadingWhitespace(line.substr(index + 1));
 	Header.insert(std::make_pair(key, value));
 }
 
@@ -194,6 +194,7 @@ void Request::storeData(const std::string &dataRequest)
 	std::istringstream iss(dataRequest);
 	std::string line;
 
+	// std::cout << "dataRequest: " <<dataRequest;
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -205,7 +206,6 @@ void Request::storeData(const std::string &dataRequest)
 			storeHeader(line);
 		}
 	}
-	// doneHeaderReading = true;
 }
 
 void Request::saveFirstChuckBody()
@@ -236,10 +236,6 @@ void Request::checkValidHeader()
 
 void Request::checkValid_GET_Header()
 {
-	if (body.empty() == false)
-	{
-		setFlagError(BAD_REQ, "bad Request");
-	}
 	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
 	{
 		if (location->allowedMethods[i].compare("GET") == 0)
@@ -252,11 +248,11 @@ void Request::checkValid_POST_Header()
 {
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
 	{
-		setFlagError(BAD_REQ, "bad Request");
+		setFlagError(BAD_REQ, "bad Request3");
 	}
 	if (this->Header.find("transfer-encoding") != Header.end() && Header["transfer-encoding"] != "chunked") // ! what is this
 	{
-		std::cout << "debug: " << Header["transfer-encoding"] << "\n";
+		// std::cout << "debug: " << Header["transfer-encoding"] << "\n";
 		setFlagError(NOT_IMPLEMENTED, "Not Implemented");
 	}
 	if (Header.find("content-length") != Header.end())
@@ -270,10 +266,6 @@ void Request::checkValid_POST_Header()
 
 void Request::checkValid_DELETE_Header()
 {
-	if (body.empty() == false)
-	{
-		setFlagError(BAD_REQ, "bad Request");
-	}
 	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
 	{
 		if (location->allowedMethods[i].compare("DELETE") == 0)
@@ -310,8 +302,7 @@ bool Request::URI_ValidChar(const std::string &uri) const
 {
 	for (size_t i = 0; i < uri.size(); i++)
 	{
-		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i])
-			&& validChars.find(uri[i]) == std::string::npos)
+		if (!std::isdigit(uri[i]) && !std::isalpha(uri[i]) && validChars.find(uri[i]) == std::string::npos)
 		{
 			return (1);
 		}
@@ -326,7 +317,7 @@ bool Request::URI_ValidLocation(const std::string &uri)
 
 	for (; it != it_end; ++it)
 	{
-		std::cout << it->first << "\n";
+		// std::cout << it->first << "\n";
 		if (uri.compare(0, (it->first).size(), it->first) == 0)
 		{
 			location_str = std::string(it->first);
@@ -361,10 +352,10 @@ void Request::URI_Checking(const std::string &uri)
 void Request::httpVersionCheck(const std::string &http)
 {
 	if (http.compare("HTTP/1.1"))
-		setFlagError(BAD_REQ, "BAD REQUEST");
+		setFlagError(BAD_REQ, "BAD REQUEST5");
 }
 
-void Request::WhichMethod(const std::string &method)
+void Request::WhichMethod(const std::string &method)// ! add other methods
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -402,8 +393,8 @@ void Request::storeRequestLine(const std::string &line)
 		RequestLine.push_back(word);
 	}
 	if (RequestLine.size() != 3)
-			setFlagError(BAD_REQ, "BAD REQUEST");
-		
+		setFlagError(BAD_REQ, "BAD REQUEST6");
+
 	WhichMethod(RequestLine[0]);
 	parseURI_QueryString(RequestLine[1]);
 	URI_Checking(RequestLine[1]);
@@ -416,9 +407,11 @@ void Request::SetNewPath() // ! match location and change this
 {
 	std::cout << "old: " << oldPath << "\n";
 	// ! use location->getRootLOcation() instead
-	newPath = location->getRoot() + oldPath; // * u need to handle when there is / at last of the root
-	std::cout << "new: " << newPath << "\n";
-	// exit(1);
+	newPath = location->getRoot();
+	if (newPath[newPath.size() - 1] == '/')
+		newPath.resize(newPath.size() - 1);
+	newPath += oldPath; // * u need to handle when there is / at last of the root
+	std::cout << "new: " << newPath << "\n";	
 }
 
 // ************** Main Methods *******************
@@ -431,13 +424,16 @@ void Request::matchClients()
 	iter--;
 	while (1)
 	{
-		if (iter->first.compare(0, iter->first.size(), URI.c_str()) == 0)
+		// std::cout << "h: " << iter->first << " , "<< URI << " " << iter->first.size() ;
+		if (iter->first.compare(0, iter->first.size(), URI.c_str(), iter->first.size()) == 0)
 		{
 			location = iter->second;
 			return;
 		}
 		if (iter == Vserver->getLocationsBeginIterMap())
-			return;
+		{
+			setFlagError(NOT_FOUND, "no location match the request uri");
+		}
 		iter--;
 	}
 	location = iter->second;
@@ -450,6 +446,7 @@ bool Request::ReadCheckHeader()
 		{
 			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
 			{
+				// std::cout << "here\n";
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
 				doneHeaderReading = true;
@@ -470,13 +467,17 @@ void Request::ReadRequest()
 	try
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
+		// std::cout << "buf: " << buf;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
-			setFlagError(BAD_REQ, "thre is No \\r\\n\\r\\n");
+		{
+			setFlagError(BAD_REQ, "bad request7");
+		}
 		//* if ReadCheckHeader() return false , the reading request is done
 		if (ReadCheckHeader())
 		{
+			storeBody();
 			checkValidMethod();
 		}
 		if (doneHeaderReading)
@@ -502,7 +503,7 @@ void Request::printRequest()
 	std::cout << "Method: " << Methods[MethodType - 1] << "\n";
 	std::cout << "URI: " << URI << "\n";
 	// std::cout << "URI: " << URI << "\n";
-	
+
 	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
 	{
 		std::cout << it->first << ":" << it->second << "\n";
@@ -512,4 +513,3 @@ void Request::printRequest()
 	std::cout << body << "\n";
 	std::cout << "||************************************||\n";
 }
-

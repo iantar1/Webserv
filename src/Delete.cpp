@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 02:26:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 07:34:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,13 @@ void Response::DeleteMethod()
 	{
 		status = DeleteDiractory(request->getNewPath());
 	}
-	std::cout << "this->path: " << request->getNewPath() << "\n";
-	std::cout << "status: " << status << "\n";
+	// std::cout << "this->path: " << request->getNewPath() << "\n";
+	// std::cout << "status: " << status << "\n";
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/204.htm") + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
 	this->response += this->body;
-	std::cout << response ;
+	// std::cout << response ;
 }
 
 void Response::theDeleteHeaderResponse(int code, int transferType)

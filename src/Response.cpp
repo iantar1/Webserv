@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 03:45:39 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/23 07:26:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ Response::~Response(void)
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
 // if it fails , ana mali
-	!input_file.empty() && unlink(input_file.c_str());
-	// !output_file.empty() && unlink(output_file.c_str());
+	// !input_file.empty() && unlink(input_file.c_str());
+	!output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -58,23 +58,23 @@ void Response::errorPage(int errorCode)
 		header_it++;
 	}
 	this->response += "\r\n" + this->responseBody;
-	// write(this->socket, this->response.c_str(), this->response.size());
+	write(this->socket, this->response.c_str(), this->response.size());
 	this->response.clear();
 }
 
 void Response::StartResponse()
 {
-	// if (request->getError() != 0)
-	// {
-	// 	errorPage(request->getError());
-	// 	return ;
-	// }
+	if (request->getError() != 0)
+	{
+		errorPage(request->getError());
+		request->setDoneServing();
+		return ;
+	}
 
 	if (request->getMethdType() == GET)
 	{
 		if (isCGI() == true)
 		{
-			std::cout << "cci\n";
 			cgi_Handler();
 		}
 		theGetMethod();
@@ -84,7 +84,6 @@ void Response::StartResponse()
 		PostResponse();
 		if (isCGI() == true)
 		{
-			std::cout << "cci\n";
 			cgi_Handler();
 		}
 	}
