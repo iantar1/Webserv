@@ -1,6 +1,7 @@
 
 *.out
 *.o
+*.c
 t.cpp
 config/*.out
 config/*.o
