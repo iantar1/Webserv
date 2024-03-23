@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/20 22:31:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/23 02:45:17 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,6 @@ void	Response::PostResponse()
 			this->mode = CHUNKED;
 		else
 			this->mode = NORMAL;
-		// if (this->request->getRequest().find("content-length") != this->request->getRequest().end())
-		// 	this->mode = NORMAL;
-		// else
-		// 	this->mode = CHUNKED;
 		this->modeChecked = true;
 	}
 	thePostMethod();
@@ -63,9 +59,6 @@ void	Response::thePostMethod()
 		else
 			this->postType = CHUNKED_POST;
 		this->dataCopy = true;
-		// this->contentType = this->request->getRequest().find("content-type")->second;
-
-
 
 		if (this->request->getRequest().find("content-type") != this->request->getRequest().end()) {
 			this->contentType = this->request->getRequest().find("content-type")->second;
@@ -74,14 +67,6 @@ void	Response::thePostMethod()
 		else
 			extension = "";
 		fileName = "Uploads/" + generateNameFile(this->strTime2) + extension;
-
-
-
-
-		// extension = getContentExtension(this->files.mime, this->contentType);
-		// fileName = "Uploads/" + generateNameFile() + extension;
-		// std::cout << "filename: " << fileName << std::endl;
-		// std::cout << "extension: " << extension << std::endl;
 
 		this->response = "";
 	}
@@ -163,24 +148,24 @@ void	Response::thePostResponseCreate(void)
 			size_t	eol = this->appendedRequest.find("\r\n");
 			if (eol != std::string::npos) {
 				this->chunkSize = hexStringToInt(this->appendedRequest);
-				this->chunkStart = true;
-				this->appendedRequest = this->appendedRequest.substr(eol + 2);
-				this->appendedSize = this->appendedRequest.size();
 
 				if (this->chunkSize == 0) {
 					this->outFile.close();
 					this->appendedRequest.clear();
 					this->request->setDoneServing();
+					thePostResponseCreatedPage();
 					return;
 				}
-				// std::cout << "xxxxx" << std::endl;
+
+				this->chunkStart = true;
+				this->appendedRequest = this->appendedRequest.substr(eol + 2);
+				this->appendedSize = this->appendedRequest.size();
 			}
 			else
 				return;
 		}
 		else
 			this->appendedSize = this->appendedRequest.size();
-		// std::cout << this->appendedSize << " || " << this->chunkSize << std::endl;
 		if (this->appendedSize >= this->chunkSize + 2) {
 			std::string	toWrite = this->appendedRequest.substr(0, this->chunkSize);
 			this->appendedRequest = this->appendedRequest.substr(this->chunkSize + 2);
@@ -189,10 +174,10 @@ void	Response::thePostResponseCreate(void)
 			this->appendedSize = this->appendedRequest.size();
 			this->chunkStart = false;
 
-			// std::cout << "yyyyy" << std::endl;
-			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {// ! dyalax 0
+			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
 				this->outFile.close();
 				this->appendedRequest.clear();
+				thePostResponseCreatedPage();
 				this->request->setDoneServing();
 				return;
 			}
