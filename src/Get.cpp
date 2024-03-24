@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 22:20:12 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/24 01:46:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
 
-// you should tell me where can I send to had zmmer Content-type: text/html; charset=UTF-8   from CGI 
-
+// you should tell me where can I send to had zmmer Content-type: text/html; charset=UTF-8   from CGI
 
 void Response::theGetHeaderResponse(int code, int transferType)
 {
@@ -27,6 +26,10 @@ void Response::theGetHeaderResponse(int code, int transferType)
 
 	header_it = this->files.headers.find(CONTENT_TYPE);
 	header_it->second += this->contentType;
+
+	//! if (set_cookies())
+	header_it = this->files.headers.find(SET_COOKIE);
+	header_it->second += "user=ismail\r\n";
 
 	if (this->redirection != "")
 	{

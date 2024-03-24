@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 21:44:41 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/24 00:48:43 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ void Request::storeBody()
 void Request::checkValidHeader()
 {
 }
-bool	Request::is_allowed_Method(const std::string& method) const
+bool Request::is_allowed_Method(const std::string &method) const
 {
 	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
 	{
@@ -275,7 +275,6 @@ void Request::checkValid_DELETE_Header()
 {
 	if (is_allowed_Method("DELETE") == false)
 		setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
-	setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 }
 
 void Request::checkValidMethod()
@@ -359,7 +358,7 @@ void Request::httpVersionCheck(const std::string &http)
 		setFlagError(BAD_REQ, "BAD REQUEST5");
 }
 
-void Request::WhichMethod(const std::string &method)// ! add other methods
+void Request::WhichMethod(const std::string &method) // ! add other methods
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -417,7 +416,7 @@ void Request::SetNewPath() // ! match location and change this
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
-	std::cout << "new: " << newPath << "\n";	
+	std::cout << "new: " << newPath << "\n";
 }
 
 // ************** Main Methods *******************
@@ -480,7 +479,7 @@ bool Request::ReadCheckHeader()
 // 			// 	exit(87);
 // 			if (i + 3 < bytesRead && str.substr(i, 4) == "\r\n\r\n")
 // 			{
-// 				std::cout 
+// 				std::cout
 // 				storeData(HeaderReq);
 // 				lastCharHederIndex = i + 4;
 // 				doneHeaderReading = true;
@@ -502,8 +501,8 @@ void Request::ReadRequest()
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 		buf[bytesRead] = '\0';
-		std::cout  << "byte: " << bytesRead << "\n";
-		std::cout << "buf: " << buf << std::endl;
+		std::cout << "byte: " << bytesRead << "\n";
+		// std::cout << "buf: " << buf << std::endl;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
@@ -522,7 +521,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{

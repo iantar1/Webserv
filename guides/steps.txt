@@ -21,7 +21,7 @@ Connection: keep-alive
 Content-Type: application/x-www-form-urlencoded
 
 1f
-username=okhiar&password=xihaja
+username=iantar&password=xihaja
 0
 
 
@@ -37,4 +37,4 @@ Connection: keep-alive
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 31
 
-username=okhiar&password=xihaja%  
+username=iantar&password=xihaja%  
