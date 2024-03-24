@@ -6,22 +6,23 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 09:16:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 06:35:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include "headers.hpp"
-#include "macros.hpp"
-#include "VirtualServer.hpp"
+# include "headers.hpp"
+# include "macros.hpp"
+# include "ServerBlock.hpp"
+# include "LocationBlock.hpp"
 
 #define BAD_REQ 400
 #define NOT_IMPLEMENTED 501
 #define REQ_URI_TOO_LONG 414
 #define REQ_ENTITY_TOO_LONG 413
 
-typedef std::map<std::string, Location *>::const_iterator mapIterType;
+// typedef std::map<std::string, Location *>::const_iterator mapIterType;
 
 class Request
 {
@@ -32,11 +33,12 @@ private:
     Request &operator=(const Request &);
 
 private:
-    VirtualServer *Vserver;
+    // VirtualServer *Vserver;
+    ServerBlock    *Vserver; 
 
-    std::map<std::string, std::string> Header;
-    std::vector<std::string> RequestLine; // this line: GET /hello.htm HTTP/1.1
-    Location *location;
+    std::map<std::string, std::string>  Header;
+    std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
+    LocationBlock                       *location;
 
     char buf[BUF_SIZE];
 
@@ -66,7 +68,7 @@ private:
 
 public:
     // ************ Constructor destructor ****************
-    Request(int, VirtualServer *);
+    Request(int, ServerBlock *);
     ~Request();
     std::string newPath;// ! tmp
 
@@ -115,15 +117,15 @@ public:
 
     const std::map<std::string, std::string> &getRequest() const;
 
-    const std::string   &getBody(void) const;
-    const std::string   &getChunkedBodySize(void) const;
-    const std::string   &getOldPath() const;
-    const std::string   &getNewPath() const;
-    const std::string   &getCgiPath(const std::string &) const;
-    const std::string   &getMethod() const;
-    const std::string   &getQueryString() const;
-    const std::string   &getURI() const;
-    const Location*     getLocation() const;    
+    const std::string       &getBody(void) const;
+    const std::string       &getChunkedBodySize(void) const;
+    const std::string       &getOldPath() const;
+    const std::string       &getNewPath() const;
+    const std::string       &getCgiPath(const std::string &) const;
+    const std::string       &getMethod() const;
+    const std::string       &getQueryString() const;
+    const std::string       &getURI() const;
+    const LocationBlock*     getLocation() const;    
 
     // ************* Setters ****************
     void    setDoneServing();

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/14 04:07:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 06:33:59 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "../includes/headers.hpp"
 # include "../includes/Request.hpp"
 # include "../includes/Response.hpp"
-# include "../includes/VirtualServer.hpp"
+# include "../includes/ServerBlock.hpp"
 
 
 # define POST 1
@@ -30,7 +30,7 @@ class Client
 {
 private:
 	int                 sockeFd;
-	VirtualServer*		Vserver;
+	ServerBlock*		Vserver;
 	t_files				files;
 	char                buf[BUF_SIZE];
 	int					MethodType;
@@ -50,7 +50,7 @@ private:
 	Client();
 
 public:
-	Client(int, VirtualServer*, t_files);
+	Client(int, ServerBlock*, t_files);
 	~Client();
 
 // Request and Respose classes

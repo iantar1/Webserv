@@ -263,7 +263,7 @@ std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock
 	// iterate over locations
 	std::map<std::string, LocationBlock>::const_iterator itBegin = serverBlock.getLocations().begin();
 	std::map<std::string, LocationBlock>::const_iterator itEnd = serverBlock.getLocations().end();
-	for (itBegin; itBegin != itEnd; itBegin++)
+	for (; itBegin != itEnd; itBegin++)
 	{
 		outstream << "###########  Location " << itBegin->first << " ###########" << std::endl;
 		outstream << itBegin->second << std::endl;

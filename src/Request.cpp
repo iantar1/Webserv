@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 00:48:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 06:39:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, VirtualServer *_Vserver) : Vserver(_Vserver),
+Request::Request(int fd, ServerBlock *_Vserver) : Vserver(_Vserver),
 													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
@@ -52,7 +52,7 @@ void encodinString(std::string &str) // ! to do
 
 // ************ Getters **************
 
-const Location *Request::getLocation() const
+const LocationBlock *Request::getLocation() const
 {
 	return (location);
 }

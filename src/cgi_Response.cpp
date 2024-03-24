@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 02:05:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 06:27:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,9 @@ bool Response::isCGI()
 
 bool Response::validCGI(const std::string &extention)
 {
-	const Location *loc = request->getLocation();
+	LocationBlock *loc = request->getLocation();
 
-	if ((loc->getCGI_Map()).find(extention) != (loc->getCGI_Map()).end())
+	if ((loc->getCgiPaths()).find(extention) != (loc->getCgiPaths()).end())
 		return (true);
 
 	return (false);
