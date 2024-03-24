@@ -4,21 +4,28 @@ CXX = c++
 
 RM = rm -rf
 
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
+CXXFLAGS = #-Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
 
-SRC =	./src/VirtualServer.cpp \
-		./src/Response.cpp \
-		./src/Location.cpp \
-		./src/Request.cpp \
-		./src/Client.cpp \
-  		./src/Server.cpp \
-		./src/utils.cpp \
+# SRC =	./src/VirtualServer.cpp \
+# 		./src/Response.cpp \
+# 		./src/Location.cpp \
+# 		./src/Request.cpp \
+# 		./src/Client.cpp \
+#   	./src/Server.cpp \
+# 		./src/utils.cpp \
+# 		./src/Post.cpp \
+# 		./src/Get.cpp \
+# 		./src/cgi_Response.cpp \
+# 		./src/request_Utils.cpp \
+# 		./src/Delete.cpp \
+
+SRC = 	./src/Config.cpp\
 		./src/main.cpp \
-		./src/Post.cpp \
-		./src/Get.cpp \
-		./src/cgi_Response.cpp \
-		./src/request_Utils.cpp \
-		./src/Delete.cpp \
+		./src/ServerBlock.cpp\
+		./src/LocationBlock.cpp\
+		./src/utilFunctions.cpp\
+
+
 		
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@

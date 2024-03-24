@@ -23,14 +23,15 @@ class ServerBlock
 		typedef bool (ServerBlock::*parseFunctions)(std::vector<std::string>);
 		std::map<std::string, parseFunctions> Fields;
 		// #######   start of ServerBlock   ########
-		int listen;
+		int fdSocket;
+		std::string listen;
 		std::string host;
 		std::vector<std::string> serverName;
 		std::string root;
 		std::vector<std::string> indexes;
 		std::map<int, std::string> errorPages;
 		int maxBodySize;
-		std::vector<LocationBlock> locations;
+		std::map<std::string, LocationBlock> locations; 
 		// #######   end of ServerBlock   ########
 		bool checkListen(std::vector<std::string> listen);
 		bool checkHost(std::vector<std::string> host);
@@ -44,16 +45,18 @@ class ServerBlock
 		ServerBlock();
 		~ServerBlock();
 		// getters
-		int const& getListen() const;
+		int const& getFdSocket() const;
+		std::string const& getListen() const;
 		std::string const& getHost() const;
 		std::vector<std::string> const& getServerName() const;
 		std::string const& getRoot() const;
 		std::vector<std::string> const& getIndexes() const;
 		std::map<int, std::string> const& getErrorPages() const;
 		int const& getMaxBodySize() const;
-		std::vector<LocationBlock> const& getLocations() const;
+		std::map<std::string, LocationBlock> const& getLocations() const;
 		LocationBlock *getLocation(std::string const& locationName) const;
 		// end of getters
+		void setFdSocket(int);
 		// operator == overload
 		bool operator==(ServerBlock const& rhs) const;
 		void addLocation(LocationBlock const& location);

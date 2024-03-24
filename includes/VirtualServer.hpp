@@ -18,7 +18,7 @@
 
 class Location;
 
-typedef	std::map<std::string, Location *>::const_iterator	mapIterType;
+typedef	std::map<std::string, Location>::const_iterator	mapIterType;
 
 class VirtualServer
 {
@@ -31,7 +31,7 @@ private:
 
 public:
 // public Attrebiute (class)
-	std::map<std::string, Location *>	locations;
+	std::map<std::string, Location>	locations;
 
 	std::string							Port;
 	std::string							HostAddress;

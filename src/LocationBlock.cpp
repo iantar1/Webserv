@@ -1,8 +1,8 @@
 
 
 
-#include "LocationBlock.hpp"
-#include "utils.hpp"
+#include "../includes/LocationBlock.hpp"
+#include "../includes/utils.hpp"
 
 LocationBlock::LocationBlock()
 {

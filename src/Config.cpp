@@ -1,7 +1,8 @@
 
 
-#include "Config.hpp"
+#include "../includes/Config.hpp"
 #include <set>
+
 
 Config::Config(std::string const& filename)
 {

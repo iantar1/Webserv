@@ -10,101 +10,114 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/headers.hpp"
-#include "../includes/macros.hpp"
-#include "../includes/VirtualServer.hpp"
-#include <iostream>
-#define PORT 8080
-#define CONNECTIN_QUEUE 100
+// #include "../includes/headers.hpp"
+// #include "../includes/macros.hpp"
+// // #include "../includes/VirtualServer.hpp"
 
-#include "../includes/Server.hpp"
+// #include <iostream>
+// #define PORT 8080
+// #define CONNECTIN_QUEUE 100
 
-Location *getLocation1(std::string location)
-{
-	Location *loc = new Location(location);
+// #include "../includes/Server.hpp"
 
-	loc->allowedMethods.push_back("POST");
-	loc->allowedMethods.push_back("GET");
-	loc->allowedMethods.push_back("DELETE");
+// Location *getLocation1(std::string location)
+// {
+// 	Location *loc = new Location(location);
 
-	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->index = "page.html";
-	loc->root = "/nfs/homes/iantar/Desktop/Webserv"; // ! it must came without / at the end
-	loc->location = location;
+// 	loc->allowedMethods.push_back("POST");
+// 	loc->allowedMethods.push_back("GET");
+// 	loc->allowedMethods.push_back("DELETE");
 
-	loc->errorPage[404] = "";
-	loc->cgi[".py"] = "/usr/bin/python3";
-	loc->cgi[".sh"] = "/usr/bin/sh";
-	loc->cgi[".php"] = "/usr/bin/php-cgi";
+// 	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
+// 	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
+// 	loc->index = "page.html";
+// 	loc->root = "/nfs/homes/iantar/Desktop/Webserv"; // ! it must came without / at the end
+// 	loc->location = location;
 
-	loc->redirectCode.push_back(301);
-	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
+// 	loc->errorPage[404] = "";
+// 	loc->cgi[".py"] = "/usr/bin/python3";
+// 	loc->cgi[".sh"] = "/usr/bin/sh";
+// 	loc->cgi[".php"] = "/usr/bin/php-cgi";
 
-	loc->redirectCode.push_back(302);
-	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
-	loc->setMaxbodySize(90000000);
+// 	loc->redirectCode.push_back(301);
+// 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
 
-	return (loc);
-}
+// 	loc->redirectCode.push_back(302);
+// 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
+// 	loc->setMaxbodySize(90000000);
 
-// /nfs/homes/iantar/Desktop/Webserv
-// /nfs/homes/iantar/Desktop/Webserv
+// 	return (loc);
+// }
 
-Location *getLocation2(std::string location)
-{
-	Location *loc = new Location(location);
+// // /nfs/homes/iantar/Desktop/Webserv
+// // /nfs/homes/iantar/Desktop/Webserv
 
-	loc->allowedMethods.push_back("POST");
-	loc->allowedMethods.push_back("GET");
-	loc->allowedMethods.push_back("DELETE");
+// Location *getLocation2(std::string location)
+// {
+// 	Location *loc = new Location(location);
 
-	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->index = "page.html";
-	loc->root = "/nfs/homes/iantar/Desktop/Webserv";
-	loc->location = location;
+// 	loc->allowedMethods.push_back("POST");
+// 	loc->allowedMethods.push_back("GET");
+// 	loc->allowedMethods.push_back("DELETE");
 
-	loc->errorPage[404] = "";
-	loc->cgi[".py"] = "/usr/bin/python3";
-	loc->cgi[".sh"] = "/usr/bin/sh";
-	loc->cgi[".php"] = "/usr/bin/php-cgi";
+// 	loc->uploadPath = "/nfs/homes/iantar/Desktop/Webserv";
+// 	loc->uploadPost = "/nfs/homes/iantar/Desktop/Webserv";
+// 	loc->index = "page.html";
+// 	loc->root = "/nfs/homes/iantar/Desktop/Webserv";
+// 	loc->location = location;
 
-	loc->redirectCode.push_back(301);
-	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
+// 	loc->errorPage[404] = "";
+// 	loc->cgi[".py"] = "/usr/bin/python3";
+// 	loc->cgi[".sh"] = "/usr/bin/sh";
+// 	loc->cgi[".php"] = "/usr/bin/php-cgi";
 
-	loc->redirectCode.push_back(302);
-	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
-	loc->setMaxbodySize(90000000);
+// 	loc->redirectCode.push_back(301);
+// 	loc->redirectLocations.push_back(std::make_pair("/Media/op.png", "/Media/op.gif"));
 
-	return (loc);
-}
+// 	loc->redirectCode.push_back(302);
+// 	loc->redirectLocations.push_back(std::make_pair("/Media/op.mp4", "/Media/op.gif"));
+// 	loc->setMaxbodySize(90000000);
 
-void fillVector(std::vector<VirtualServer *> &Vser)
-{
-	VirtualServer *Vser2 = new VirtualServer();
-	Vser2->SetLocation(getLocation2("/"), "/");
-	Vser2->Port = "8081";
-	Vser2->HostAddress = "0.0.0.0";
-	Vser.push_back(Vser2);
+// 	return (loc);
+// }
 
-	VirtualServer *Vser1 = new VirtualServer();
-	Vser1->SetLocation(getLocation1("/"), "/");
-	Vser1->Port = "8080";
-	Vser1->HostAddress = "0.0.0.0";
-	Vser.push_back(Vser1);
-}
+// void fillVector(std::vector<VirtualServer *> &Vser)
+// {
+// 	VirtualServer *Vser2 = new VirtualServer();
+// 	Vser2->SetLocation(getLocation2("/"), "/");
+// 	Vser2->Port = "8081";
+// 	Vser2->HostAddress = "0.0.0.0";
+// 	Vser.push_back(Vser2);
+
+// 	VirtualServer *Vser1 = new VirtualServer();
+// 	Vser1->SetLocation(getLocation1("/"), "/");
+// 	Vser1->Port = "8080";
+// 	Vser1->HostAddress = "0.0.0.0";
+// 	Vser.push_back(Vser1);
+// }
+
+
+#include "../includes/Config.hpp"
+
 
 int main(int ac, char **av)
 {
 	try
 	{
-		std::vector<VirtualServer *> Vserv;
+		// std::vector<VirtualServer *> Vserv;
+		Config config("config/config.conf");
+		config.parse();
+		std::vector<ServerBlock> servers = config.servers;
+		for (std::size_t i = 0; i < servers.size(); i++)
+		{
+			std::cout << "Server: " << i << std::endl;
+			std::cout << servers[i] << std::endl;
+			std::cout << "-----------------------------------\n" << std::endl;
+		}
+		// fillVector(Vserv); // Ibrahim
+		// Server webserv(Vserv);
 
-		fillVector(Vserv); // Ibrahim
-		Server webserv(Vserv);
-
-		webserv.ServerCore();
+		// webserv.ServerCore();
 	}
 	catch (std::exception &e)
 	{

@@ -1,8 +1,8 @@
 
 
-#include "ServerBlock.hpp"
+#include "../includes/ServerBlock.hpp"
+#include "../includes/utils.hpp"
 #include <set>
-#include "utils.hpp"
 
 ServerBlock::ServerBlock()
 {
@@ -25,6 +25,7 @@ void ServerBlock::initFieldsMap()
 
 void ServerBlock::initFields()
 {
+	fdSocket = -1;
 	listen = -1;
 	host = "";
 	serverName.clear();
@@ -54,7 +55,7 @@ bool ServerBlock::checkListen(std::vector<std::string> listen)
 	listenPort = stringToPosInt(listen[1]);
 	if (listenPort < 0 || listenPort > 65535)
 		return false;
-	this->listen = listenPort;
+	this->listen = listen[1];
 	return true;
 }
 
@@ -146,7 +147,7 @@ bool ServerBlock::checkMaxBodySize(std::vector<std::string> maxBodySize)
 	return true;
 }
 
-int const& ServerBlock::getListen() const
+std::string const& ServerBlock::getListen() const
 {
 	return this->listen;
 }
@@ -181,31 +182,36 @@ int const& ServerBlock::getMaxBodySize() const
 	return this->maxBodySize;
 }
 
-std::vector<LocationBlock> const& ServerBlock::getLocations() const
+std::map<std::string, LocationBlock> const& ServerBlock::getLocations() const
 {
 	return this->locations;
 }
 
-LocationBlock  *ServerBlock::getLocation(std::string const& locationName) const
-{
-	if (locationName.empty())
-		return NULL;
-	for (std::size_t i = 0; i < this->locations.size(); i++)
-	{
-		if (this->locations[i].getLocationName() == locationName)
-			return const_cast<LocationBlock*>(&this->locations[i]);
-	}
-	return NULL;
-}
+// LocationBlock  *ServerBlock::getLocation(std::string const& locationName) const
+// {
+// 	if (locationName.empty())
+// 		return NULL;
+// 	for (std::size_t i = 0; i < this->locations.size(); i++)
+// 	{
+// 		if (this->locations[i].getLocationName() == locationName)
+// 			return const_cast<LocationBlock*>(&this->locations[i]);
+// 	}
+// 	return NULL;
+// }
 
 void ServerBlock::addLocation(LocationBlock const& location)
 {
-	this->locations.push_back(location);
+	this->locations.insert(std::make_pair(location.getLocationName(), location));
+}
+
+void ServerBlock::setFdSocket(int fd)
+{
+	this->fdSocket = fd;
 }
 
 void ServerBlock::checkServer(void)
 {
-	if (this->listen < 0 || this->host.empty() || this->root.empty())
+	if (stringToPosInt(this->getListen()) < 0 || this->host.empty() || this->root.empty())
 		throw std::runtime_error("Error: required fields are missing in server block");
 	if (this->locations.empty())
 		throw std::runtime_error("Error: no location block found in server block");
@@ -253,11 +259,14 @@ std::ostream& operator<<(std::ostream& outstream, ServerBlock const& serverBlock
 	outstream << std::endl;
 	outstream << "max_body_size: " << serverBlock.getMaxBodySize() << std::endl;
 	outstream << "locations: " << std::endl;
-	std::vector<LocationBlock> locations = serverBlock.getLocations();
-	for (std::size_t i = 0; i < locations.size(); i++)
+	// std::vector<LocationBlock> locations = serverBlock.getLocations();
+	// iterate over locations
+	std::map<std::string, LocationBlock>::const_iterator itBegin = serverBlock.getLocations().begin();
+	std::map<std::string, LocationBlock>::const_iterator itEnd = serverBlock.getLocations().end();
+	for (itBegin; itBegin != itEnd; itBegin++)
 	{
-		std::cout << "###########  Location " << i << " ###########" << std::endl;
-		outstream << locations[i] << std::endl;
+		outstream << "###########  Location " << itBegin->first << " ###########" << std::endl;
+		outstream << itBegin->second << std::endl;
 	}
 	return outstream;
 }

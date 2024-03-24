@@ -27,6 +27,9 @@
 #include <ctime>
 #include <map>
 #include <algorithm>
+#include <cctype>
+#include <set>
+
 #include "macros.hpp"
 
 template <typename T>
@@ -76,3 +79,16 @@ std::string toStr(const T& value) {
 	ss << value;
 	return ss.str();
 }
+
+// parsing utils functions
+
+std::string removeExtraSpaces(std::string const& line);
+std::vector<std::string> split(std::string line, char delim);
+bool isPosNumber(std::string const& str);
+int stringToPosInt(std::string const& str);
+bool checkIp(std::string ip);
+bool checkEnable(std::string enable);
+bool isBrace(std::string line);
+
+
+// parsing functions
