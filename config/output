@@ -3,10 +3,9 @@ End of context: location
 End of context: server
 End of context: location
 End of context: server
-nouh.com www.example.com www.webserv.com 
 >>>>>>>>>>>  Server 0 <<<<<<<<<<<
 listen: 80
-host: localhost
+host: 127.250.0.1
 server_name: www.example.com nouh.com 
 root: /var/www/serverRoot
 indexes: index.html 
@@ -42,8 +41,8 @@ cgi_enable: 1
 
 >>>>>>>>>>>  Server 1 <<<<<<<<<<<
 listen: 80
-host: localhost
-server_name: www.webserv.com 
+host: 127.0.0.1
+server_name: www.webserv.com nouh.com 
 root: /var/www/webserv.com
 indexes: index.html 
 error_pages: 

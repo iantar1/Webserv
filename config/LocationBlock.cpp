@@ -138,16 +138,13 @@ bool LocationBlock::checkCgiPath(std::vector<std::string> cgiPath)
 
 bool LocationBlock::checkUploadPath(std::vector<std::string> uploadPath)
 {
-	bool uploadPathBool;
+	std::string upload;
 	if (uploadPath.size() != 3 || *(uploadPath.end() - 1) != ";")
 		return false;
-	if (uploadPath[1] == "on")
-		uploadPathBool = true;
-	else if (uploadPath[1] == "off")
-		uploadPathBool = false;
-	else
+	upload = uploadPath[1];
+	if (upload.empty())
 		return false;
-	this->uploadEnable = uploadPathBool;
+	this->uploadPath = upload;
 	return true;
 }
 

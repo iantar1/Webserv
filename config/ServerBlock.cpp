@@ -66,8 +66,10 @@ bool ServerBlock::checkHost(std::vector<std::string> host)
 	hostName = host[1];
 	if (hostName.empty())
 		return false;
-	if (hostName != "localhost" && !checkIp(hostName))
+	else if (hostName != "localhost" && !checkIp(hostName))
 		return false;
+	if (hostName == "localhost")
+		hostName = "127.0.0.1";
 	this->host = hostName;
 	return true;
 }

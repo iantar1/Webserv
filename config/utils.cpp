@@ -56,7 +56,7 @@ bool checkIp(std::string ip)
 		return false;
 	for (std::size_t i = 0; i < ipParts.size(); i++)
 	{
-		if (!isPosNumber(ipParts[i]))
+		if (ipParts[i].length() > 3 || !isPosNumber(ipParts[i]))
 			return false;
 		int ipPart = stringToPosInt(ipParts[i]);
 		if (ipPart < 0 || ipPart > 255)
