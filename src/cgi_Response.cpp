@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 07:57:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 02:04:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ std::string Response::getScriptName()
 	std::string uri;
 
 	uri = request->getURI();
-	for (size_t i = uri.size() - 1; i >= 0; i--)
+	for (int i = uri.size() - 1; i >= 0; i--)
 	{
 		if (uri[i] == '/')
 			break;
