@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 00:49:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 01:02:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,6 @@ bool Request::URI_ValidLocation(const std::string &uri)
 	mapIterType it_end = loc.end();
 	for (; it_begin != it_end; ++it_begin)
 	{
-		// std::cout << it->first << "\n";
 		if (uri.compare(0, (it_begin->first).size(), it_begin->first) == 0)
 		{
 			location_str = it_begin->first;

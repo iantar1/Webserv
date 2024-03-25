@@ -6,18 +6,18 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/24 00:46:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 01:08:35 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/macros.hpp"
 #include "../includes/Response.hpp"
 #include "../includes/utils.hpp"
-										
+
 Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
-                                                    request(request), files(files), chunkStart(false), streamStart(false),
-                                                    outOpened(false), gotTime(false), modeChecked(false), dataCopy(false),
-                                                    startedTheChunk(false), doneCGI(false)
+													   request(request), files(files), chunkStart(false), streamStart(false),
+													   outOpened(false), gotTime(false), modeChecked(false), dataCopy(false),
+													   startedTheChunk(false), doneCGI(false)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();
@@ -28,7 +28,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-// if it fails , ana mali
+	// if it fails , ana mali
 	// !input_file.empty() && unlink(input_file.c_str());
 	!output_file.empty() && unlink(output_file.c_str());
 }
@@ -68,7 +68,7 @@ void Response::StartResponse()
 	{
 		errorPage(request->getError());
 		request->setDoneServing();
-		return ;
+		return;
 	}
 
 	if (request->getMethdType() == GET)
@@ -78,9 +78,9 @@ void Response::StartResponse()
 			cgi_Handler();
 		}
 		theGetMethod();
-		std::cout << YELLOW << this->response << RESET << std::endl;
+		// std::cout << YELLOW << this->response << RESET << std::endl;
 	}
-	else if (request->getMethdType() == POST)// ! here
+	else if (request->getMethdType() == POST) // ! here
 	{
 		PostResponse();
 		if (isCGI() == true)
@@ -92,11 +92,10 @@ void Response::StartResponse()
 	{
 		// * check valid path
 		DeleteMethod();
-		this->request->setDoneServing(); // ! to edit later 
+		this->request->setDoneServing(); // ! to edit later
 	}
 }
 // ******** DELETE MEthod ************
-
 
 const std::string &Response::getResponse() const
 {
@@ -105,7 +104,7 @@ const std::string &Response::getResponse() const
 
 // *************** Seters *********
 
-void	Response::setURI()
+void Response::setURI()
 {
-	this->uri  = this->request->getURI();
+	this->uri = this->request->getURI();
 }
