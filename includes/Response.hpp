@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/25 09:05:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 10:14:57 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ private:
 	void				redirectCgiInput();
 	void				redirectCgiOutput();
 	void				set_args(char**);
+	void				extractCgiMetadata();
 // *** debug
 	void	print_CGI_env(char **);
 

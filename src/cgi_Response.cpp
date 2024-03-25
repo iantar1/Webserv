@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 09:07:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 10:48:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,19 @@ void	Response::set_args(char **args)
 	
 }
 
+void	Response::extractCgiMetadata()
+{
+	// open the file output_file
+	// read it;s data and store the header until \r\n\r\n
+	// save the body , and write it back to the same file
+	// tell to naboune to store it in the response
+	
+}
+
+std::string	getCgiFileRoot(const std::string)
+{
+	// this 
+}
 
 void Response::cgi_Handler()
 {
@@ -240,6 +253,7 @@ void Response::cgi_Handler()
 	}
 	if (!status)
 	{
+		extractCgiMetadata();
 		request->setPath(output_file);
 	}
 	delete [] env;
