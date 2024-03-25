@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 07:09:16 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 07:10:53 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -458,6 +458,7 @@ bool Request::ReadCheckHeader()
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
+		// save the separated request
 			req += buf[i];
 			if (req.size() > 3 && req.substr(req.size() - 4) == "\r\n\r\n")
 			{
@@ -481,33 +482,6 @@ bool Request::ReadCheckHeader()
 	return (false);
 }
 
-// bool Request::ReadCheckHeader()
-// {
-// 	std::string str = std::string(buf, bytesRead);
-
-// 	if (!doneHeaderReading)
-// 	{
-// 		for (int i = 0; i < bytesRead; i++)
-// 		{
-// 			// if (str.find("\r\n\r\n") != std::string::npos)
-// 			// 	exit(87);
-// 			if (i + 3 < bytesRead && str.substr(i, 4) == "\r\n\r\n")
-// 			{
-// 				std::cout
-// 				storeData(HeaderReq);
-// 				lastCharHederIndex = i + 4;
-// 				doneHeaderReading = true;
-// 				matchClients();
-// 				return (true);
-// 			}
-// 			if (buf[i] != '\r')
-// 			{
-// 				HeaderReq += buf[i];
-// 			}
-// 		}
-// 	}
-// 	return (false);
-// }
 
 void Request::ReadRequest()
 {
