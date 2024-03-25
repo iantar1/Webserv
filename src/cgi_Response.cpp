@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 04:33:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 09:07:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,48 @@ void Response::print_CGI_env(char **env)
 	}
 }
 
-void Response::setCgiEnvironment(char **env)
+std::string	str_to_upper(const std::string& str)
 {
+	std::string	res;
+
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		res += std::toupper(str[i]);
+	}
+	return (res);
+}
+
+std::string	change_a_to_b(const std::string& str, char a, char b)
+{
+	std::string	res;
+
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (str[i] == a)
+			res += b;
+		else
+			res += str[i];
+	}
+	return (res);
+}
+
+std::string	buildCgiMetaVariables(const std::string& key, const std::string& value)
+{
+	std::string	res;
+
+	res = change_a_to_b(key, '-', '_');
+	res = str_to_upper(res);
+	res += '=';
+	
+	if (key != "content-length" && key != "content-type")
+		res = "HTTP_" + res;
+	return (res + value);
+}
+
+char ** Response::setCgiEnvironment()
+{
+	char ** env;
+
 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	CgiEnvironment.push_back("REDIRECT_STATUS=CGI");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
@@ -69,13 +109,22 @@ void Response::setCgiEnvironment(char **env)
 	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());		   // * The name of the CGI script
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath());  // * The full path to the CGI script
 	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());		   // * path for cgi script
-	// ! HTTP_COOKIE=
 
-	for (size_t i = 0; i < 8; i++)
+	const std::map<std::string, std::string>& headers = request->getHeaders();
+	std::map<std::string, std::string>::const_iterator it = headers.begin();
+	
+	for (;it != headers.end(); ++it)
+	{
+		CgiEnvironment.push_back(buildCgiMetaVariables(it->first, it->second));
+	}
+	
+	env = new char*[CgiEnvironment.size() + 1];
+	for (size_t i = 0; i < CgiEnvironment.size(); i++)
 	{
 		env[i] = (char *)CgiEnvironment[i].c_str();
 	}
-	env[8] = NULL;
+	env[CgiEnvironment.size()] = NULL;
+	return (env);
 }
 
 std::string Response::RandomName()
@@ -154,12 +203,12 @@ void	Response::set_args(char **args)
 void Response::cgi_Handler()
 {
 	char		*args[3];
-	char		*env[9];
+	char		**env;
 	pid_t		pid;
 	int 		status;
 
 	std::cout << RED << "CGI" << RESET << std::endl;
-	setCgiEnvironment(env);
+	env = setCgiEnvironment();
 	set_args(args);
 
 	output_file = RandomName();
@@ -184,10 +233,16 @@ void Response::cgi_Handler()
 	}
 	waitpid(pid, &status, 0);
 	doneCGI = true;
+	if (status)
+	{
+		// ! set error flag
+		// !tmeout
+	}
 	if (!status)
 	{
 		request->setPath(output_file);
 	}
+	delete [] env;
 	// ! tuimeout
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 03:41:20 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/25 09:05:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ private:
 	void				cgi_Handler();
 	std::string			getExtention() const;
 	const std::string	&getCgiPath() const;
-	void				setCgiEnvironment(char**);
+	char**				setCgiEnvironment();
 	std::string			getScriptName();
 	bool				validCGI(const std::string&);
 	bool				isCGI();

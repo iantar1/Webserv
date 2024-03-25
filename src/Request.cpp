@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 07:10:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 08:32:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ bool Request::getDoneHeaderReading() const
 	return (this->doneHeaderReading);
 }
 
-const std::map<std::string, std::string> &Request::getRequest() const
+const std::map<std::string, std::string> &Request::getHeaders() const
 {
 	return (this->Header);
 }
@@ -372,7 +372,7 @@ void Request::WhichMethod(const std::string &method) // ! add other methods
 		if (Methods[i].compare(method) == 0)
 		{
 			if (i > 2)
-				setFlagError(NOT_IMPLEMENTED, "Invalid Method");
+				setFlagError(NOT_IMPLEMENTED, "NOT IMPLEMENTED");
 			MethodType = i + 1;
 			return;
 		}

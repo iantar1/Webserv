@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 08:33:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 09:08:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	Response::PostResponse()
 {
 	if (!this->modeChecked)
 	{
-		if (this->request->getRequest().find("transfer-encoding") != this->request->getRequest().end())
+		if (this->request->getHeaders().find("transfer-encoding") != this->request->getHeaders().end())
 			this->mode = CHUNKED;
 		else
 			this->mode = NORMAL;
@@ -54,14 +54,14 @@ void	Response::thePostMethod()
 		if (this->mode == NORMAL)
 		{
 			this->postType = NORMAL_POST;
-			this->contentLenght = std::atoi((this->request->getRequest().find("content-length")->second).c_str());
+			this->contentLenght = std::atoi((this->request->getHeaders().find("content-length")->second).c_str());
 		}
 		else
 			this->postType = CHUNKED_POST;
 		this->dataCopy = true;
 
-		if (this->request->getRequest().find("content-type") != this->request->getRequest().end()) {
-			this->contentType = this->request->getRequest().find("content-type")->second;
+		if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
+			this->contentType = this->request->getHeaders().find("content-type")->second;
 			extension = getContentExtension(this->files.mime, this->contentType);
 		}
 		else

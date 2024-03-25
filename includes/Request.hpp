@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 06:02:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 08:32:17 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ public:
     bool getDoneServing(void) const;
     bool getDoneHeaderReading() const;
 
-    const std::map<std::string, std::string> &getRequest() const;
+    const std::map<std::string, std::string> &getHeaders() const;
 
     const std::string &getBody(void) const;
     const std::string &getChunkedBodySize(void) const;
@@ -127,6 +127,7 @@ public:
     const std::string &getQueryString() const;
     const std::string &getURI() const;
     const LocationBlock &getLocation() const;
+    
 
     // ************* Setters ****************
     void setDoneServing();
