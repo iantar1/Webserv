@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 01:02:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 04:47:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -507,7 +507,6 @@ void Request::ReadRequest()
 	try
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-		buf[bytesRead] = '\0';
 		std::cout << "byte: " << bytesRead << "\n";
 		// std::cout << "buf: " << buf << std::endl;
 		if (bytesRead < 0)

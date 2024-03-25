@@ -6,12 +6,11 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 00:02:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 04:27:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#define BUF_SIZE 1024
 
 #include "../includes/headers.hpp"
 #include "../includes/Request.hpp"

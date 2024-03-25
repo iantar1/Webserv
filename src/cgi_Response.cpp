@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 02:52:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 04:33:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ void Response::cgi_Handler()
 	pid_t		pid;
 	int 		status;
 
+	std::cout << RED << "CGI" << RESET << std::endl;
 	setCgiEnvironment(env);
 	set_args(args);
 
