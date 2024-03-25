@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 08:32:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 09:20:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -465,7 +465,7 @@ bool Request::ReadCheckHeader()
 			// store and parce the header
 				storeData(HeaderReq);
 			// save the start od the body if any
-				lastCharHederIndex = i + 4;
+				lastCharHederIndex = i + 1;
 			// set done reading header request , to not enter again
 				doneHeaderReading = true;
 			// match the clitent with its location
