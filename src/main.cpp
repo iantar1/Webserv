@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 03:13:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 03:21:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,17 @@
 // 	Vser.push_back(Vser1);
 // }
 
+void	printConfigParsing(const std::vector<ServerBlock>& servers)
+{
+	for (std::size_t i = 0; i < servers.size(); i++)
+	{
+		std::cout << "Server: " << i << std::endl;
+		std::cout << servers[i] << std::endl;
+		std::cout << "-----------------------------------\n"
+					<< std::endl;
+	}
+}
+
 int main(int ac, char **av)
 {
 	try
@@ -118,14 +129,7 @@ int main(int ac, char **av)
 		Config config("config/config.conf");
 		config.parse();
 		std::vector<ServerBlock> servers = config.servers;
-		for (std::size_t i = 0; i < servers.size(); i++)
-		{
-			std::cout << "Server: " << i << std::endl;
-			std::cout << servers[i] << std::endl;
-			std::cout << "-----------------------------------\n"
-					  << std::endl;
-		}
-		// fillVector(Vserv); // Ibrahim
+		// printConfigParsing(servers);
 		Server webserv(config.servers);
 
 		webserv.ServerCore();

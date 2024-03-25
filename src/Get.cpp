@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/25 02:27:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 04:09:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it->second += this->contentType;
 
 	//! if (set_cookies())
-	header_it = this->files.headers.find(SET_COOKIE);
-	header_it->second += "user=ismail\r\n";
+	// header_it = this->files.headers.find(SET_COOKIE);
+	// header_it->second += "user=ismail\r\n";
 
 	if (this->redirection != "")
 	{
