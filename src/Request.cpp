@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 06:10:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 07:09:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,8 @@ void Request::storeData(const std::string &dataRequest)
 			storeHeader(line);
 		}
 	}
+	if (Header.find("host") == Header.end())
+		setFlagError(BAD_REQ, "bad Request_");
 }
 
 void Request::saveFirstChuckBody()
@@ -457,29 +459,23 @@ bool Request::ReadCheckHeader()
 		for (int i = 0; i < bytesRead; i++)
 		{
 			req += buf[i];
-			std::cout << RED << "reqSize: " << req.size() << "\n"<< RESET;
-			if (buf[i] != '\r')
-			{
-				HeaderReq += buf[i];
-			}
 			if (req.size() > 3 && req.substr(req.size() - 4) == "\r\n\r\n")
 			{
-				std::cout << RED << "here: " << HeaderReq << RESET;
+			// store and parce the header
 				storeData(HeaderReq);
+			// save the start od the body if any
 				lastCharHederIndex = i + 4;
+			// set done reading header request , to not enter again
 				doneHeaderReading = true;
+			// match the clitent with its location
 				matchClients();
 				return (true);
 			}
-			// if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
-			// {
-			// 	storeData(HeaderReq);
-			// 	lastCharHederIndex = i + 4;
-			// 	doneHeaderReading = true;
-			// 	matchClients();
-			// 	return (true);
-			// }
-			// printRequest();
+			if (buf[i] != '\r')
+			{
+			// save the request header without \r and the last \n
+				HeaderReq += buf[i];
+			}
 		}
 	}
 	return (false);
@@ -518,22 +514,21 @@ void Request::ReadRequest()
 	try
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
-		std::cout << "byte: " << bytesRead << "\n";
-		// std::cout << "buf: " << buf << std::endl;
 		if (bytesRead < 0)
 			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
 		if (bytesRead == 0 && !doneHeaderReading)
 		{
 			setFlagError(BAD_REQ, "bad request7");
 		}
-		//* if ReadCheckHeader() return false , the reading request is done
+	//* if ReadCheckHeader() return false , the reading request is done
 		if (ReadCheckHeader())
 		{
 			checkValidMethod();
 		}
 		if (doneHeaderReading)
 		{
-			if (MethodType == POST) // * save the first chunck body
+		// * save the first chunck body
+			if (MethodType == POST) 
 			{
 				storeBody();
 			}
