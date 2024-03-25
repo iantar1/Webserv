@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 04:47:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 06:10:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -456,18 +456,29 @@ bool Request::ReadCheckHeader()
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-			if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
+			req += buf[i];
+			std::cout << RED << "reqSize: " << req.size() << "\n"<< RESET;
+			if (buf[i] != '\r')
 			{
+				HeaderReq += buf[i];
+			}
+			if (req.size() > 3 && req.substr(req.size() - 4) == "\r\n\r\n")
+			{
+				std::cout << RED << "here: " << HeaderReq << RESET;
 				storeData(HeaderReq);
 				lastCharHederIndex = i + 4;
 				doneHeaderReading = true;
 				matchClients();
 				return (true);
 			}
-			if (buf[i] != '\r')
-			{
-				HeaderReq += buf[i];
-			}
+			// if (i + 3 < bytesRead && !strncmp(buf + i, "\r\n\r\n", 4))
+			// {
+			// 	storeData(HeaderReq);
+			// 	lastCharHederIndex = i + 4;
+			// 	doneHeaderReading = true;
+			// 	matchClients();
+			// 	return (true);
+			// }
 			// printRequest();
 		}
 	}

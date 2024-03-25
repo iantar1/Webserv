@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 04:41:56 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 06:17:49 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,12 @@ void Server::DropCleint(int ClientFd)
 // ! Desing Timeget.getResponse()
 void Server::ServeClients(int index)
 {
+	// ! in case of Bad Req or somthing that will not vist your reponse , you must setDoneServing here
+	if (clients[events[index].data.fd]->getRequest()->getError() != 0)
+	{
+		clients[events[index].data.fd]->getResponseClass()->errorPage(clients[events[index].data.fd]->getRequest()->getError());
+		clients[events[index].data.fd]->getRequest()->setDoneServing();
+	}
 	if (events[index].events & EPOLLIN)
 	{
 		std::cout <<RED<< "honaa.. lso" << RESET << std::endl;

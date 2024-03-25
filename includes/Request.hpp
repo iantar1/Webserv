@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 00:04:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 06:02:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ private:
     // std::string newPath;
     std::string oldPath;
     std::string HeaderReq;
+    std::string req;
     std::string location_str; // ! (location in configFile) don't forget to set it to it's value from ConfigFile
     std::string URI;
     std::string QueryString; // * include ? at the begining
