@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 00:05:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 00:49:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, const ServerBlock& _Vserver) : Vserver(_Vserver),
-													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
+Request::Request(int fd, const ServerBlock &_Vserver) : Vserver(_Vserver),
+														SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
@@ -52,7 +52,7 @@ void encodinString(std::string &str) // ! to do
 
 // ************ Getters **************
 
-const LocationBlock& Request::getLocation() const
+const LocationBlock &Request::getLocation() const
 {
 	return (location);
 }
@@ -67,9 +67,9 @@ const std::string &Request::getMethod() const
 	return (Methods[MethodType - 1]);
 }
 
-const std::string &Request::getCgiPath(const std::string& extention) const
+const std::string &Request::getCgiPath(const std::string &extention) const
 {
-	const std::map<std::string, std::string>& cgi_ = location.getCgiPaths();
+	const std::map<std::string, std::string> &cgi_ = location.getCgiPaths();
 	std::map<std::string, std::string>::const_iterator it = cgi_.find(extention);
 	return (it->second);
 }
@@ -238,7 +238,7 @@ void Request::checkValidHeader()
 }
 bool Request::is_allowed_Method(const std::string &method) const
 {
-	const std::vector<std::string>&	allowMethods = location.getAllowMethods();
+	const std::vector<std::string> &allowMethods = location.getAllowMethods();
 	for (size_t i = 0; i < (allowMethods).size(); i++)
 	{
 		if (allowMethods[i].compare(method) == 0)
@@ -320,8 +320,8 @@ bool Request::URI_ValidLocation(const std::string &uri)
 {
 	// mapIterType it_end = Vserver.getLocationsEndIterMap();
 
-	const std::map<std::string, LocationBlock>& loc = Vserver.getLocations();
-	
+	const std::map<std::string, LocationBlock> &loc = Vserver.getLocations();
+
 	mapIterType it_begin = loc.begin();
 	mapIterType it_end = loc.end();
 	for (; it_begin != it_end; ++it_begin)
@@ -418,7 +418,7 @@ void Request::SetNewPath() // ! match location and change this
 {
 	std::cout << "old: " << oldPath << "\n";
 	// ! use location.getRootLOcation() instead
-	newPath = location.getRoot();
+	newPath = Vserver.getRoot();
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
@@ -429,8 +429,8 @@ void Request::SetNewPath() // ! match location and change this
 
 void Request::matchClients()
 {
-	const std::map<std::string, LocationBlock>& loc = Vserver.getLocations();
-	
+	const std::map<std::string, LocationBlock> &loc = Vserver.getLocations();
+
 	mapIterType iter = loc.end();
 	mapIterType it_begin = loc.begin();
 
@@ -469,6 +469,7 @@ bool Request::ReadCheckHeader()
 			{
 				HeaderReq += buf[i];
 			}
+			// printRequest();
 		}
 	}
 	return (false);

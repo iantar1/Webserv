@@ -6,14 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 23:55:53 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 00:23:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/headers.hpp"
-# include "../includes/macros.hpp"
-# include "../includes/Server.hpp"
-# include "../includes/Config.hpp"
+#include "../includes/headers.hpp"
+#include "../includes/macros.hpp"
+#include "../includes/Server.hpp"
+#include "../includes/Config.hpp"
 // // #include "../includes/VirtualServer.hpp"
 
 // #include <iostream>
@@ -98,10 +98,6 @@
 // 	Vser.push_back(Vser1);
 // }
 
-
-
-
-
 int main(int ac, char **av)
 {
 	try
@@ -114,12 +110,13 @@ int main(int ac, char **av)
 		{
 			std::cout << "Server: " << i << std::endl;
 			std::cout << servers[i] << std::endl;
-			std::cout << "-----------------------------------\n" << std::endl;
+			std::cout << "-----------------------------------\n"
+					  << std::endl;
 		}
 		// fillVector(Vserv); // Ibrahim
 		Server webserv(config.servers);
 
-		// webserv.ServerCore();
+		webserv.ServerCore();
 	}
 	catch (std::exception &e)
 	{
