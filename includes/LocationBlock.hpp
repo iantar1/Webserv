@@ -15,8 +15,6 @@
 #include <stdexcept>
 #include <algorithm>
 
-
-
 class LocationBlock
 {
 	private:
@@ -29,7 +27,7 @@ class LocationBlock
 		std::string 						root;
 		std::vector<std::string>			indexes;
 		bool 								autoIndex;
-		std::vector<std::string> 			allowMethods;
+		std::vector<std::string> 			allowedMethods;
 		std::map<std::string, std::string>	cgiPaths;
 		std::string							uploadPath;
 		bool 								uploadEnable;
@@ -60,6 +58,7 @@ class LocationBlock
 		std::string const& 							getUploadPath() const;
 		bool const& 								getUploadEnable() const;
 		bool const& 								getCgiEnable() const;
+		long										getMaxBodySize() const;
 
 	// end of getters
 		void initFieldsMap();
@@ -70,7 +69,7 @@ class LocationBlock
 
 // << operator overload
 std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock);
+typedef	std::map<std::string, LocationBlock>::const_iterator	mapIterType;
 
 #endif
-	// long										getMaxBodySize() const;
 

@@ -6,14 +6,15 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/22 07:06:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 00:06:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/headers.hpp"
 #include "../includes/Server.hpp"
+# include "../includes/ServerBlock.hpp"
 
-int Server::socketCreate(VirtualServer *vSer)
+int Server::socketCreate(ServerBlock& vSer)
 {
 	int sockfd;
 	struct addrinfo hints;
@@ -25,8 +26,8 @@ int Server::socketCreate(VirtualServer *vSer)
 	hints.ai_flags = AI_PASSIVE;	 //
 	hints.ai_protocol = IPPROTO_TCP;
 
-	std::cout << "Host : " << vSer->getHost() << " Port: " << vSer->getPort() << "\n";
-	getaddrinfo((vSer->getHost()).c_str(), (vSer->getPort()).c_str(), &hints, &res);
+	std::cout << "Host : " << vSer.getHost() << " Port: " << vSer.getListen() << "\n";
+	getaddrinfo((vSer.getHost()).c_str(), (vSer.getListen()).c_str(), &hints, &res);
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
@@ -45,7 +46,7 @@ int Server::socketCreate(VirtualServer *vSer)
 	{
 		throw std::runtime_error("lisen sys_call failed");
 	}
-	vSer->setFdSocket(sockfd);
+	vSer.setFdSocket(sockfd);
 	return (sockfd);
 }
 
@@ -72,7 +73,7 @@ void Server::addCleintToEpoll(int index)
 	struct sockaddr_in clientAddr;
 	socklen_t clientAddrLen = sizeof(clientAddr);
 
-	int fd = accept(Vservers[index]->getFdSocket(), NULL, &clientAddrLen);
+	int fd = accept(Vservers[index].getFdSocket(), NULL, &clientAddrLen);
 	if (fd < 0)
 		throw std::runtime_error("accept\n");
 
@@ -90,7 +91,7 @@ bool Server::NewClient(int index)
 {
 	for (size_t j = 0; j < Vservers.size(); j++) // add the new Cleint to epoll
 	{
-		if (events[index].data.fd == Vservers[j]->getFdSocket())
+		if (events[index].data.fd == Vservers[j].getFdSocket())
 		{
 			Server::addCleintToEpoll(j);
 			return (1);
@@ -183,7 +184,7 @@ int Server::ServerCore()
 	}
 }
 
-Server::Server(std::vector<VirtualServer *> &Vser) : Vservers(Vser)
+Server::Server(std::vector<ServerBlock>& Vser) : Vservers(Vser)
 {
 	files = getDataFromFiles();
 }

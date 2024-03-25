@@ -147,6 +147,13 @@ bool ServerBlock::checkMaxBodySize(std::vector<std::string> maxBodySize)
 	return true;
 }
 
+// ************ Getters ****************
+
+int	ServerBlock::getFdSocket() const
+{
+	return (this->fdSocket);
+}
+
 std::string const& ServerBlock::getListen() const
 {
 	return this->listen;

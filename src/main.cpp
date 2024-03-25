@@ -6,12 +6,14 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 23:21:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 23:55:53 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "../includes/headers.hpp"
-// #include "../includes/macros.hpp"
+# include "../includes/headers.hpp"
+# include "../includes/macros.hpp"
+# include "../includes/Server.hpp"
+# include "../includes/Config.hpp"
 // // #include "../includes/VirtualServer.hpp"
 
 // #include <iostream>
@@ -97,7 +99,7 @@
 // }
 
 
-#include "../includes/Config.hpp"
+
 
 
 int main(int ac, char **av)
@@ -115,7 +117,7 @@ int main(int ac, char **av)
 			std::cout << "-----------------------------------\n" << std::endl;
 		}
 		// fillVector(Vserv); // Ibrahim
-		// Server webserv(Vserv);
+		Server webserv(config.servers);
 
 		// webserv.ServerCore();
 	}

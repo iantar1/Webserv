@@ -21,16 +21,18 @@
 class Config
 {
 	private:
-		ServerBlock server;
-		LocationBlock location;
-		std::stack<char> braces;
-		std::stack<std::string> contexts;
-		void pushBlock(std::string context);
-		void parseContextLine(std::vector<std::string> line, std::string context);
-		void addServerToContexts(std::vector<std::string> line);
-		void addLocationToContexts(std::vector<std::string> line);
-		bool checkBraces(std::vector<std::string> line, std::string context);
-		void insertLocationRoot(void);
+		ServerBlock 			server;
+		LocationBlock 			location;
+		std::stack<char> 		braces;
+		std::stack<std::string>	contexts;
+
+	// * private Methods *
+		void	pushBlock(std::string context);
+		void	parseContextLine(std::vector<std::string> line, std::string context);
+		void	addServerToContexts(std::vector<std::string> line);
+		void	addLocationToContexts(std::vector<std::string> line);
+		bool	checkBraces(std::vector<std::string> line, std::string context);
+		void	insertLocationRoot(void);
 	public:
 		std::ifstream configFile;
 		std::vector<ServerBlock> servers; 

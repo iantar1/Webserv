@@ -8,7 +8,6 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
 
 # SRC =	./src/VirtualServer.cpp \
 # 		./src/Location.cpp \
-#	   	./src/Server.cpp \
 
 SRC = 	./src/Config.cpp\
 		./src/main.cpp \
@@ -24,6 +23,7 @@ SRC = 	./src/Config.cpp\
  		./src/Get.cpp \
  		./src/Post.cpp \
 		./src/Client.cpp \
+	   	./src/Server.cpp \
 
 
 		

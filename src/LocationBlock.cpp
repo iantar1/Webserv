@@ -33,7 +33,7 @@ void LocationBlock::initFields()
 	root = "";
 	indexes.clear();
 	autoIndex = false;
-	allowMethods.clear();
+	allowedMethods.clear();
 	cgiPaths.clear();
 	uploadPath = "";
 	uploadEnable = false;
@@ -106,7 +106,7 @@ bool LocationBlock::checkAutoIndex(std::vector<std::string> autoIndex)
 bool LocationBlock::checkAllowMethods(std::vector<std::string> allowMethods)
 {
 	std::vector<std::string> methods;
-	std::vector<std::string> allowedMethods;
+	std::vector<std::string> _allowedMethods;
 	methods.push_back("GET");
 	methods.push_back("POST");
 	methods.push_back("DELETE");
@@ -116,9 +116,9 @@ bool LocationBlock::checkAllowMethods(std::vector<std::string> allowMethods)
 	{
 		if (std::find(methods.begin(), methods.end(), allowMethods[i]) == methods.end())
 			return false;
-		allowedMethods.push_back(allowMethods[i]);
+		_allowedMethods.push_back(allowMethods[i]);
 	}
-	this->allowMethods = allowedMethods;
+	this->allowedMethods = _allowedMethods;
 	return true;
 }
 
@@ -178,6 +178,8 @@ bool LocationBlock::checkCgiEnable(std::vector<std::string> cgiEnable)
 	return true;
 }
 
+// ****************** getters ***********************
+
 std::string const& LocationBlock::getLocationName() const
 {
 	return this->locationName;
@@ -200,7 +202,7 @@ bool const& LocationBlock::getAutoIndex() const
 
 std::vector<std::string> const& LocationBlock::getAllowMethods() const
 {
-	return this->allowMethods;
+	return this->allowedMethods;
 }
 
 std::map<std::string, std::string> const& LocationBlock::getCgiPaths() const
@@ -223,7 +225,10 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
-
+// long	LocationBlock::getMaxBodySize() const
+// {
+// 	return (this->)
+// }
 
 std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock)
 {

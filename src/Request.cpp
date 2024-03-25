@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 06:39:00 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 00:05:09 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, ServerBlock *_Vserver) : Vserver(_Vserver),
+Request::Request(int fd, const ServerBlock& _Vserver) : Vserver(_Vserver),
 													SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
@@ -52,7 +52,7 @@ void encodinString(std::string &str) // ! to do
 
 // ************ Getters **************
 
-const LocationBlock *Request::getLocation() const
+const LocationBlock& Request::getLocation() const
 {
 	return (location);
 }
@@ -67,9 +67,11 @@ const std::string &Request::getMethod() const
 	return (Methods[MethodType - 1]);
 }
 
-const std::string &Request::getCgiPath(const std::string &extention) const
+const std::string &Request::getCgiPath(const std::string& extention) const
 {
-	return (location->cgi[extention]);
+	const std::map<std::string, std::string>& cgi_ = location.getCgiPaths();
+	std::map<std::string, std::string>::const_iterator it = cgi_.find(extention);
+	return (it->second);
 }
 
 int Request::getMethdType() const
@@ -236,9 +238,10 @@ void Request::checkValidHeader()
 }
 bool Request::is_allowed_Method(const std::string &method) const
 {
-	for (size_t i = 0; i < (location->allowedMethods).size(); i++)
+	const std::vector<std::string>&	allowMethods = location.getAllowMethods();
+	for (size_t i = 0; i < (allowMethods).size(); i++)
 	{
-		if (location->allowedMethods[i].compare(method) == 0)
+		if (allowMethods[i].compare(method) == 0)
 			return true;
 	}
 	return (false);
@@ -264,7 +267,7 @@ void Request::checkValid_POST_Header()
 	}
 	if (Header.find("content-length") != Header.end())
 	{
-		if (atol((Header["content-length"]).c_str()) > location->getMaxBodySize())
+		if (atoi((Header["content-length"]).c_str()) > Vserver.getMaxBodySize())
 		{
 			setFlagError(REQ_ENTITY_TOO_LONG, "Request Entity Too Large");
 		}
@@ -315,21 +318,24 @@ bool Request::URI_ValidChar(const std::string &uri) const
 
 bool Request::URI_ValidLocation(const std::string &uri)
 {
-	mapIterType it = Vserver->getLocationsBeginIterMap();
-	mapIterType it_end = Vserver->getLocationsEndIterMap();
+	// mapIterType it_end = Vserver.getLocationsEndIterMap();
 
-	for (; it != it_end; ++it)
+	const std::map<std::string, LocationBlock>& loc = Vserver.getLocations();
+	
+	mapIterType it_begin = loc.begin();
+	mapIterType it_end = loc.end();
+	for (; it_begin != it_end; ++it_begin)
 	{
 		// std::cout << it->first << "\n";
-		if (uri.compare(0, (it->first).size(), it->first) == 0)
+		if (uri.compare(0, (it_begin->first).size(), it_begin->first) == 0)
 		{
-			location_str = std::string(it->first);
-			location = it->second;
-			if ((it->first).size() == uri.size())
+			location_str = it_begin->first;
+			// ! location = &(it_begin->second);
+			if ((it_begin->first).size() == uri.size())
 				return (0);
-			if ((it->first).size() < uri.size() && uri[(it->first).size()] == '/')
+			if ((it_begin->first).size() < uri.size() && uri[(it_begin->first).size()] == '/')
 				return (0);
-			if (it->first == "/") // ! hard code
+			if (it_begin->first == "/") // ! hard code
 				return (0);
 		}
 	}
@@ -411,8 +417,8 @@ void Request::storeRequestLine(const std::string &line)
 void Request::SetNewPath() // ! match location and change this
 {
 	std::cout << "old: " << oldPath << "\n";
-	// ! use location->getRootLOcation() instead
-	newPath = location->getRoot();
+	// ! use location.getRootLOcation() instead
+	newPath = location.getRoot();
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
@@ -423,19 +429,20 @@ void Request::SetNewPath() // ! match location and change this
 
 void Request::matchClients()
 {
-	mapIterType iter;
+	const std::map<std::string, LocationBlock>& loc = Vserver.getLocations();
+	
+	mapIterType iter = loc.end();
+	mapIterType it_begin = loc.begin();
 
-	iter = Vserver->getLocationsEndIterMap();
 	iter--;
 	while (1)
 	{
-		// std::cout << "h: " << iter->first << " , "<< URI << " " << iter->first.size() ;
 		if (iter->first.compare(0, iter->first.size(), URI.c_str(), iter->first.size()) == 0)
 		{
 			location = iter->second;
 			return;
 		}
-		if (iter == Vserver->getLocationsBeginIterMap())
+		if (iter == it_begin)
 		{
 			setFlagError(NOT_FOUND, "no location match the request uri");
 		}

@@ -22,17 +22,18 @@ class ServerBlock
 	private:
 		typedef bool (ServerBlock::*parseFunctions)(std::vector<std::string>);
 		std::map<std::string, parseFunctions> Fields;
-		// #######   start of ServerBlock   ########
-		int fdSocket;
-		std::string listen;
-		std::string host;
-		std::vector<std::string> serverName;
-		std::string root;
-		std::vector<std::string> indexes;
-		std::map<int, std::string> errorPages;
-		int maxBodySize;
-		std::map<std::string, LocationBlock> locations; 
-		// #######   end of ServerBlock   ########
+	// #######   start of ServerBlock   ########
+		int										fdSocket;
+		std::string								listen;
+		std::string								host;
+		std::vector<std::string>				serverName;
+		std::string								root;
+		std::vector<std::string>				indexes;
+		std::map<int, std::string>				errorPages;
+		int										maxBodySize;
+		std::map<std::string, LocationBlock>	locations;
+ 
+	// #######   end of ServerBlock   ########
 		bool checkListen(std::vector<std::string> listen);
 		bool checkHost(std::vector<std::string> host);
 		bool checkServerName(std::vector<std::string> serverName);
@@ -44,20 +45,22 @@ class ServerBlock
 	public:
 		ServerBlock();
 		~ServerBlock();
-		// getters
-		int const& getFdSocket() const;
-		std::string const& getListen() const;
-		std::string const& getHost() const;
-		std::vector<std::string> const& getServerName() const;
-		std::string const& getRoot() const;
-		std::vector<std::string> const& getIndexes() const;
-		std::map<int, std::string> const& getErrorPages() const;
-		int const& getMaxBodySize() const;
-		std::map<std::string, LocationBlock> const& getLocations() const;
-		LocationBlock *getLocation(std::string const& locationName) const;
-		// end of getters
+	
+	// getters
+		int											getFdSocket() const;
+		std::string const&							getListen() const;
+		std::string const&							getHost() const;
+		std::vector<std::string> const&				getServerName() const;
+		std::string const& 							getRoot() const;
+		std::vector<std::string> const&				getIndexes() const;
+		std::map<int, std::string> const&			getErrorPages() const;
+		int const& 									getMaxBodySize() const;
+		std::map<std::string, LocationBlock> const&	getLocations() const;
+		LocationBlock								*getLocation(std::string const&	locationName) const;
+
 		void setFdSocket(int);
-		// operator == overload
+
+	// operator == overload
 		bool operator==(ServerBlock const& rhs) const;
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();

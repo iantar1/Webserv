@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 06:27:13 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/24 23:42:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void Response::setCgiEnvironment(char **env)
 std::string Response::RandomName()
 {
 	std::string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	std::string result = request->getLocation()->getRoot();
+	std::string result = request->getLocation().getRoot();
 
 	if (result[result.size() - 1] != '/')
 		result += '/';
@@ -131,9 +131,9 @@ bool Response::isCGI()
 
 bool Response::validCGI(const std::string &extention)
 {
-	LocationBlock *loc = request->getLocation();
+	const LocationBlock& loc = request->getLocation();
 
-	if ((loc->getCgiPaths()).find(extention) != (loc->getCgiPaths()).end())
+	if ((loc.getCgiPaths()).find(extention) != (loc.getCgiPaths()).end())
 		return (true);
 
 	return (false);

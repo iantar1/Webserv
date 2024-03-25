@@ -6,16 +6,16 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/24 06:35:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 00:04:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-# include "headers.hpp"
-# include "macros.hpp"
-# include "ServerBlock.hpp"
-# include "LocationBlock.hpp"
+#include "headers.hpp"
+#include "macros.hpp"
+#include "ServerBlock.hpp"
+#include "LocationBlock.hpp"
 
 #define BAD_REQ 400
 #define NOT_IMPLEMENTED 501
@@ -34,11 +34,11 @@ private:
 
 private:
     // VirtualServer *Vserver;
-    ServerBlock    *Vserver; 
+    const ServerBlock &Vserver;
 
-    std::map<std::string, std::string>  Header;
-    std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
-    LocationBlock                       *location;
+    std::map<std::string, std::string> Header;
+    std::vector<std::string> RequestLine; // this line: GET /hello.htm HTTP/1.1
+    LocationBlock location;
 
     char buf[BUF_SIZE];
 
@@ -68,33 +68,33 @@ private:
 
 public:
     // ************ Constructor destructor ****************
-    Request(int, ServerBlock *);
+    Request(int, const ServerBlock &);
     ~Request();
-    std::string newPath;// ! tmp
+    std::string newPath; // ! tmp
 
 private:
     // ***************** Private Methodes **************
-    void        SetNewPath();
-    bool        ReadCheckHeader();
-    void        saveFirstChuckBody();
-    void        storeBody();
-    void        WhichMethod(const std::string &);
+    void SetNewPath();
+    bool ReadCheckHeader();
+    void saveFirstChuckBody();
+    void storeBody();
+    void WhichMethod(const std::string &);
     std::string skipLeadingWhitespace(const std::string &);
-    void        parseURI_QueryString(const std::string &);
-    void        matchClients();
+    void parseURI_QueryString(const std::string &);
+    void matchClients();
 
     // ***************** Error checking Methods **********
-    void    URI_Checking(const std::string &);
-    bool    URI_ValidLength(const std::string &) const;
-    bool    URI_ValidChar(const std::string &) const;
-    bool    URI_ValidLocation(const std::string &);
-    void    checkValidMethod();
-    void    checkValid_GET_Header();
-    void    checkValid_POST_Header();
-    void    checkValid_DELETE_Header();
-    void    checkValidHeader();
-    void    httpVersionCheck(const std::string &);
-    bool    is_allowed_Method(const std::string&) const;
+    void URI_Checking(const std::string &);
+    bool URI_ValidLength(const std::string &) const;
+    bool URI_ValidChar(const std::string &) const;
+    bool URI_ValidLocation(const std::string &);
+    void checkValidMethod();
+    void checkValid_GET_Header();
+    void checkValid_POST_Header();
+    void checkValid_DELETE_Header();
+    void checkValidHeader();
+    void httpVersionCheck(const std::string &);
+    bool is_allowed_Method(const std::string &) const;
 
 public:
     // ********** Public Methods ************
@@ -117,25 +117,25 @@ public:
 
     const std::map<std::string, std::string> &getRequest() const;
 
-    const std::string       &getBody(void) const;
-    const std::string       &getChunkedBodySize(void) const;
-    const std::string       &getOldPath() const;
-    const std::string       &getNewPath() const;
-    const std::string       &getCgiPath(const std::string &) const;
-    const std::string       &getMethod() const;
-    const std::string       &getQueryString() const;
-    const std::string       &getURI() const;
-    const LocationBlock*     getLocation() const;    
+    const std::string &getBody(void) const;
+    const std::string &getChunkedBodySize(void) const;
+    const std::string &getOldPath() const;
+    const std::string &getNewPath() const;
+    const std::string &getCgiPath(const std::string &) const;
+    const std::string &getMethod() const;
+    const std::string &getQueryString() const;
+    const std::string &getURI() const;
+    const LocationBlock &getLocation() const;
 
     // ************* Setters ****************
-    void    setDoneServing();
-    void    setDoneHeaderReading();
-    void    setLocation_str(std::string);
-    void    setFlagError(int, const std::string &);
-    void    setPath(std::string);
+    void setDoneServing();
+    void setDoneHeaderReading();
+    void setLocation_str(std::string);
+    void setFlagError(int, const std::string &);
+    void setPath(std::string);
 
     // ************* Debug ****************
     void printRequest();
 };
 
-void    encoding(std::string&);
+void encoding(std::string &);
