@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/25 10:14:57 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 01:32:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,12 @@ private:
 	std::string appendedRequest;
 	std::string	uri;
 	std::string	uploadedFileName;
+
 // cgi inpit/output
 	std::string	input_file;
 	std::string	output_file;
+// Cgi header
+	std::string	cookie;
 
 	bool 	chunkStart;
 	bool 	streamStart;
@@ -119,8 +122,9 @@ private:
 	void				redirectCgiOutput();
 	void				set_args(char**);
 	void				extractCgiMetadata();
-// *** debug
-	void	print_CGI_env(char **);
+	void				parseStoreCgiOutHeader(std::string);
+
+	void	print_CGI_env(char **);// debug
 
 // *************** Getters ***************
 public:

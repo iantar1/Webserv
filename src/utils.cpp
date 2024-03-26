@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/23 09:12:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 01:16:33 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,4 +202,15 @@ std::string toLower(const std::string& str)
         result += std::tolower(str[i]);
     }
     return (result);
+}
+
+std::string skipLeadingWhitespace(const std::string &str)
+{
+	std::string result;
+	size_t index;
+
+	for (index = 0; index < str.length() && isspace(str[index]); ++index)
+	{
+	}
+	return (str.substr(index));
 }

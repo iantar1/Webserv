@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 08:32:17 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 01:17:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ private:
     void saveFirstChuckBody();
     void storeBody();
     void WhichMethod(const std::string &);
-    std::string skipLeadingWhitespace(const std::string &);
     void parseURI_QueryString(const std::string &);
     void matchClients();
 

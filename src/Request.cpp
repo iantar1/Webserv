@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 09:20:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 01:16:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,16 +163,16 @@ void Request::setFlagError(int error_flag, const std::string &mes)
 	throw std::runtime_error(mes);
 }
 
-std::string Request::skipLeadingWhitespace(const std::string &str)
-{
-	std::string result;
-	size_t index;
+// std::string skipLeadingWhitespace(const std::string &str)
+// {
+// 	std::string result;
+// 	size_t index;
 
-	for (index = 0; index < str.length() && isspace(str[index]); ++index)
-	{
-	}
-	return (str.substr(index));
-}
+// 	for (index = 0; index < str.length() && isspace(str[index]); ++index)
+// 	{
+// 	}
+// 	return (str.substr(index));
+// }
 
 /// @brief I check if there is /r at the last of any line, and ":" ater any key
 /// and I map evry key with its value, afeter removing "\r"
