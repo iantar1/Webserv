@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 01:53:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 03:12:31 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,10 +266,15 @@ void Response::extractCgiMetadata()
 	close(fd);
 }
 
-// std::string	getCgiFileRoot(const std::string)
-// {
-// 	// this
-// }
+std::string	Response::getCgiFileRoot()
+{
+	std::string	root;
+	size_t		pos;
+
+	root = request->getNewPath();
+	pos = root.rfind("/");
+	return (root.substr(0, pos + 1));
+}
 
 void Response::cgi_Handler()
 {
@@ -278,27 +283,23 @@ void Response::cgi_Handler()
 	pid_t pid;
 	int status;
 
-	std::cout << RED << "CGI" << RESET << std::endl;
 	env = setCgiEnvironment();
 	set_args(args);
 
 	output_file = RandomName();
 	if (request->getMethdType() == POST)
 	{
-		input_file = this->uploadedFileName; // ! you need to generate a random file , just use
-											 // ! nabboune /Uplodes/ to read from
+		input_file = this->uploadedFileName;
 	}
-	// print_CGI_env(env);
 	pid = fork();
-	// if (pid)
-	// 	sleep(1);
 	if (pid == 0)
 	{
 		if (request->getMethdType() == POST)
 			redirectCgiInput();
 		redirectCgiOutput();
-		// if (chdir() == -1) // check subject////////////////////
-		// 	exit(EXIT_FAILURE);
+	// The CGI should be run in the correct directory for relative path file access.
+		if (chdir(getCgiFileRoot().c_str()) == -1)
+			exit(EXIT_FAILURE);
 		execve(args[0], args, env);
 		exit(EXIT_FAILURE);
 	}
@@ -306,14 +307,13 @@ void Response::cgi_Handler()
 	doneCGI = true;
 	if (status)
 	{
-		// ! set error flag
+		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad gateway");
+		delete[] env;
+		return ;
 		// !tmeout
 	}
-	if (!status)
-	{
-		extractCgiMetadata();
-		request->setPath(output_file);
-	}
+	extractCgiMetadata();
+	request->setPath(output_file);
 	delete[] env;
 	// ! tuimeout
 }

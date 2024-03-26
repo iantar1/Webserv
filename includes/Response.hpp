@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/26 01:32:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 02:57:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ private:
 	void				set_args(char**);
 	void				extractCgiMetadata();
 	void				parseStoreCgiOutHeader(std::string);
+	std::string			getCgiFileRoot();
 
 	void	print_CGI_env(char **);// debug
 

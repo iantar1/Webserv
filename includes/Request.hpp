@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 01:17:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 03:08:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ public:
     void setLocation_str(std::string);
     void setFlagError(int, const std::string &);
     void setPath(std::string);
+    void setFlagErrorWithoutThrow(int, const std::string &);
 
     // ************* Debug ****************
     void printRequest();

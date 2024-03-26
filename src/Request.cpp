@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 01:16:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/26 03:08:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,13 @@ void Request::setLocation_str(std::string _location_str)
 void Request::setFlagError(int error_flag, const std::string &mes)
 {
 	ErrorFlag = error_flag;
-	// ! Ya l mternen Wache dayre hna nta doneServing w baghini ana n servi ba9i l client !?
-	// setDoneServing();
 	throw std::runtime_error(mes);
+}
+
+void Request::setFlagErrorWithoutThrow(int error_flag, const std::string &mes)
+{
+	ErrorFlag = error_flag;
+	std::cout << mes << std::endl;
 }
 
 // std::string skipLeadingWhitespace(const std::string &str)
