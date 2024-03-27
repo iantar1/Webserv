@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 03:12:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:08:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,6 +276,21 @@ std::string	Response::getCgiFileRoot()
 	return (root.substr(0, pos + 1));
 }
 
+bool Response::chechStatus(int status)
+{
+	switch (status)
+	{
+	case 14:
+		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
+		break;
+	
+	default:
+		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad gateway");
+		break;
+	}
+	return (status);
+}
+
 void Response::cgi_Handler()
 {
 	char *args[3];
@@ -294,6 +309,7 @@ void Response::cgi_Handler()
 	pid = fork();
 	if (pid == 0)
 	{
+		alarm(30);
 		if (request->getMethdType() == POST)
 			redirectCgiInput();
 		redirectCgiOutput();
@@ -305,16 +321,11 @@ void Response::cgi_Handler()
 	}
 	waitpid(pid, &status, 0);
 	doneCGI = true;
-	if (status)
-	{
-		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad gateway");
-		delete[] env;
+	delete[] env;
+	if (chechStatus(status))
 		return ;
-		// !tmeout
-	}
 	extractCgiMetadata();
 	request->setPath(output_file);
-	delete[] env;
 	// ! tuimeout
 }
 

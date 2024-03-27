@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 01:59:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 02:29:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -459,7 +459,7 @@ void Request::timeOutCheching()
 {
 	if (doneHeaderReading)
 		return;
-	if (time(NULL) - startTime > 2)
+	if (time(NULL) - startTime > 30)
 		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
 }
 

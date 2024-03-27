@@ -1,5 +1,7 @@
 #!/bin/bash
 
-echo "sh"
-
-echo "Success"
+while :
+do
+    # Empty loop body
+    :
+done
