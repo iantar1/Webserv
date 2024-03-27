@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 03:43:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:20:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int Server::socketCreate(ServerBlock &vSer)
 	struct addrinfo *res;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_INET;		 // IP4
+	hints.ai_family = AF_INET;		 // on hosts connected via an IPv4 network
 	hints.ai_socktype = SOCK_STREAM; // stream TCP
 	hints.ai_flags = AI_PASSIVE;	 //
 	hints.ai_protocol = IPPROTO_TCP;
