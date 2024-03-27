@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:25:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:30:46 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,9 +207,6 @@ void Response::parseStoreCgiOutHeader(std::string header)
 	std::string value;
 	size_t pos;
 	size_t p;
-
-
-	std::map<std::string, std::string> nabboune; decleare this as an attrebuite in your class
 	
 	while ((pos = header.find("\r\n")) != std::string::npos)
 	{
@@ -221,7 +218,7 @@ void Response::parseStoreCgiOutHeader(std::string header)
 		// store key value here, using your map
 		if (key.compare("Set-Cookie") == 0)
 			this->cookie = value;
-		nabboune[key] = value; dirha hna 
+		this->cgiKeyValue[key] = value; this is the tmp map I told you , you need to override your map 
 		if (pos >= header.size() - 2)
 			break;
 		header = header.substr(pos + 2);
