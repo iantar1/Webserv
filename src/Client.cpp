@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 04:46:44 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 01:44:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void    Client::PrintRequest() const
 
 void	Client::ReadParseReqHeader()
 {
-    std::cout << "OOOO_____OOOO\n";
     request.ReadRequest();
     // std::cout << "*******************FIRST BODY***********************" << request.getBody() << "*************************END**********************" << std::endl;
 }

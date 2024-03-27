@@ -6,15 +6,15 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/25 06:17:49 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 02:03:51 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/headers.hpp"
 #include "../includes/Server.hpp"
-# include "../includes/ServerBlock.hpp"
+#include "../includes/ServerBlock.hpp"
 
-int Server::socketCreate(ServerBlock& vSer)
+int Server::socketCreate(ServerBlock &vSer)
 {
 	int sockfd;
 	struct addrinfo hints;
@@ -84,7 +84,7 @@ void Server::addCleintToEpoll(int index)
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 		throw std::runtime_error("epoll_ctl [Cleint]");
 	std::cout << YELLOW << "new Cleint added ,fd: " << fd << "\n"
-							  << RESET;
+			  << RESET;
 }
 
 bool Server::NewClient(int index)
@@ -121,14 +121,14 @@ void Server::ServeClients(int index)
 	// ! in case of Bad Req or somthing that will not vist your reponse , you must setDoneServing here
 	if (clients[events[index].data.fd]->getRequest()->getError() != 0)
 	{
+		std::cout << clients[events[index].data.fd]->getRequest()->getError() << " HI\n";
 		clients[events[index].data.fd]->getResponseClass()->errorPage(clients[events[index].data.fd]->getRequest()->getError());
 		clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
 	if (events[index].events & EPOLLIN)
 	{
-		std::cout <<RED<< "honaa.. lso" << RESET << std::endl;
 		clients[events[index].data.fd]->ReadParseReqHeader();
-		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST)// ! i need to set donServing
+		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST) // ! i need to set donServing
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
@@ -136,7 +136,6 @@ void Server::ServeClients(int index)
 			write(this->clients[events[index].data.fd]->getSocketFd(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
-		
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
@@ -179,6 +178,8 @@ int Server::ServerCore()
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
+					// check client timeout
+					clients[events[i].data.fd]->getRequest()->timeOutCheching();
 					ServeClients(i);
 				}
 				else
@@ -190,7 +191,7 @@ int Server::ServerCore()
 	}
 }
 
-Server::Server(std::vector<ServerBlock>& Vser) : Vservers(Vser)
+Server::Server(std::vector<ServerBlock> &Vser) : Vservers(Vser)
 {
 	files = getDataFromFiles();
 }

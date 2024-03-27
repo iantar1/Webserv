@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 03:08:29 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 01:59:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Request::Request(int fd, const ServerBlock &_Vserver) : Vserver(_Vserver),
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
 	lastCharHederIndex = 0;
+	startTime = time(NULL);
 }
 
 Request::~Request()
@@ -201,7 +202,6 @@ void Request::storeData(const std::string &dataRequest)
 	std::istringstream iss(dataRequest);
 	std::string line;
 
-	// std::cout << "dataRequest: " <<dataRequest;
 	for (int i = 0; std::getline(iss, line); i++)
 	{
 		if (i == 0)
@@ -335,7 +335,6 @@ bool Request::URI_ValidLocation(const std::string &uri)
 		if (uri.compare(0, (it_begin->first).size(), it_begin->first) == 0)
 		{
 			location_str = it_begin->first;
-			// ! location = &(it_begin->second);
 			if ((it_begin->first).size() == uri.size())
 				return (0);
 			if ((it_begin->first).size() < uri.size() && uri[(it_begin->first).size()] == '/')
@@ -455,37 +454,44 @@ void Request::matchClients()
 	}
 	location = iter->second;
 }
-// ! debug this
+
+void Request::timeOutCheching()
+{
+	if (doneHeaderReading)
+		return;
+	if (time(NULL) - startTime > 2)
+		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
+}
+
 bool Request::ReadCheckHeader()
 {
 	if (!doneHeaderReading)
 	{
 		for (int i = 0; i < bytesRead; i++)
 		{
-		// save the separated request
+			// save the separated request
 			req += buf[i];
 			if (req.size() > 3 && req.substr(req.size() - 4) == "\r\n\r\n")
 			{
-			// store and parce the header
+				// store and parce the header
 				storeData(HeaderReq);
-			// save the start od the body if any
+				// save the start od the body if any
 				lastCharHederIndex = i + 1;
-			// set done reading header request , to not enter again
+				// set done reading header request , to not enter again
 				doneHeaderReading = true;
-			// match the clitent with its location
+				// match the clitent with its location
 				matchClients();
 				return (true);
 			}
 			if (buf[i] != '\r')
 			{
-			// save the request header without \r and the last \n
+				// save the request header without \r and the last \n
 				HeaderReq += buf[i];
 			}
 		}
 	}
 	return (false);
 }
-
 
 void Request::ReadRequest()
 {
@@ -498,15 +504,15 @@ void Request::ReadRequest()
 		{
 			setFlagError(BAD_REQ, "bad request7");
 		}
-	//* if ReadCheckHeader() return false , the reading request is done
+		//* if ReadCheckHeader() return false , the reading request is done
 		if (ReadCheckHeader())
 		{
 			checkValidMethod();
 		}
 		if (doneHeaderReading)
 		{
-		// * save the first chunck body
-			if (MethodType == POST) 
+			// * save the first chunck body
+			if (MethodType == POST)
 			{
 				storeBody();
 			}

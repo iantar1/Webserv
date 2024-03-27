@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/26 03:08:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 01:53:57 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ private:
     std::string RequestHeader;
     std::string chunkedBodySize;
     std::string body;
-    // std::string newPath;
+    // std::string  newPath;
     std::string oldPath;
     std::string HeaderReq;
     std::string req;
@@ -60,13 +60,14 @@ private:
     std::string URI;
     std::string QueryString; // * include ? at the begining
 
-    bool doneServing;
-    bool doneHeaderReading;
+    bool    doneServing;
+    bool    doneHeaderReading;
 
     // *************  static attrebuites **************
-    static std::string Methods[8];
-    static std::string validChars;
+    static std::string  Methods[8];
+    static std::string  validChars;
 
+    time_t              startTime;
 public:
     // ************ Constructor destructor ****************
     Request(int, const ServerBlock &);
@@ -75,35 +76,36 @@ public:
 
 private:
     // ***************** Private Methodes **************
-    void SetNewPath();
-    bool ReadCheckHeader();
-    void saveFirstChuckBody();
-    void storeBody();
-    void WhichMethod(const std::string &);
-    void parseURI_QueryString(const std::string &);
-    void matchClients();
+    void    SetNewPath();
+    bool    ReadCheckHeader();
+    void    saveFirstChuckBody();
+    void    storeBody();
+    void    WhichMethod(const std::string   &);
+    void    parseURI_QueryString(const std::string  &);
+    void    matchClients();
 
     // ***************** Error checking Methods **********
-    void URI_Checking(const std::string &);
-    bool URI_ValidLength(const std::string &) const;
-    bool URI_ValidChar(const std::string &) const;
-    bool URI_ValidLocation(const std::string &);
-    void checkValidMethod();
-    void checkValid_GET_Header();
-    void checkValid_POST_Header();
-    void checkValid_DELETE_Header();
-    void checkValidHeader();
-    void httpVersionCheck(const std::string &);
-    bool is_allowed_Method(const std::string &) const;
+    void    URI_Checking(const std::string  &);
+    bool    URI_ValidLength(const std::string   &) const;
+    bool    URI_ValidChar(const std::string &) const;
+    bool    URI_ValidLocation(const std::string &);
+    void    checkValidMethod();
+    void    checkValid_GET_Header();
+    void    checkValid_POST_Header();
+    void    checkValid_DELETE_Header();
+    void    checkValidHeader();
+    void    httpVersionCheck(const std::string  &);
+    bool    is_allowed_Method(const std::string &) const;
 
 public:
     // ********** Public Methods ************
-    void ParseRequest();
-    void readHeader(const std::string &, size_t);
-    void storeHeader(const std::string &);
-    void storeRequestLine(const std::string &);
-    void storeData(const std::string &);
-    void ReadRequest();
+    void    ParseRequest();
+    void    readHeader(const std::string    &, size_t);
+    void    storeHeader(const std::string   &);
+    void    storeRequestLine(const std::string  &);
+    void    storeData(const std::string &);
+    void    ReadRequest();
+    void    timeOutCheching();
 
     // ************** Getters *******************
 
@@ -112,32 +114,32 @@ public:
     int getError() const;
     int getTransferMode();
 
-    bool getDoneServing(void) const;
-    bool getDoneHeaderReading() const;
+    bool    getDoneServing(void) const;
+    bool    getDoneHeaderReading() const;
 
     const std::map<std::string, std::string> &getHeaders() const;
 
-    const std::string &getBody(void) const;
-    const std::string &getChunkedBodySize(void) const;
-    const std::string &getOldPath() const;
-    const std::string &getNewPath() const;
-    const std::string &getCgiPath(const std::string &) const;
-    const std::string &getMethod() const;
-    const std::string &getQueryString() const;
-    const std::string &getURI() const;
+    const std::string   &getBody(void) const;
+    const std::string   &getChunkedBodySize(void) const;
+    const std::string   &getOldPath() const;
+    const std::string   &getNewPath() const;
+    const std::string   &getCgiPath(const std::string  &) const;
+    const std::string   &getMethod() const;
+    const std::string   &getQueryString() const;
+    const std::string   &getURI() const;
     const LocationBlock &getLocation() const;
     
 
     // ************* Setters ****************
-    void setDoneServing();
-    void setDoneHeaderReading();
-    void setLocation_str(std::string);
-    void setFlagError(int, const std::string &);
-    void setPath(std::string);
-    void setFlagErrorWithoutThrow(int, const std::string &);
+    void    setDoneServing();
+    void    setDoneHeaderReading();
+    void    setLocation_str(std::string);
+    void    setFlagError(int, const std::string &);
+    void    setPath(std::string);
+    void    setFlagErrorWithoutThrow(int, const std::string &);
 
     // ************* Debug ****************
-    void printRequest();
+    void    printRequest();
 };
 
-void encoding(std::string &);
+void    encoding(std::string    &);
