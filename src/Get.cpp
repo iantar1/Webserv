@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/27 07:32:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:51:33 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it->second += ToString(this->body.size());
 	}
 
-	override your map here
+	 override your map here
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
