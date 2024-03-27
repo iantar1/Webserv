@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/27 02:17:58 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:26:52 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void Response::StartResponse()
 		request->setDoneServing();
 		return;
 	}
-
 	if (request->getMethdType() == GET)
 	{
 		if (isCGI() == true)

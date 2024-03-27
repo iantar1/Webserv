@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/25 09:08:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:45:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	Response::thePostMethod()
 		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
 	}
-
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
 	else

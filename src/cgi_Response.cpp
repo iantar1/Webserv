@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 03:08:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:21:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ std::string buildCgiMetaVariables(const std::string &key, const std::string &val
 char **Response::setCgiEnvironment()
 {
 	char **env;
-
 
 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	CgiEnvironment.push_back("REDIRECT_STATUS=CGI");
@@ -266,10 +265,10 @@ void Response::extractCgiMetadata()
 	close(fd);
 }
 
-std::string	Response::getCgiFileRoot()
+std::string Response::getCgiFileRoot()
 {
-	std::string	root;
-	size_t		pos;
+	std::string root;
+	size_t pos;
 
 	root = request->getNewPath();
 	pos = root.rfind("/");
@@ -278,16 +277,10 @@ std::string	Response::getCgiFileRoot()
 
 bool Response::chechStatus(int status)
 {
-	switch (status)
-	{
-	case 14:
+	if (status == 14)
 		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
-		break;
-	
-	default:
+	else if (status)
 		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad gateway");
-		break;
-	}
 	return (status);
 }
 
@@ -309,11 +302,11 @@ void Response::cgi_Handler()
 	pid = fork();
 	if (pid == 0)
 	{
-		alarm(30);
+		alarm(2);
 		if (request->getMethdType() == POST)
 			redirectCgiInput();
 		redirectCgiOutput();
-	// The CGI should be run in the correct directory for relative path file access.
+		// The CGI should be run in the correct directory for relative path file access.
 		if (chdir(getCgiFileRoot().c_str()) == -1)
 			exit(EXIT_FAILURE);
 		execve(args[0], args, env);
@@ -323,7 +316,7 @@ void Response::cgi_Handler()
 	doneCGI = true;
 	delete[] env;
 	if (chechStatus(status))
-		return ;
+		return;
 	extractCgiMetadata();
 	request->setPath(output_file);
 	// ! tuimeout

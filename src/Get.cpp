@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/26 01:33:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:22:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,12 @@ void Response::regularFileGet(void)
 
 void Response::theGetMethod(void)
 {
+	if (request->getError() != 0)
+	{
+		errorPage(request->getError());
+		request->setDoneServing();
+		return;
+	}
 	if (!this->gotTime)
 	{
 		tm *local_time;

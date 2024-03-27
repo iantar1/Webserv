@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 02:03:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 03:43:04 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ void Server::ServeClients(int index)
 	// ! in case of Bad Req or somthing that will not vist your reponse , you must setDoneServing here
 	if (clients[events[index].data.fd]->getRequest()->getError() != 0)
 	{
-		std::cout << clients[events[index].data.fd]->getRequest()->getError() << " HI\n";
 		clients[events[index].data.fd]->getResponseClass()->errorPage(clients[events[index].data.fd]->getRequest()->getError());
 		clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
@@ -133,9 +132,11 @@ void Server::ServeClients(int index)
 			clients[events[index].data.fd]->ServingClient();
 		}
 		if (clients[events[index].data.fd]->getDoneServing())
+		{
 			write(this->clients[events[index].data.fd]->getSocketFd(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+		}
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
