@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 08:40:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 08:41:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void Response::DeleteMethod()
 	}
 	if (access(request->getNewPath().c_str(), F_OK))
 	{
-		std::cout << "JEYE\n";
 		status = NOT_EXIST;
 	}
 	else if (isFile(request->getNewPath()))
