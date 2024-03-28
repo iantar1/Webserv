@@ -41,7 +41,6 @@ class ServerBlock
 		bool checkIndex(std::vector<std::string> index);
 		bool checkErrorPage(std::vector<std::string> errorPage);
 		bool checkMaxBodySize(std::vector<std::string> maxBodySize);
-		bool compareServerName(ServerBlock const& rhs) const;
 	public:
 		ServerBlock();
 		~ServerBlock();
@@ -61,6 +60,7 @@ class ServerBlock
 		void setFdSocket(int);
 
 	// operator == overload
+		bool compareServerName(ServerBlock const& rhs) const;
 		bool operator==(ServerBlock const& rhs) const;
 		void addLocation(LocationBlock const& location);
 		void initFieldsMap();

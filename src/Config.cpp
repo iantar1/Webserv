@@ -21,17 +21,26 @@ void Config::insertLocationRoot(void)
 		location.parseLocationLine(rootLine);
 }
 
+bool Config::checkDupServers()
+{
+	bool duplicate = false;
+	for (size_t i = 0; i < servers.size(); i++)
+	{
+		if (server == servers[i] && !server.compareServerName(servers[i]))
+			throw std::runtime_error("Error: duplicate server block");
+		else if (server == servers[i] && server.compareServerName(servers[i]))
+			duplicate = true;
+	}
+	return duplicate;
+}
+
 void Config::pushBlock(std::string context)
 {
 	if (context == "server")
 	{
 		server.checkServer();
-		for (size_t i = 0; i < servers.size(); i++)
-		{
-			if (server == servers[i])
-				throw std::runtime_error("Error: duplicate server block");
-		}
-		servers.push_back(server);
+		if (!checkDupServers())
+			servers.push_back(server);
 		server = ServerBlock();
 	}
 	else if (context == "location")

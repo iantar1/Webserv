@@ -40,6 +40,7 @@ class Config
 		~Config();
 		void parseBlock(std::ifstream& configFile, std::string context);
 		void parse(void);
+		bool checkDupServers();
 };
 
 

@@ -242,7 +242,7 @@ bool ServerBlock::compareServerName(ServerBlock const& rhs) const
 
 bool ServerBlock::operator==(ServerBlock const& rhs) const
 {
-	if (this->listen != rhs.listen || this->host != rhs.host || compareServerName(rhs))
+	if (this->listen != rhs.listen || this->host != rhs.host)
 		return false;
 	return true;
 }
