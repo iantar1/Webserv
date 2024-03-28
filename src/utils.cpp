@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/27 07:57:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 03:43:33 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ std::map<int, std::string>	getHeaders(void)
 	std::string					line;
 	int							i = 0;
 
-	if (!inFile.is_open())
+	if (!inFile.is_open()) {
 		std::cerr << "Couldn't open Headers file!" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	while (std::getline(inFile, line))
 		headers.insert(std::make_pair(i++, line));
 	inFile.close();
@@ -80,8 +82,10 @@ std::map<int, std::string>	getStatus(void)
 	std::string					line;
 	int							nb;
 
-	if (!inFile.is_open())
+	if (!inFile.is_open()) {
 		std::cerr << "Couldn't open Status file!" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	while (std::getline(inFile, line))
 	{
 		nb = std::atoi(line.c_str());
@@ -98,8 +102,10 @@ std::map<std::string, std::string> mimeTypes(void)
 	std::string line, key, value;
 	int i;
 
-	if (!inFile.is_open())
+	if (!inFile.is_open()) {
 		std::cerr << "Couldn't open MIME.type file!" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	while (std::getline(inFile, line))
 	{
 		key = "";
