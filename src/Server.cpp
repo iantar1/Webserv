@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:20:30 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 00:15:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,6 @@ void Server::DropCleint(int ClientFd)
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
 	close(ClientFd);
-	// exit(1);
-	// std::cout << RED << "Drop Client\n" << RESET;
 }
 
 // ! Desing Timeget.getResponse()

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:50:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:56:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ char **Response::setCgiEnvironment()
 		CgiEnvironment.push_back(buildCgiMetaVariables(it->first, it->second));
 	}
 
-	std::cout << "size_of: " << CgiEnvironment.size() << "\n";
 	env = new char *[CgiEnvironment.size() + 1];
 	for (size_t i = 0; i < CgiEnvironment.size(); i++)
 	{
@@ -214,10 +213,10 @@ void Response::parseStoreCgiOutHeader(std::string header)
 		else
 			break;
 		value = skipLeadingWhitespace(header.substr(p + 1, pos));
-		 store key value here, using your map
+		//  store key value here, using your map
 		if (key.compare("Set-Cookie") == 0)
 			this->cookie = value;
-		this->cgiKeyValue[key] = value;  this is the tmp map I told you , you need to override your map
+		this->cgiKeyValue[key] = value; //  this is the tmp map I told you , you need to override your map
 		if (pos >= header.size() - 2)
 			break;
 		header = header.substr(pos + 2);
@@ -237,7 +236,7 @@ void Response::extractCgiMetadata()
 	int fd = open(output_file.c_str(), O_RDWR, 0666);
 	if (fd < 0)
 	{
-		std::cout << "file can't open\n";
+		std::cerr << "file can't open\n";
 		return;
 	}
 
@@ -245,7 +244,7 @@ void Response::extractCgiMetadata()
 	{
 		if (readByte < 0)
 		{
-			std::cout << "read fails\n";
+			std::cerr << "read fails\n";
 			return;
 		}
 		data += std::string(buf, readByte);

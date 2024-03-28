@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/26 01:16:33 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:57:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ std::map<int, std::string>	getHeaders(void)
 	int							i = 0;
 
 	if (!inFile.is_open())
-		std::cout << "Couldn't open Headers file!" << std::endl;
+		std::cerr << "Couldn't open Headers file!" << std::endl;
 	while (std::getline(inFile, line))
 		headers.insert(std::make_pair(i++, line));
 	inFile.close();
@@ -81,7 +81,7 @@ std::map<int, std::string>	getStatus(void)
 	int							nb;
 
 	if (!inFile.is_open())
-		std::cout << "Couldn't open Status file!" << std::endl;
+		std::cerr << "Couldn't open Status file!" << std::endl;
 	while (std::getline(inFile, line))
 	{
 		nb = std::atoi(line.c_str());
@@ -99,7 +99,7 @@ std::map<std::string, std::string> mimeTypes(void)
 	int i;
 
 	if (!inFile.is_open())
-		std::cout << "Couldn't open MIME.type file!" << std::endl;
+		std::cerr << "Couldn't open MIME.type file!" << std::endl;
 	while (std::getline(inFile, line))
 	{
 		key = "";
@@ -121,12 +121,10 @@ std::string	getContentExtension(std::map<std::string, std::string> mime, std::st
 	std::map<std::string, std::string>::iterator	it;
 
 	it = mime.begin();
-	// std::cout << RED << contentType << RESET << std::endl;
 	while (it != mime.end())
 	{
 		if (it->second == contentType)
 		{
-			// std::cout << "{" << it->second << "}" << " {" << contentType << "}" << std::endl;
 			return it->first;
 		}
 		it++;

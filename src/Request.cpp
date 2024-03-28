@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 02:29:01 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/27 07:57:08 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void Request::setFlagError(int error_flag, const std::string &mes)
 void Request::setFlagErrorWithoutThrow(int error_flag, const std::string &mes)
 {
 	ErrorFlag = error_flag;
-	std::cout << mes << std::endl;
+	std::cerr << mes << std::endl;
 }
 
 // std::string skipLeadingWhitespace(const std::string &str)
@@ -517,7 +517,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		printRequest();
+		//printRequest();
 	}
 	catch (const std::exception &e)
 	{
