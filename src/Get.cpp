@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/27 07:51:40 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 00:54:55 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,12 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	}
 
 	//  override your map here
+	
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
+			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 		{
 			this->response += header_it->second + "\r\n";
 		}

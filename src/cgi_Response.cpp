@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:56:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 00:52:12 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,9 @@ void Response::redirectCgiInput()
 	int fd_in;
 
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
-		exit(1); // ! INTERNAL_SERVER_ERROR
+		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	if (dup2(fd_in, 0) == -1)
-		exit(1); // ! INTERNAL_SERVER_ERROR
+		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	close(fd_in);
 }
 
@@ -157,10 +157,10 @@ void Response::redirectCgiOutput()
 	int fd_out;
 
 	if ((fd_out = open(output_file.c_str(), O_WRONLY | O_CREAT, 0666)) == -1)
-		exit(1); // ! INTERNAL_SERVER_ERROR
+		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 
 	if (dup2(fd_out, 1) == -1)
-		exit(1); // ! INTERNAL_SERVER_ERROR
+		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	close(fd_out);
 }
 
@@ -222,6 +222,7 @@ void Response::parseStoreCgiOutHeader(std::string header)
 		header = header.substr(pos + 2);
 	}
 }
+key + ":" + " " + value
 
 // parse the cgi output, and extract the header from it.
 void Response::extractCgiMetadata()

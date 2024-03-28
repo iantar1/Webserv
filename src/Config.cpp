@@ -94,7 +94,7 @@ bool Config::checkBraces(std::vector<std::string> line, std::string context)
 		braces.pop();
 		if (contexts.empty() == false)
 		{
-			std::cout << "End of context: " << contexts.top() << std::endl;
+			// std::cout << "End of context: " << contexts.top() << std::endl;
 			contexts.pop();
 		}
 		if (braces.size() != contexts.size())
