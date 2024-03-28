@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 10:11:21 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 10:15:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int Server::socketCreate(ServerBlock &vSer)
 	if (getaddrinfo((vSer.getHost()).c_str(), (vSer.getListen()).c_str(), &hints, &res) != 0)
 		throw std::runtime_error("getaddrinfo failed\n");
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+	freeaddrinfo(res); //
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
 	std::cout << "server: " << sockfd << " created\n";
