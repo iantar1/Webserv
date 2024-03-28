@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 07:19:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 08:20:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@
 // ! check delete Method
 #define SUCCESS 0
 #define PERMISSION_DENIED 1
-#define ERROR 2
+# define ERROR 2
+# define NOT_EXIST 3
+
 
 #define MAX_URI_CHAR_SIZE 2048
 

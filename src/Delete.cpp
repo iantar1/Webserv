@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 07:11:02 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 08:40:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool Response::isDiractory(const std::string &path)
 	return (S_ISDIR(file_info.st_mode));
 }
 
-bool Response::deleteFile(const std::string &path)
+int Response::deleteFile(const std::string &path)
 {
 	if (access(path.c_str(), W_OK))
 		return (PERMISSION_DENIED);
@@ -68,7 +68,7 @@ int Response::DeleteDiractory(const std::string &path)
 		entryFullPath += entry->d_name;
 		if (isDiractory(entryFullPath.c_str()))
 		{
-		// check if rmdir fails
+			// check if rmdir fails
 			status = DeleteDiractory(entryFullPath.c_str());
 			if (status)
 				return (status);
@@ -87,26 +87,13 @@ int Response::DeleteDiractory(const std::string &path)
 	return (rmdir(path.c_str()));
 }
 
-bool deleteChecking(const std::string &path)
-{
-	if (std::strncmp(path.c_str(), "/To_Delete/", 10) != 0)
-		return (false);
-	if (path.size() == 10)
-		return (false);
-	return (true);
-}
-
-static const std::string filePath[] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm"};
-
-// A 202 (Accepted) status code if the action will likely succeed but has not yet been enacted.
-// A 204 (No Content) status code if the action has been enacted and no further information is to be supplied.
-// A 200 (OK) status code if the action has been enacted and the response message includes a representation describing the status.
+static const std::string filePath[] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm", "defaultPages/404.htm"};
 
 void Response::DeleteMethod()
 {
 	std::ifstream file;
 	std::stringstream buffer;
-	int status = 0;
+	int status;
 
 	if (!this->gotTime)
 	{
@@ -119,11 +106,14 @@ void Response::DeleteMethod()
 		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
-	if (deleteChecking(uri) == false)
-		return;
-	if (isFile(uri))
+	if (access(request->getNewPath().c_str(), F_OK))
 	{
-		status = deleteFile(uri);
+		std::cout << "JEYE\n";
+		status = NOT_EXIST;
+	}
+	else if (isFile(request->getNewPath()))
+	{
+		status = deleteFile(request->getNewPath());
 	}
 	else
 	{
@@ -133,7 +123,6 @@ void Response::DeleteMethod()
 	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
 	this->response += this->body;
-	// std::cout << response ;
 }
 
 void Response::theDeleteHeaderResponse(int code, int transferType)
