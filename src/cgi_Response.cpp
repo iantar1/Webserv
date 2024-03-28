@@ -216,13 +216,14 @@ void Response::parseStoreCgiOutHeader(std::string header)
 		//  store key value here, using your map
 		if (key.compare("Set-Cookie") == 0)
 			this->cookie = value;
-		this->cgiKeyValue[key] = value; //  this is the tmp map I told you , you need to override your map
+		if (key.compare("Content-type") == 0)
+			this->contentType_cgi = value;
+		std::cerr << RED << "key: " << key << " value: " <<  value << RESET << std::endl;
 		if (pos >= header.size() - 2)
 			break;
 		header = header.substr(pos + 2);
 	}
 }
-key + ":" + " " + value
 
 // parse the cgi output, and extract the header from it.
 void Response::extractCgiMetadata()

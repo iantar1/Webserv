@@ -14,10 +14,14 @@
 
 // you should tell me where can I send to had zmmer Content-type: text/html; charset=UTF-8   from CGI
 
+// 1 RESPONSE_STATUS = success
+// 2 date = 20:44:0444
+// 3 content_type = 
+
+
 void Response::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
-
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(code)->second;
 
@@ -25,11 +29,13 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it->second += this->strTime;
 
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	header_it->second += this->contentType;
-
+	if (this->contentType_cgi.empty())
+		header_it->second += this->contentType;
+	else
+		header_it->second += this->contentType_cgi;
 	//! if (set_cookies())
 	header_it = this->files.headers.find(SET_COOKIE);
-	header_it->second += cookie;
+	header_it->second += this->cookie;
 
 	if (this->redirection != "")
 	{
@@ -56,6 +62,7 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it++;
 	}
 	this->response += "\r\n";
+	std::cerr << " ###################### response: " << this->response << "###########################" <<std::endl;
 }
 
 void Response::theGetRedirectionRequest(void)

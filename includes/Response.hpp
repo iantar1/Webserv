@@ -57,9 +57,10 @@ private:
 // cgi inpit/output
 	std::string	input_file;
 	std::string	output_file;
-	std::map<std::string, std::string>	cgiKeyValue;
+	// std::map<std::string, std::string>	cgiKeyValue;
 // Cgi header
 	std::string	cookie;
+	std::string contentType_cgi;
 	
 
 	bool 	chunkStart;
