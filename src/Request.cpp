@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:57:08 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 07:20:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,7 @@ void Request::checkValid_POST_Header()
 		setFlagError(METHOD_NOT_ALLOWED, "Method not allwed");
 	if (Header.find("transfer-encoding") == Header.end() && Header.find("content-length") == Header.end())
 	{
-		setFlagError(BAD_REQ, "bad Request3");
+		setFlagError(LENGTH_REQUIRED, "Length Required");
 	}
 	if (this->Header.find("transfer-encoding") != Header.end() && Header["transfer-encoding"] != "chunked") // ! what is this
 	{
@@ -517,7 +517,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		//printRequest();
+		// printRequest();
 	}
 	catch (const std::exception &e)
 	{

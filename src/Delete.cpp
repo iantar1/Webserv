@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/23 07:34:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 07:11:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,10 @@ int Response::DeleteDiractory(const std::string &path)
 		entryFullPath += entry->d_name;
 		if (isDiractory(entryFullPath.c_str()))
 		{
+		// check if rmdir fails
 			status = DeleteDiractory(entryFullPath.c_str());
 			if (status)
-				return (status); //! rmdir fail
+				return (status);
 		}
 		if (isFile(entryFullPath.c_str()))
 		{
@@ -86,9 +87,6 @@ int Response::DeleteDiractory(const std::string &path)
 	return (rmdir(path.c_str()));
 }
 
-// Not found
-// permission denied
-
 bool deleteChecking(const std::string &path)
 {
 	if (std::strncmp(path.c_str(), "/To_Delete/", 10) != 0)
@@ -98,7 +96,7 @@ bool deleteChecking(const std::string &path)
 	return (true);
 }
 
-static const std::string filePath[] = {"204.htm", "403.htm", "500.htm"};
+static const std::string filePath[] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm"};
 
 // A 202 (Accepted) status code if the action will likely succeed but has not yet been enacted.
 // A 204 (No Content) status code if the action has been enacted and no further information is to be supplied.
@@ -121,9 +119,6 @@ void Response::DeleteMethod()
 		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
-
-	// std::cout << RED << uri << RESET << "\n";
-	// exit(1);
 	if (deleteChecking(uri) == false)
 		return;
 	if (isFile(uri))
@@ -134,10 +129,8 @@ void Response::DeleteMethod()
 	{
 		status = DeleteDiractory(request->getNewPath());
 	}
-	// std::cout << "this->path: " << request->getNewPath() << "\n";
-	// std::cout << "status: " << status << "\n";
 	this->contentType = "text/html";
-	this->body = getPageContent("defaultPages/204.htm") + "\r\n\r\n";
+	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
 	this->response += this->body;
 	// std::cout << response ;
@@ -177,6 +170,5 @@ void Response::theDeleteHeaderResponse(int code, int transferType)
 		}
 		header_it++;
 	}
-
 	this->response += "\r\n";
 }

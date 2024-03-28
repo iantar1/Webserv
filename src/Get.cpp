@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 00:54:55 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 07:24:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it++;
 	}
 	this->response += "\r\n";
-	std::cerr << " ###################### response: " << this->response << "###########################" <<std::endl;
 }
 
 void Response::theGetRedirectionRequest(void)
