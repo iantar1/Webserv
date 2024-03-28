@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 08:41:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 09:00:49 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int Response::DeleteDiractory(const std::string &path)
 		entryFullPath += entry->d_name;
 		if (isDiractory(entryFullPath.c_str()))
 		{
-			// check if rmdir fails
+		// check if rmdir fails
 			status = DeleteDiractory(entryFullPath.c_str());
 			if (status)
 				return (status);

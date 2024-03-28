@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 00:15:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 10:11:21 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ int Server::socketCreate(ServerBlock &vSer)
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;		 // on hosts connected via an IPv4 network
-	hints.ai_socktype = SOCK_STREAM; // stream TCP
+	hints.ai_socktype = SOCK_STREAM; // use the TCP in order to communicate
 	hints.ai_flags = AI_PASSIVE;	 //
 	hints.ai_protocol = IPPROTO_TCP;
 
 	std::cout << "Host : " << vSer.getHost() << " Port: " << vSer.getListen() << "\n";
-	getaddrinfo((vSer.getHost()).c_str(), (vSer.getListen()).c_str(), &hints, &res);
+	if (getaddrinfo((vSer.getHost()).c_str(), (vSer.getListen()).c_str(), &hints, &res) != 0)
+		throw std::runtime_error("getaddrinfo failed\n");
 	sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
@@ -106,7 +107,6 @@ void Server::DropCleint(int ClientFd)
 	if (epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL) == -1)
 	{
 		std::cerr << "Failed to remove client FD from epoll instance." << std::endl;
-		close(epollFd);
 	}
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
