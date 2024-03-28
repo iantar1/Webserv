@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 06:14:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 07:48:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	// !input_file.empty() && unlink(input_file.c_str());
-	!output_file.empty() && unlink(output_file.c_str());
+	output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -77,7 +76,7 @@ void Response::StartResponse()
 		}
 		theGetMethod();
 	}
-	else if (request->getMethdType() == POST) // ! here
+	else if (request->getMethdType() == POST)
 	{
 		PostResponse();
 		if (isCGI() == true)
@@ -92,9 +91,8 @@ void Response::StartResponse()
 	}
 	else if (request->getMethdType() == DELETE)
 	{
-		// * check valid path
 		DeleteMethod();
-		this->request->setDoneServing(); // ! to edit later
+		this->request->setDoneServing();
 	}
 }
 
