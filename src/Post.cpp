@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/27 03:45:16 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 03:26:00 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,9 +135,11 @@ void	Response::thePostResponseCreate(void)
 		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
 		if (this->contentTotalSizePosted == this->contentLenght) {
-			this->request->setDoneServing();
-			thePostResponseCreatedPage();
 			this->outFile.close();
+			if (!isCGI()) {
+				this->request->setDoneServing();
+				thePostResponseCreatedPage();
+			}
 		}
 	}
 	else if (this->postType == CHUNKED_POST)
@@ -151,8 +153,10 @@ void	Response::thePostResponseCreate(void)
 				if (this->chunkSize == 0) {
 					this->outFile.close();
 					this->appendedRequest.clear();
-					this->request->setDoneServing();
-					thePostResponseCreatedPage();
+					if (!isCGI()) {
+						this->request->setDoneServing();
+						thePostResponseCreatedPage();
+					}
 					return;
 				}
 
@@ -176,8 +180,10 @@ void	Response::thePostResponseCreate(void)
 			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
 				this->outFile.close();
 				this->appendedRequest.clear();
-				thePostResponseCreatedPage();
-				this->request->setDoneServing();
+				if (!isCGI()) {
+					thePostResponseCreatedPage();
+					this->request->setDoneServing();
+				}
 				return;
 			}
 		}

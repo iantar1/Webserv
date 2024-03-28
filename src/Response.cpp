@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 00:40:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 03:34:36 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ void Response::StartResponse()
 		if (isCGI() == true)
 		{
 			cgi_Handler();
+			if (this->request->getError())
+				errorPage(this->request->getError());
+			else
+				thePostResponseCreatedPage();
+			this->request->setDoneServing();
 		}
 	}
 	else if (request->getMethdType() == DELETE)
