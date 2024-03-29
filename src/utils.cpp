@@ -152,6 +152,10 @@ std::string	generateNameFile(std::string &str)
 
 std::string	getPageContent(std::string page)
 {
+	// std::string		pgNbStr = (split(page, '/').back());
+	// std::istringstream pg(pgNbStr);
+	// int pgNb;
+	// pg >> pgNb;
 	std::ifstream	inFile(page.c_str());
 	std::string		line, pageContent = "";
  
