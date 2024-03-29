@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 23:48:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 00:43:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int Server::socketCreate(ServerBlock &vSer)
 	if (sockfd < 0)
 		throw std::runtime_error("socket() failed\n");
 	std::cout << "server: " << sockfd << " created\n";
+	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1) // subject
+		throw std::runtime_error("fcntl failed\n");
 	int on = 1;
 	// SO_REUSEADDR is used to enable the reusing of local addresses in the bind() function.
 	// setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
