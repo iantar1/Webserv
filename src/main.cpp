@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 07:48:43 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 02:11:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int main(int ac, char **av)
 		config.parse();
 		std::vector<ServerBlock> servers = config.servers;
 		Server webserv(config.servers);
-
 		webserv.ServerCore();
 	}
 	catch (std::exception &e)

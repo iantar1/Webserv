@@ -3,15 +3,17 @@
 #include "../includes/Config.hpp"
 #include <set>
 
-
-Config::Config(std::string const& filename)
+Config::Config(std::string const &filename)
 {
 	configFile.open(filename.c_str());
 	if (!configFile)
 		throw std::runtime_error("Failed to open config file");
 }
 
-Config::~Config(){configFile.close();}
+Config::~Config()
+{
+	configFile.close();
+}
 
 void Config::insertLocationRoot(void)
 {
@@ -88,7 +90,7 @@ bool Config::checkBraces(std::vector<std::string> line, std::string context)
 	if (line[0] == "{" && contexts.empty() == false)
 		braces.push('{');
 	else if (line[0] == "}" && braces.empty())
-			throw std::runtime_error("Config Error: check closing braces or braces with no context #1");
+		throw std::runtime_error("Config Error: check closing braces or braces with no context #1");
 	else if (line[0] == "}" && braces.empty() == false)
 	{
 		braces.pop();
@@ -105,7 +107,7 @@ bool Config::checkBraces(std::vector<std::string> line, std::string context)
 	return 0;
 }
 
-void Config::parseBlock(std::ifstream& configFile, std::string context)
+void Config::parseBlock(std::ifstream &configFile, std::string context)
 {
 	std::string line;
 	std::vector<std::string> splitedLine;
@@ -145,5 +147,6 @@ void Config::parse(void)
 {
 	parseBlock(configFile, "server");
 	if (servers.empty())
-		throw std::runtime_error("Config Error: no server blocks found");	
+		throw std::runtime_error("Config Error: no server blocks found");
+	// configFile.close();
 }
