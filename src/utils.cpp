@@ -150,26 +150,26 @@ std::string	generateNameFile(std::string &str)
 	return result;
 }
 
-std::string	getPageContent(std::string page)
-{
-	// std::string		pgNbStr = (split(page, '/').back());
-	// std::istringstream pg(pgNbStr);
-	// int pgNb;
-	// pg >> pgNb;
-	std::ifstream	inFile(page.c_str());
-	std::string		line, pageContent = "";
+// std::string	getPageContent(std::string page)
+// {
+// 	// std::string		pgNbStr = (split(page, '/').back());
+// 	// std::istringstream pg(pgNbStr);
+// 	// int pgNb;
+// 	// pg >> pgNb;
+// 	std::ifstream	inFile(page.c_str());
+// 	std::string		line, pageContent = "";
  
-	if (inFile.is_open())
-	{
-		while (std::getline(inFile, line))
-		{
-			pageContent += line;
-			pageContent += "\n";
-		}
-	}
-	inFile.close();
-	return pageContent;
-}
+// 	if (inFile.is_open())
+// 	{
+// 		while (std::getline(inFile, line))
+// 		{
+// 			pageContent += line;
+// 			pageContent += "\n";
+// 		}
+// 	}
+// 	inFile.close();
+// 	return pageContent;
+// }
 
 bool	isAllowed(std::string &str)
 {

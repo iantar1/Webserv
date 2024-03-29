@@ -56,7 +56,7 @@ std::string	generateNameFile(std::string &str);
 std::string	dec_to_hex(int decimal);
 int	hexStringToInt(const std::string& hexStr);
 
-std::string	getPageContent(std::string page);
+// std::string	getPageContent(std::string page);
 std::string	getFileExtension(const std::string& fileName);
 std::string	replacePath(std::string path, std::string location, std::string root);
 std::string	getContentExtension(std::map<std::string, std::string> mime, std::string contentType);

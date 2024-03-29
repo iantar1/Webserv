@@ -101,6 +101,31 @@ const std::string &Response::getResponse() const
 	return this->response;
 }
 
+std::string	Response::getPageContent(std::string page)
+{
+	std::string		pgNbStr = (split(page, '/').back());
+	std::istringstream pg(pgNbStr);
+	int pgNb;
+	pg >> pgNb;
+	if (request->Vserver.getErrorPages().find(pgNb) != request->Vserver.getErrorPages().end())
+	{
+		page =  request->Vserver.getErrorPages().find(pgNb)->second;
+	}
+	std::ifstream	inFile(page.c_str());
+	std::string		line, pageContent = "";
+ 
+	if (inFile.is_open())
+	{
+		while (std::getline(inFile, line))
+		{
+			pageContent += line;
+			pageContent += "\n";
+		}
+	}
+	inFile.close();
+	return pageContent;
+}
+
 // *************** Seters *********
 
 void Response::setURI()

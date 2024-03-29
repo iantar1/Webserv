@@ -17,8 +17,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, const ServerBlock &_Vserver) : Vserver(_Vserver),
-														SocketFd(fd), ErrorFlag(0), doneServing(false), doneHeaderReading(false)
+Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0), 
+				doneServing(false), doneHeaderReading(false), Vserver(_Vserver)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;

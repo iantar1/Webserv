@@ -79,6 +79,7 @@ public:
 	virtual ~Response(void);
 
 	void errorPage(int errorCode);
+	std::string	getPageContent(std::string page);
 	void theDeleteMethod(void);
 	void StartResponse();
 

@@ -33,7 +33,6 @@ private:
     Request &operator=(const Request &);
 
 private:
-    const ServerBlock &Vserver;
 
     std::map<std::string, std::string>  Header;
     std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
@@ -71,6 +70,7 @@ public:
     // ************ Constructor destructor ****************
     Request(int, const ServerBlock &);
     ~Request();
+    const ServerBlock &Vserver;
     std::string newPath; // ! tmp
 
 private:
