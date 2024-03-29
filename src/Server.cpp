@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 03:51:28 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 07:15:32 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ void Server::DropCleint(int ClientFd)
 // ! Desing Timeget.getResponse()
 void Server::ServeClients(int index)
 {
+	bool tmp = 0;
 	// ! in case of Bad Req or somthing that will not vist your reponse , you must setDoneServing here
 	if (clients[events[index].data.fd]->getRequest()->getError() != 0)
 	{
@@ -127,21 +128,26 @@ void Server::ServeClients(int index)
 	}
 	if (events[index].events & EPOLLIN)
 	{
+		if (clients[events[index].data.fd]->getRequest()->getDoneHeaderReading() == false)
+			tmp = 1;
 		clients[events[index].data.fd]->ReadParseReqHeader();
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == POST) // ! i need to set donServing
 		{
 			clients[events[index].data.fd]->ServingClient();
+			tmp = 1;
 		}
 		if (clients[events[index].data.fd]->getDoneServing())
 		{
 			write(this->clients[events[index].data.fd]->getSocketFd(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+			tmp = 1;
 		}
-		// std::cout << "HERE\n";
+		std::cout << RED << "JGHJHKJK" << RESET;
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
+		tmp = 1;
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == DELETE)
 		{
 			clients[events[index].data.fd]->ServingClient();
@@ -153,6 +159,10 @@ void Server::ServeClients(int index)
 		write(this->clients[events[index].data.fd]->getSocketFd(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+	}
+	if (tmp == 0  && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
+	{
+		clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
 }
 
