@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 07:15:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 07:40:34 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,9 @@ void Server::DropCleint(int ClientFd)
 void Server::ServeClients(int index)
 {
 	bool tmp = 0;
+	// this variable is to fix a chrome issue (sending two requests instead of one (when we try to get a video))
+	// open the , which leads to  a fd leaks
+
 	// ! in case of Bad Req or somthing that will not vist your reponse , you must setDoneServing here
 	if (clients[events[index].data.fd]->getRequest()->getError() != 0)
 	{
@@ -160,7 +163,7 @@ void Server::ServeClients(int index)
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 	}
-	if (tmp == 0  && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
+	if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
 	{
 		clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
