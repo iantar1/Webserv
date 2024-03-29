@@ -225,9 +225,15 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
+void LocationBlock::checkLocation(void)
+{
+	if (!this->cgiEnable)
+		this->cgiPaths.clear();
+}
+
 // long	LocationBlock::getMaxBodySize() const
 // {
-// 	return (this->)
+// 		return (this->)
 // }
 
 std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationBlock)
