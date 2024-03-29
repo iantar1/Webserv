@@ -53,7 +53,7 @@ bool ServerBlock::checkListen(std::vector<std::string> listen)
 	if (!isPosNumber(listen[1]))
 		return false;
 	listenPort = stringToPosInt(listen[1]);
-	if (listenPort < 0 || listenPort > 65535)
+	if (listenPort <= 1024 || listenPort > 65535)
 		return false;
 	this->listen = listen[1];
 	return true;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 03:43:33 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:11:27 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ std::string	getPageContent(std::string page)
 {
 	std::ifstream	inFile(page.c_str());
 	std::string		line, pageContent = "";
-
+ 
 	if (inFile.is_open())
 	{
 		while (std::getline(inFile, line))

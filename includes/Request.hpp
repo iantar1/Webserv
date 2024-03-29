@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 01:53:57 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 23:43:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,11 @@ private:
     Request &operator=(const Request &);
 
 private:
-    // VirtualServer *Vserver;
     const ServerBlock &Vserver;
 
-    std::map<std::string, std::string> Header;
-    std::vector<std::string> RequestLine; // this line: GET /hello.htm HTTP/1.1
-    LocationBlock location;
+    std::map<std::string, std::string>  Header;
+    std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
+    LocationBlock                       location;
 
     char buf[BUF_SIZE];
 
