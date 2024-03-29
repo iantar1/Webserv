@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 07:20:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 03:39:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,13 +420,13 @@ void Request::storeRequestLine(const std::string &line)
 
 void Request::SetNewPath() // ! match location and change this
 {
-	std::cout << "old: " << oldPath << "\n";
+	// std::cout << "old: " << oldPath << "\n";
 	// ! use location.getRootLOcation() instead
 	newPath = Vserver.getRoot();
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
-	std::cout << "new: " << newPath << "\n";
+	// std::cout << "new: " << newPath << "\n";
 }
 
 // ************** Main Methods *******************
@@ -499,7 +499,7 @@ void Request::ReadRequest()
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 		if (bytesRead < 0)
-			std::runtime_error("read system call failed\n"); // ! should i set a flag ?
+			setFlagError(INTERNAL_ERR, "read system call failed");
 		if (bytesRead == 0 && !doneHeaderReading)
 		{
 			setFlagError(BAD_REQ, "bad request7");

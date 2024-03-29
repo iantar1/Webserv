@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 07:24:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 03:53:20 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,10 @@ void Response::regularFileGet(void)
 		theGetResponseOk();
 
 	if (this->request->getDoneServing())
+	{
+		std::cout << "CLOSE\n";
 		this->inFile.close();
+	}
 }
 
 // std::string	getStrTime()

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 02:11:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 02:21:59 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void printConfigParsing(const std::vector<ServerBlock> &servers)
 int main(int ac, char **av)
 {
 	std::string cnfPath[2] = {"config/default.conf", av[ac - 1]};
+	std::vector<ServerBlock> servers;
 
 	if (ac > 2)
 	{
@@ -53,7 +54,7 @@ int main(int ac, char **av)
 	{
 		Config config(cnfPath[ac - 1]);
 		config.parse();
-		std::vector<ServerBlock> servers = config.servers;
+		servers = config.servers;
 		Server webserv(config.servers);
 		webserv.ServerCore();
 	}

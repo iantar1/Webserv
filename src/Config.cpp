@@ -148,5 +148,5 @@ void Config::parse(void)
 	parseBlock(configFile, "server");
 	if (servers.empty())
 		throw std::runtime_error("Config Error: no server blocks found");
-	// configFile.close();
+	configFile.close();
 }

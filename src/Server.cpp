@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 00:43:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 03:51:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 int Server::socketCreate(ServerBlock &vSer)
 {
 	int sockfd;
+	int on = 1;
 	struct addrinfo hints;
 	struct addrinfo *res;
 
@@ -35,11 +36,9 @@ int Server::socketCreate(ServerBlock &vSer)
 	std::cout << "server: " << sockfd << " created\n";
 	if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1) // subject
 		throw std::runtime_error("fcntl failed\n");
-	int on = 1;
 	// SO_REUSEADDR is used to enable the reusing of local addresses in the bind() function.
-	// setsockopt(sockfd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
 
-	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &on, sizeof(on))) //* so you can reuse port num
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &on, sizeof(on)))
 		throw std::runtime_error("setsockopt() failed\n");
 	if (bind(sockfd, res->ai_addr, res->ai_addrlen) < 0)
 	{
@@ -114,6 +113,7 @@ void Server::DropCleint(int ClientFd)
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
 	close(ClientFd);
+	std::cout << "THE CLIENT DROPED\n";
 }
 
 // ! Desing Timeget.getResponse()
@@ -138,6 +138,7 @@ void Server::ServeClients(int index)
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 		}
+		// std::cout << "HERE\n";
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
@@ -167,7 +168,7 @@ int Server::ServerCore()
 		int readyFd;
 		bzero(events, sizeof(events));
 		// std::cout << "***************** wiating for a new connection *******************\n";
-		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, 0)) != 0)
+		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, -1)) != 0)
 		{
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
@@ -175,12 +176,12 @@ int Server::ServerCore()
 			{
 				if (NewClient(i)) // add new client
 				{
-					// std::cout << YELLOW << "new Cleint added ,fd: " << events[i].data.fd << "\n"
-					// 		  << RESET;
+					std::cout << YELLOW << "new Cleint connected ,fd: " << events[i].data.fd << "\n"
+							  << RESET;
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
-					// check client timeout
+					std::cout << "Serving client\n";
 					clients[events[i].data.fd]->getRequest()->timeOutCheching();
 					ServeClients(i);
 				}
