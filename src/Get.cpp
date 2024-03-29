@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/29 03:53:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 07:49:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it->second += this->contentType;
 	else
 		header_it->second += this->contentType_cgi;
-	//! if (set_cookies())
+// set cookies
 	header_it = this->files.headers.find(SET_COOKIE);
 	header_it->second += this->cookie;
 
@@ -48,8 +48,6 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it = this->files.headers.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
-
-	//  override your map here
 	
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
@@ -177,7 +175,6 @@ void Response::regularFileGet(void)
 
 	if (this->request->getDoneServing())
 	{
-		std::cout << "CLOSE\n";
 		this->inFile.close();
 	}
 }
