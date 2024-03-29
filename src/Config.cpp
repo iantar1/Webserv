@@ -47,6 +47,7 @@ void Config::pushBlock(std::string context)
 	}
 	else if (context == "location")
 	{
+		location.checkLocation();
 		insertLocationRoot();
 		server.addLocation(location);
 		location = LocationBlock();
