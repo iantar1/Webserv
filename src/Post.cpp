@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Post.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 03:26:00 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/30 02:26:58 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	Response::thePostResponseCreate(void)
 		this->contentTotalSizePosted += this->request->getBody().size();
 		if (this->contentTotalSizePosted == this->contentLenght) {
 			this->outFile.close();
-			if (!isCGI()) {
+			if (!isCGI(uri)) {
 				this->request->setDoneServing();
 				thePostResponseCreatedPage();
 			}
@@ -153,7 +153,7 @@ void	Response::thePostResponseCreate(void)
 				if (this->chunkSize == 0) {
 					this->outFile.close();
 					this->appendedRequest.clear();
-					if (!isCGI()) {
+					if (!isCGI(uri)) {
 						this->request->setDoneServing();
 						thePostResponseCreatedPage();
 					}
@@ -180,7 +180,7 @@ void	Response::thePostResponseCreate(void)
 			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
 				this->outFile.close();
 				this->appendedRequest.clear();
-				if (!isCGI()) {
+				if (!isCGI(uri)) {
 					thePostResponseCreatedPage();
 					this->request->setDoneServing();
 				}

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 00:52:12 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 02:31:52 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,29 @@
 
 static std::string cgiExtention[] = {".sh", ".py", ".php"}; // ! static varible
 
-std::string Response::getExtention() const
+std::string Response::getExtention(const std::string &_uri) const
 {
 	std::string result;
 
-	for (int i = uri.size() - 1; i >= 0; i--)
+	for (int i = _uri.size() - 1; i >= 0; i--)
 	{
-		result += uri[i];
-		if (uri[i] == '.')
+		result += _uri[i];
+		if (_uri[i] == '.')
 			break;
 	}
 	std::reverse(result.begin(), result.end());
 	return (result);
 }
 
-std::string Response::getScriptName()
+std::string Response::getScriptName(const std::string &_uri)
 {
 	std::string result;
-	std::string uri;
 
-	uri = request->getURI();
-	for (int i = uri.size() - 1; i >= 0; i--)
+	for (int i = _uri.size() - 1; i >= 0; i--)
 	{
-		if (uri[i] == '/')
+		if (_uri[i] == '/')
 			break;
-		result += uri[i];
+		result += _uri[i];
 	}
 	return (result);
 }
@@ -97,16 +95,16 @@ std::string buildCgiMetaVariables(const std::string &key, const std::string &val
 	return (res + value);
 }
 
-char **Response::setCgiEnvironment()
+char **Response::setCgiEnvironment(const std::string &_uri)
 {
 	char **env;
 
 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	CgiEnvironment.push_back("REDIRECT_STATUS=CGI");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
-	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
+	CgiEnvironment.push_back("REQUEST_URI=" + _uri);
 	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString()); // !start mn ?
-	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());		   // * The name of the CGI script
+	CgiEnvironment.push_back("SCRIPT_NAME=" + _uri);					   // * The name of the CGI script
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath());  // * The full path to the CGI script
 	CgiEnvironment.push_back("PATH_INFO=" + request->getNewPath());		   // * path for cgi script
 
@@ -164,7 +162,7 @@ void Response::redirectCgiOutput()
 	close(fd_out);
 }
 
-bool Response::isCGI()
+bool Response::isCGI(const std::string &_uri)
 {
 	if (doneCGI == true)
 	{
@@ -172,8 +170,8 @@ bool Response::isCGI()
 	}
 	for (size_t i = 0; i < cgiExtention->size(); i++)
 	{
-		if (uri.find(cgiExtention[i]) == uri.size() - cgiExtention[i].size())
-			return (validCGI(getExtention()));
+		if (_uri.find(cgiExtention[i]) == _uri.size() - cgiExtention[i].size())
+			return (validCGI(getExtention(_uri)));
 	}
 	return (false);
 }
@@ -188,13 +186,13 @@ bool Response::validCGI(const std::string &extention)
 	return (false);
 }
 
-void Response::set_args(char **args)
+void Response::set_args(char **args, const std::string &_uri)
 {
 	std::string extention;
 
-	extention = getExtention();
+	extention = getExtention(_uri);
 	args[0] = (char *)request->getCgiPath(extention).c_str(); // !before  using this check if extention exist (.sh .php .py)
-	args[1] = (char *)(request->getNewPath().c_str());		  //(char *)inFile.c_str();						  // ! use access to check if the file exist
+	args[1] = (char *)(getCgiFileRoot() + _uri).c_str();	  //(char *)(request->getNewPath().c_str());
 	args[2] = NULL;
 }
 
@@ -218,7 +216,6 @@ void Response::parseStoreCgiOutHeader(std::string header)
 			this->cookie = value;
 		if (key.compare("Content-type") == 0)
 			this->contentType_cgi = value;
-		std::cerr << RED << "key: " << key << " value: " <<  value << RESET << std::endl;
 		if (pos >= header.size() - 2)
 			break;
 		header = header.substr(pos + 2);
@@ -286,16 +283,16 @@ bool Response::chechStatus(int status)
 	return (status);
 }
 
-void Response::cgi_Handler()
+void Response::cgi_Handler(const std::string &_uri)
 {
 	char *args[3];
 	char **env;
 	pid_t pid;
 	int status;
 
-	env = setCgiEnvironment();
-	set_args(args);
-
+	env = setCgiEnvironment(_uri);
+	set_args(args, _uri);
+	// print_CGI_env(env);
 	output_file = RandomName();
 	if (request->getMethdType() == POST)
 	{

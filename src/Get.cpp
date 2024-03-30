@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/29 07:49:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 00:24:05 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 
 // 1 RESPONSE_STATUS = success
 // 2 date = 20:44:0444
-// 3 content_type = 
-
+// 3 content_type =
 
 void Response::theGetHeaderResponse(int code, int transferType)
 {
@@ -29,11 +28,17 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it->second += this->strTime;
 
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	if (this->contentType_cgi.empty())
-		header_it->second += this->contentType;
-	else
-		header_it->second += this->contentType_cgi;
-// set cookies
+
+	this->contentType = "text/html; charset=UTF-8";
+
+	// if (this->contentType_cgi.empty())
+	header_it->second += this->contentType;
+	// else
+	// 	header_it->second += this->contentType_cgi;
+	std::cout << "{\n";
+	std::cout << "\tcontentType: " << this->contentType << "\n";
+	std::cout << "\tcontentType_cgi: " << this->contentType_cgi << "\n";
+	// set cookies
 	header_it = this->files.headers.find(SET_COOKIE);
 	header_it->second += this->cookie;
 
@@ -48,12 +53,11 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it = this->files.headers.find(CONTENT_LENGHT);
 		header_it->second += ToString(this->body.size());
 	}
-	
+
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
-			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 		{
 			this->response += header_it->second + "\r\n";
 		}

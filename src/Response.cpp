@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 07:48:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 02:25:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	output_file.empty() && unlink(output_file.c_str());
+	// output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -70,18 +70,18 @@ void Response::StartResponse()
 	}
 	if (request->getMethdType() == GET)
 	{
-		if (isCGI() == true)
+		if (isCGI(uri) == true)
 		{
-			cgi_Handler();
+			cgi_Handler(uri);
 		}
 		theGetMethod();
 	}
 	else if (request->getMethdType() == POST)
 	{
 		PostResponse();
-		if (isCGI() == true)
+		if (isCGI(uri) == true)
 		{
-			cgi_Handler();
+			cgi_Handler(uri);
 			if (this->request->getError())
 				errorPage(this->request->getError());
 			else

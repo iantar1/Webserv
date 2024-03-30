@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 07:40:34 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 00:08:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void Server::ServeClients(int index)
 	}
 	if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
 	{
-		clients[events[index].data.fd]->getRequest()->setDoneServing();
+			clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
 }
 

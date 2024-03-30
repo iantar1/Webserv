@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/28 08:27:20 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 02:50:10 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ private:
 	Response &operator=(const Response &);
 
 private:
-	int 	socket;
-	int 	contentTotalSizePosted;
-	int 	chunkContentTotalSizePosted;
+	int socket;
+	int contentTotalSizePosted;
+	int chunkContentTotalSizePosted;
 	size_t chunkSize;
-	int 	mode;
-	int 	contentLenght;
-	int 	postType;
-	int 	ccl;
-	size_t 	appendedSize;
+	int mode;
+	int contentLenght;
+	int postType;
+	int ccl;
+	size_t appendedSize;
 
 	Request *request;
 	t_files &files;
@@ -51,26 +51,25 @@ private:
 	std::string redirection;
 	std::string requestBody;
 	std::string appendedRequest;
-	std::string	uri;
-	std::string	uploadedFileName;
+	std::string uri;
+	std::string uploadedFileName;
 
-// cgi inpit/output
-	std::string	input_file;
-	std::string	output_file;
+	// cgi inpit/output
+	std::string input_file;
+	std::string output_file;
 	// std::map<std::string, std::string>	cgiKeyValue;
-// Cgi header
-	std::string	cookie;
+	// Cgi header
+	std::string cookie;
 	std::string contentType_cgi;
-	
 
-	bool 	chunkStart;
-	bool 	streamStart;
-	bool 	outOpened;
-	bool 	gotTime;
-	bool 	modeChecked;
-	bool 	dataCopy;
-	bool 	startedTheChunk;
-	bool	doneCGI;
+	bool chunkStart;
+	bool streamStart;
+	bool outOpened;
+	bool gotTime;
+	bool modeChecked;
+	bool dataCopy;
+	bool startedTheChunk;
+	bool doneCGI;
 
 	std::vector<std::string> CgiEnvironment;
 
@@ -79,7 +78,7 @@ public:
 	virtual ~Response(void);
 
 	void errorPage(int errorCode);
-	std::string	getPageContent(std::string page);
+	std::string getPageContent(std::string page);
 	void theDeleteMethod(void);
 	void StartResponse();
 
@@ -105,36 +104,37 @@ public:
 
 	// ******************** DelteMethod **************
 private:
-	void	DeleteMethod();
-	int		DeleteDiractory(const std::string &);
-	bool	isFile(const std::string &);
-	bool	isDiractory(const std::string &);
-	int		deleteFile(const std::string &);
-	void	theDeleteHeaderResponse(int, int);
+	void DeleteMethod();
+	int DeleteDiractory(const std::string &);
+	bool isFile(const std::string &);
+	bool isDiractory(const std::string &);
+	int deleteFile(const std::string &);
+	void theDeleteHeaderResponse(int, int);
 
 	// **************** CGI **************************
 private:
-	void				cgi_Handler();
-	std::string			getExtention() const;
-	const std::string	&getCgiPath() const;
-	char**				setCgiEnvironment();
-	std::string			getScriptName();
-	bool				validCGI(const std::string&);
-	bool				isCGI();
-	std::string			RandomName();
-	void				redirectCgiInput();
-	void				redirectCgiOutput();
-	void				set_args(char**);
-	void				extractCgiMetadata();
-	void				parseStoreCgiOutHeader(std::string);
-	std::string			getCgiFileRoot();
-	bool				chechStatus(int status);
-	void	print_CGI_env(char **);// debug
+	void cgi_Handler(const std::string &);
+	std::string getExtention(const std::string &) const;
+	const std::string &getCgiPath() const;
+	char **setCgiEnvironment(const std::string &);
+	std::string getScriptName(const std::string &);
+	bool validCGI(const std::string &);
+	bool isCGI(const std::string &);
+	std::string RandomName();
+	void redirectCgiInput();
+	void redirectCgiOutput();
+	void set_args(char **, const std::string &);
+	void extractCgiMetadata();
+	void parseStoreCgiOutHeader(std::string);
+	std::string getCgiFileRoot();
+	bool chechStatus(int status);
+	// debug
+	void print_CGI_env(char **);
 
-// *************** Getters ***************
+	// *************** Getters ***************
 public:
-	const Request*	getRequest() const;
+	const Request *getRequest() const;
 
-// ******************* setters ********************
-	void	setURI();
+	// ******************* setters ********************
+	void setURI();
 };
