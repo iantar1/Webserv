@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:25:54 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 03:52:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,14 @@ Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0)
 													   startedTheChunk(false), doneCGI(false)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
+	startTime = time(NULL);
 	this->socket = request->getFdSocket();
+}
+
+void Request::timeOutCheching()
+{
+	if (time(NULL) - startTime > 30)
+		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
 }
 
 Response::~Response(void)

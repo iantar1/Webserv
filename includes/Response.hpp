@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:50:10 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 03:54:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ private:
 	int postType;
 	int ccl;
 	size_t appendedSize;
-
 	Request *request;
 	t_files &files;
 
@@ -73,6 +72,8 @@ private:
 
 	std::vector<std::string> CgiEnvironment;
 
+	time_t startTime;
+
 public:
 	Response(Request *request, t_files &files);
 	virtual ~Response(void);
@@ -89,6 +90,7 @@ public:
 	void theGetErrorNotFound(void);
 	void theGetResponseOk(void);
 	void directoryListing(void);
+	void timeOutCheching(void);
 	void regularFileGet(void);
 	void theGetMethod(void);
 	void Delete();

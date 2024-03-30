@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:26:58 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 04:02:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,11 +129,21 @@ void	Response::thePostResponseCreatedPage(void)
 
 void	Response::thePostResponseCreate(void)
 {
+	if (!this->request->getBody().size()) {
+		this->startTime = time(NULL);
+		return;
+	}
 	if (this->postType == NORMAL_POST)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
 		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
+		if (this->contentTotalSizePosted > this->contentLenght) {
+			this->outFile.close();
+			unlink(this->uploadedFileName.c_str());
+			this->errorPage(REQUEST_TIMEOUT);
+			this->request->setDoneServing();
+		}
 		if (this->contentTotalSizePosted == this->contentLenght) {
 			this->outFile.close();
 			if (!isCGI(uri)) {
@@ -187,5 +197,14 @@ void	Response::thePostResponseCreate(void)
 				return;
 			}
 		}
+	}
+}
+
+void Response::timeOutCheching()
+{
+	if (time(NULL) - startTime > 30) {
+		this->outFile.close();
+		this->errorPage(REQUEST_TIMEOUT);
+		this->request->setDoneServing();
 	}
 }
