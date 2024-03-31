@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 04:59:15 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 05:53:51 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,12 @@ void	Response::thePostResponseCreate(void)
 	if (this->postType == NORMAL_POST)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
+		if (!this->outFile.good()) {
+			this->outFile.close();
+			unlink(this->uploadedFileName.c_str());
+			errorPage(INTERNAL_ERR);
+			return;
+		}
 		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
@@ -224,8 +230,10 @@ void	Response::thePostResponseCreate(void)
 							====================================================
 						*/
 						cgi_Handler();
-						if (this->request->getError())
+						if (this->request->getError()) {
 							errorPage(this->request->getError());
+							unlink(this->uploadedFileName.c_str());
+						}
 						// else
 						// 	thePostResponseCreatedPage(); // Hna khassni nservi dakchi li tayretourni CGI
 					}
@@ -246,6 +254,12 @@ void	Response::thePostResponseCreate(void)
 			std::string	toWrite = this->appendedRequest.substr(0, this->chunkSize);
 			this->appendedRequest = this->appendedRequest.substr(this->chunkSize + 2);
 			this->outFile.write(toWrite.data(), this->chunkSize);
+			if (!this->outFile.good()) {
+				this->outFile.close();
+				unlink(this->uploadedFileName.c_str());
+				errorPage(INTERNAL_ERR);
+				return;
+			}
 			this->contentTotalSizePosted += toWrite.size();
 			this->outFile << std::flush;
 			this->appendedSize = this->appendedRequest.size();

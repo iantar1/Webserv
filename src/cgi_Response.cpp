@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 04:58:00 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 05:44:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,7 @@ void Response::extractCgiMetadata()
 		{
 			std::cerr << "read fails\n";
 			close(fd);
+			errorPage(INTERNAL_ERR);
 			return;
 		}
 		data += std::string(buf, readByte);

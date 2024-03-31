@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 23:22:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 05:32:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ private:
 
     bool    doneServing;
     bool    doneHeaderReading;
+    bool    systemCallFailed;
 
     // *************  static attrebuites **************
     static std::string  Methods[8];
@@ -115,6 +116,7 @@ public:
 
     bool    getDoneServing(void) const;
     bool    getDoneHeaderReading() const;
+    bool    getSystemCallFailed(void) const;
 
     const std::map<std::string, std::string> &getHeaders() const;
 
@@ -136,6 +138,7 @@ public:
     void    setFlagError(int, const std::string &);
     void    setPath(std::string);
     void    setFlagErrorWithoutThrow(int, const std::string &);
+    void    setSystemCallFailed(void);
 
     // ************* Debug ****************
     void    printRequest();

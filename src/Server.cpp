@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 04:56:28 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 05:40:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,9 +142,11 @@ void Server::ServeClients(int index)
 		}
 		if (clients[events[index].data.fd]->getDoneServing())
 		{
-			write(this->clients[events[index].data.fd]->getSocketFd(),
+			if (write(this->clients[events[index].data.fd]->getSocketFd(),
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1) {
+					DropCleint(events[index].data.fd);
+				  }
 			tmp = 1;
 		}
 	}
@@ -159,11 +161,15 @@ void Server::ServeClients(int index)
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
-		write(this->clients[events[index].data.fd]->getSocketFd(),
+		if (write(this->clients[events[index].data.fd]->getSocketFd(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
+			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1) {
+				DropCleint(events[index].data.fd);
+			  }
 	}
-	if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
+	if (this->clients[events[index].data.fd]->getRequest()->getSystemCallFailed())
+		DropCleint(events[index].data.fd);
+	else if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
 	{
 		clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}

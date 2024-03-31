@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 04:59:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 05:47:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void Response::errorPage(int errorCode)
 		header_it++;
 	}
 	this->response += "\r\n" + this->responseBody;
+	this->request->setDoneServing();
 	// write(this->socket, this->response.c_str(), this->response.size());
 	// this->response.clear();
 }

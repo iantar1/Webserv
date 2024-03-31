@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 06:45:27 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 06:02:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,11 @@ void Response::theGetResponseOk(void)
 
 		signal(SIGPIPE, SIG_IGN);
 		this->inFile.read(buf, 1024);
+		if (!this->inFile.good()) {
+			this->inFile.close();
+			errorPage(INTERNAL_ERR);
+			return;
+		}
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
 		{
