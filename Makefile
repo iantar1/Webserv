@@ -4,7 +4,7 @@ CXX = c++
 
 RM = rm -rf
 
-CXXFLAGS = #-Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g3
 
 # SRC =	./src/VirtualServer.cpp \
 # 		./src/Location.cpp \
@@ -24,6 +24,7 @@ SRC = 	./src/Config.cpp\
  		./src/Post.cpp \
 		./src/Client.cpp \
 	   	./src/Server.cpp \
+
 
 
 		

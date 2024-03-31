@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 05:34:36 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 07:27:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0), 
-				doneServing(false), doneHeaderReading(false), systemCallFailed(false),
-				Vserver(_Vserver)
+Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0),
+														doneServing(false), doneHeaderReading(false), systemCallFailed(false),
+														Vserver(_Vserver)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
@@ -174,7 +174,7 @@ void Request::setFlagErrorWithoutThrow(int error_flag, const std::string &mes)
 	std::cerr << mes << std::endl;
 }
 
-void	Request::setSystemCallFailed(void)
+void Request::setSystemCallFailed(void)
 {
 	this->systemCallFailed = true;
 }

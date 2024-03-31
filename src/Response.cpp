@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 05:47:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 09:49:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@
 Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
 													   request(request), files(files), chunkStart(false), streamStart(false),
 													   outOpened(false), gotTime(false), modeChecked(false), dataCopy(false),
-													   startedTheChunk(false), doneCGI(false)
+													   startedTheChunk(false), doneCGI(false), cgiOutputFileOpened(false)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();
 	cgi_state = -1;
+	pid = 0;
 }
 
 Response::~Response(void)
@@ -30,7 +31,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	output_file.empty() && unlink(output_file.c_str());
+	unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -92,7 +93,7 @@ void Response::servPage(std::string page)
 	this->response += "\r\n" + this->responseBody;
 }
 
-void	Response::cgiResponse(void)
+void Response::cgiResponse(void)
 {
 	if (this->request->getMethdType() == POST)
 		this->cgiResponseHeaders["STATUS"] = "201 CREATED";
@@ -116,7 +117,7 @@ void Response::StartResponse()
 		return;
 	}
 	if (request->getMethdType() == GET)
-	{// ! you need to check is the file exist or not
+	{ // ! you need to check is the file exist or not
 		if (isCGI() == true)
 		{
 			// throw std::runtime_error("CGI Error: ####################");
@@ -128,7 +129,6 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		PostResponse();
-		std::cout << "$$$$$$$$$$$$$$\n";
 		// if (isCGI() == true)
 		// {
 		// 	cgi_Handler();
@@ -151,19 +151,19 @@ const std::string &Response::getResponse() const
 	return this->response;
 }
 
-std::string	Response::getPageContent(std::string page)
+std::string Response::getPageContent(std::string page)
 {
-	std::string		pgNbStr = (split(page, '/').back());
+	std::string pgNbStr = (split(page, '/').back());
 	std::istringstream pg(pgNbStr);
 	int pgNb;
 	pg >> pgNb;
 	if (request->Vserver.getErrorPages().find(pgNb) != request->Vserver.getErrorPages().end())
 	{
-		page =  request->Vserver.getErrorPages().find(pgNb)->second;
+		page = request->Vserver.getErrorPages().find(pgNb)->second;
 	}
-	std::ifstream	inFile(page.c_str());
-	std::string		line, pageContent = "";
- 
+	std::ifstream inFile(page.c_str());
+	std::string line, pageContent = "";
+
 	if (inFile.is_open())
 	{
 		while (std::getline(inFile, line))

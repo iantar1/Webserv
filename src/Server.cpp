@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 05:40:18 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 09:26:11 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,12 @@ bool Server::NewClient(int index)
 void Server::DropCleint(int ClientFd)
 {
 
+	// if (clients[ClientFd]->response->pid != 0 && kill(clients[ClientFd]->response->pid, SIGKILL) == 0)
+	// {
+	// 		std::cerr << RED << "child killed\n"
+	// 				  << RESET;
+	// }
+	// waitpid(clients[ClientFd]->response->pid, NULL, 0);
 	if (epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL) == -1)
 	{
 		throw std::runtime_error("Failed to remove client FD from epoll instance.");
@@ -143,10 +149,11 @@ void Server::ServeClients(int index)
 		if (clients[events[index].data.fd]->getDoneServing())
 		{
 			if (write(this->clients[events[index].data.fd]->getSocketFd(),
-				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1) {
-					DropCleint(events[index].data.fd);
-				  }
+					  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+					  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1)
+			{
+				DropCleint(events[index].data.fd);
+			}
 			tmp = 1;
 		}
 	}
@@ -162,13 +169,18 @@ void Server::ServeClients(int index)
 			clients[events[index].data.fd]->ServingClient();
 		}
 		if (write(this->clients[events[index].data.fd]->getSocketFd(),
-			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1) {
-				DropCleint(events[index].data.fd);
-			  }
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1)
+		{
+			DropCleint(events[index].data.fd);
+			return;
+		}
 	}
+
 	if (this->clients[events[index].data.fd]->getRequest()->getSystemCallFailed())
+	{
 		DropCleint(events[index].data.fd);
+	}
 	else if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
 	{
 		clients[events[index].data.fd]->getRequest()->setDoneServing();
@@ -195,12 +207,13 @@ int Server::ServerCore()
 			{
 				if (NewClient(i)) // add new client
 				{
-					std::cout << YELLOW << "new Cleint connected" << "\n"
+					std::cout << YELLOW << "new Cleint connected"
+							  << "\n"
 							  << RESET;
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
-					std::cout << "Serving client\n";
+					// std::cout << "Serving client\n";
 					clients[events[i].data.fd]->getRequest()->timeOutCheching();
 					ServeClients(i);
 				}

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 05:44:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 10:54:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ std::string Response::RandomName()
 {
 	std::string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	std::string result = request->getLocation().getRoot();
+	std::cout << "getRoot: " << request->getLocation().getRoot() << "\n";
 
 	if (result[result.size() - 1] != '/')
 		result += '/';
@@ -138,6 +139,7 @@ std::string Response::RandomName()
 	for (int i = 0; i < 5; i++)
 		result += str[rand() % str.size()];
 	result += "_" + ToString(nb++) + ".txt";
+	std::cout << "result: " << result << "\n";
 	return result;
 }
 
@@ -145,7 +147,7 @@ void Response::redirectCgiInput()
 {
 	int fd_in;
 
-	// std::cout << input_file << " ouleww\n";
+	// std::cerr << input_file << " ouleww\n";
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	if (dup2(fd_in, 0) == -1)
@@ -157,11 +159,19 @@ void Response::redirectCgiOutput()
 {
 	int fd_out;
 
+	std::cerr << "output file in chile: " << output_file << " \n";
 	if ((fd_out = open(output_file.c_str(), O_WRONLY | O_CREAT, 0666)) == -1)
+	{
+		std::cerr << "child: can't open file\n"
+				  << std::endl;
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
+	}
 
 	if (dup2(fd_out, 1) == -1)
+	{
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
+		close(fd_out);
+	}
 	close(fd_out);
 }
 // ! NOT FOUNT CGI
@@ -213,10 +223,9 @@ void Response::parseStoreCgiOutHeader(std::string header)
 			key = header.substr(0, p);
 		else
 			break;
-		value = skipLeadingWhitespace(header.substr(p + 1, pos - (p + 1)));// one is for :
+		value = skipLeadingWhitespace(header.substr(p + 1, pos - (p + 1))); // one is for :
 
 		cgiResponseHeaders[str_to_upper(key)] = value;
-		std::cerr << RED << "key: " << key << " value: " <<  value << RESET << std::endl;
 		if (pos >= header.size() - 2)
 			break;
 		header = header.substr(pos + 2);
@@ -262,22 +271,26 @@ void Response::extractCgiMetadata()
 		body = data.substr(pos);
 	std::ofstream fi(output_file.c_str());
 	fi << body;
+	std::cout << "body: " << body << "\n";
 	std::cout << "============================= DATA =============================\n"
-		<< data << "\n=============================== END ===============================" << std::endl;
+			  << data << "\n=============================== END ===============================" << std::endl;
 	parseStoreCgiOutHeader(header);
 
-	std::map<std::string, std::string>::iterator	it = this->cgiResponseHeaders.find("STATUS");
+	std::map<std::string, std::string>::iterator it = this->cgiResponseHeaders.find("STATUS");
 	if (it != this->cgiResponseHeaders.end())
 		this->response += "HTTP/1.1 " + it->second + "\r\n";
 	it = this->cgiResponseHeaders.begin();
-	while (it != this->cgiResponseHeaders.end()) {
-		if (it->first == "STATUS") {
+	while (it != this->cgiResponseHeaders.end())
+	{
+		if (it->first == "STATUS")
+		{
 			it++;
 			continue;
 		}
 		else if (it->first == "CONTENT-LENGHT")
 			this->response += it->first + ": " + ToString(body.size()) + "\r\n";
-		else {
+		else
+		{
 			this->response += it->first + ": " + it->second + "\r\n";
 		}
 		it++;
@@ -289,7 +302,7 @@ void Response::extractCgiMetadata()
 	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
 	this->request->setDoneServing();
 	std::cout << "============================ RESPONSE =====================================\n"
-		<<  this->response << "\n=========================== END ===============================" << std::endl;
+			  << this->response << "\n=========================== END ===============================" << std::endl;
 	close(fd);
 }
 
@@ -305,9 +318,9 @@ std::string Response::getCgiFileRoot()
 
 bool Response::chechStatus(int status)
 {
-	if (status == 14)
-		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
-	else if (status)
+	// if (status == 14)
+	// 	request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
+	if (status)
 		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad _gateway");
 	return (status);
 }
@@ -320,122 +333,130 @@ bool Response::chechStatus(int status)
 // 	}
 // }
 
+// void Response::cgi_Handler()
+// {
+// 	char *args[3];
+// 	char **env = NULL;
+// 	// pid_t pid = -1;
+// 	int status = -100;
+
+// 	if (access(request->getNewPath().c_str(), F_OK))
+// 	{
+// 		errorPage(NOT_FOUND);
+// 		this->request->setDoneServing();
+// 		return;
+// 	}
+// 	// generate  files filename if nessetry and one time
+// 	if (request->getMethdType() == POST && input_file.empty())
+// 	{
+// 		input_file = this->uploadedFileName;
+// 	}
+// 	if (output_file.empty())
+// 		output_file = RandomName();
+
+// 	if (cgi_state == -1) // enter firt time
+// 	{
+// 		env = setCgiEnvironment();
+// 		set_args(args);
+// 		cgi_timer = time(NULL);
+// 		print_CGI_env(env);
+// 		pid = fork();
+// 		if (pid < 0)
+// 		{
+// 			errorPage(INTERNAL_ERR);
+// 			this->request->setDoneServing();
+// 			delete[] env;
+// 			return;
+// 		}
+// 		cgi_state = 0; // to not unter next time
+// 	}
+// 	if (pid == 0 && !cgi_state) // parent pid will never equal to 0
+// 	{
+// 		if (request->getMethdType() == POST)
+// 			redirectCgiInput();
+// 		redirectCgiOutput();
+// 		// The CGI should be run in the correct directory for relative path file access.
+// 		if (chdir(getCgiFileRoot().c_str()) == -1)
+// 			((delete[] env), exit(EXIT_FAILURE));
+// 		std::cerr << "arg: " << args[0] << " " << args[1] << "\n";
+// 		std::cerr << YELLOW << "in the child, pid: " << pid << "\n";
+// 		execve(args[0], args, env);
+// 		((delete[] env), exit(EXIT_FAILURE));
+// 	}
+// 	waitpid(pid, &status, 0);
+// 	exit(1);
+// 	cgi_state = 2; // which state we are
+// 	delete[] env;
+// 	pid_t wpid = waitpid(pid, &status, WNOHANG);
+// 	if (time(NULL) - cgi_timer > 2)
+// 	{
+// 		std::cout << "time out\n";
+// 		if (kill(pid, SIGKILL) == 0)
+// 		{
+// 			std::cerr << RED << "child killed\n"
+// 					  << RESET;
+// 		}
+// 		// waitpid(pid, NULL, 0);
+// 		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
+// 		return;
+// 	}
+// 	// std::cout << "status :" << status << "\n";
+// 	if (!wpid)
+// 		return;
+// 	if (status == -100)
+// 		return;
+// 	std::cout << "stusts: " << status << "\n";
+// 	doneCGI = true;
+// 	cgi_state = 1;
+// 	if (chechStatus(status))
+// 		return;
+// 	// std::cout << "Output file : " << output_file << std::endl;
+// 	extractCgiMetadata();
+// 	// request->setPath(output_file);
+// 	// ! tuimeout
+// }
+
+/*
+ */
+
 void Response::cgi_Handler()
 {
 	char *args[3];
-	char **env = NULL;
-	pid_t pid = -1;
+	char **env;
+	pid_t pid;
 	int status = 0;
 
-	if (access(request->getNewPath().c_str(), F_OK))
-	{
-		request->setFlagErrorWithoutThrow(NOT_FOUND, "not found");
-		errorPage(NOT_FOUND);
-		this->request->setDoneServing();
-		return ;
-	}
-	
+	// if (access())
+	env = setCgiEnvironment();
+	set_args(args);
 
 	output_file = RandomName();
 	if (request->getMethdType() == POST)
 	{
 		input_file = this->uploadedFileName;
 	}
-	if (cgi_state < 0)
-	{
-		env = setCgiEnvironment();
-		set_args(args);
-		cgi_timer = time(NULL);
-		pid = fork();
-		if (pid < 0)
-		{
-			request->setFlagErrorWithoutThrow(INTERNAL_ERR, "internal error");
-			errorPage(INTERNAL_ERR);
-			this->request->setDoneServing();
-			delete[] env;
-			return ;
-		}
-		cgi_state = 0;
-	}
-
+	pid = fork();
 	if (pid == 0)
 	{
-		// alarm(2);
+		alarm(2);
 		if (request->getMethdType() == POST)
 			redirectCgiInput();
 		redirectCgiOutput();
 		// The CGI should be run in the correct directory for relative path file access.
 		if (chdir(getCgiFileRoot().c_str()) == -1)
-			((delete[] env),exit(EXIT_FAILURE));
+			exit(EXIT_FAILURE);
 		execve(args[0], args, env);
-		((delete[] env), exit(EXIT_FAILURE));
+		exit(EXIT_FAILURE);
 	}
+	waitpid(pid, &status, 0);
+	doneCGI = true;
 	delete[] env;
-	pid_t wpid = waitpid(pid, &status,  WNOHANG);
-	if (time(NULL) - cgi_timer > 2)
-	{
-		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
-		return ;
-	}
-	if (!wpid)
-		return;
-	// doneCGI = true;
-	cgi_state = 1;
-	std::cout << "stusts: "<< status << "\n"; 
 	if (chechStatus(status))
 		return;
 	extractCgiMetadata();
-	// request->setPath(output_file);
+	request->setPath(output_file);
 	// ! tuimeout
-	
 }
-
-/*
-
-	================================ Akhire 7aja drtiha m3a drarri ========================
-
-	void Response::cgi_Handler()
-	{
-		char *args[3];
-		char **env;
-		pid_t pid;
-		int status = 0;
-
-		// if (access())
-		env = setCgiEnvironment();
-		set_args(args);
-
-		output_file = RandomName();
-		if (request->getMethdType() == POST)
-		{
-			input_file = this->uploadedFileName;
-		}
-		pid = fork();
-		if (pid == 0)
-		{
-			alarm(2);
-			if (request->getMethdType() == POST)
-				redirectCgiInput();
-			redirectCgiOutput();
-			// The CGI should be run in the correct directory for relative path file access.
-			if (chdir(getCgiFileRoot().c_str()) == -1)
-				exit(EXIT_FAILURE);
-			execve(args[0], args, env);
-			exit(EXIT_FAILURE);
-		}
-		waitpid(pid, &status, WNOHANG);
-		doneCGI = true;
-		delete[] env;
-		if (chechStatus(status))
-			return;
-		extractCgiMetadata();
-		// request->setPath(output_file);
-		// ! tuimeout
-	}
-
-	============================================== end ===================================
-
-*/
 
 // ************ Getters *********************
 
