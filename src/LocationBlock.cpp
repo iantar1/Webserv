@@ -225,6 +225,12 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
+void LocationBlock::checkLocation(void)
+{
+	if(!cgiEnable)
+		cgiPaths.clear();
+}
+
 // long	LocationBlock::getMaxBodySize() const
 // {
 // 	return (this->)

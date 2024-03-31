@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 02:22:31 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 02:38:25 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ std::string Response::RandomName()
 	srand(time(0));
 	for (int i = 0; i < 5; i++)
 		result += str[rand() % str.size()];
-	result += ".txt";
+	result += "_" + ToString(nb++) + ".txt";
 	return result;
 }
 
@@ -145,6 +145,7 @@ void Response::redirectCgiInput()
 {
 	int fd_in;
 
+	// std::cout << input_file << " ouleww\n";
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	if (dup2(fd_in, 0) == -1)
@@ -259,6 +260,8 @@ void Response::extractCgiMetadata()
 		body = data.substr(pos);
 	std::ofstream fi(output_file.c_str());
 	fi << body;
+	std::cout << "============================= DATA =============================\n"
+		<< data << "\n=============================== END ===============================" << std::endl;
 	parseStoreCgiOutHeader(header);
 
 	std::map<std::string, std::string>::iterator	it = this->cgiResponseHeaders.find("STATUS");
@@ -279,8 +282,12 @@ void Response::extractCgiMetadata()
 	}
 
 	this->response += "\r\n" + body;
+	if (this->response.empty())
+		errorPage(BAD_REQUEST);
 	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
 	this->request->setDoneServing();
+	std::cout << "============================ RESPONSE =====================================\n"
+		<<  this->response << "\n=========================== END ===============================" << std::endl;
 	close(fd);
 }
 
@@ -339,7 +346,7 @@ void Response::cgi_Handler()
 			redirectCgiInput();
 		redirectCgiOutput();
 		// The CGI should be run in the correct directory for relative path file access.
-		std::cout << "@@@@@@@@@@@@@@@" << std::endl;
+		// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
 		if (chdir(getCgiFileRoot().c_str()) == -1)
 			exit(EXIT_FAILURE);
 		execve(args[0], args, env);

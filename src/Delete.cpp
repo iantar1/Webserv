@@ -6,11 +6,12 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 00:18:13 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 02:41:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/macros.hpp"
+// #include "../includes/macros.hpp"
+#include "../includes/headers.hpp"
 #include "../includes/Response.hpp"
 #include "../includes/utils.hpp"
 

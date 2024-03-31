@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 00:47:48 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 02:36:30 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,3 +95,5 @@
 #define NOT_IMPLEMENTED 501
 #define BAD_GATEWAY 502
 #define GATEWAY_TIMEOUT 504
+
+extern int	nb;
