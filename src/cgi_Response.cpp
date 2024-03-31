@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 02:38:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 04:58:00 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,7 @@ void Response::extractCgiMetadata()
 		if (readByte < 0)
 		{
 			std::cerr << "read fails\n";
+			close(fd);
 			return;
 		}
 		data += std::string(buf, readByte);
@@ -306,18 +307,32 @@ bool Response::chechStatus(int status)
 	if (status == 14)
 		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
 	else if (status)
-		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad gateway");
+		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad _gateway");
 	return (status);
 }
+
+// void	timeHandler()
+// {
+// 	if ()
+// 	{
+// 		kill(pid_t pid, int sig);
+// 	}
+// }
 
 void Response::cgi_Handler()
 {
 	char *args[3];
 	char **env = NULL;
-	pid_t pid=-1;
+	pid_t pid = -1;
 	int status = 0;
 
-	// if (access())
+	if (access(request->getNewPath().c_str(), F_OK))
+	{
+		request->setFlagErrorWithoutThrow(NOT_FOUND, "not found");
+		errorPage(NOT_FOUND);
+		this->request->setDoneServing();
+		return ;
+	}
 	
 
 	output_file = RandomName();
@@ -329,35 +344,43 @@ void Response::cgi_Handler()
 	{
 		env = setCgiEnvironment();
 		set_args(args);
+		cgi_timer = time(NULL);
 		pid = fork();
 		if (pid < 0)
 		{
-			// ! set dong 
-			// return
-			std::cerr << "fork error\n";
+			request->setFlagErrorWithoutThrow(INTERNAL_ERR, "internal error");
+			errorPage(INTERNAL_ERR);
+			this->request->setDoneServing();
+			delete[] env;
+			return ;
 		}
 		cgi_state = 0;
 	}
 
 	if (pid == 0)
 	{
-		alarm(2);
+		// alarm(2);
 		if (request->getMethdType() == POST)
 			redirectCgiInput();
 		redirectCgiOutput();
 		// The CGI should be run in the correct directory for relative path file access.
-		// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
 		if (chdir(getCgiFileRoot().c_str()) == -1)
-			exit(EXIT_FAILURE);
+			((delete[] env),exit(EXIT_FAILURE));
 		execve(args[0], args, env);
-		exit(EXIT_FAILURE);
+		((delete[] env), exit(EXIT_FAILURE));
 	}
+	delete[] env;
 	pid_t wpid = waitpid(pid, &status,  WNOHANG);
-	std::cout << "HKJHJHJHJHJ\n";
+	if (time(NULL) - cgi_timer > 2)
+	{
+		request->setFlagErrorWithoutThrow(GATEWAY_TIMEOUT, "GATEWAY TIMEOUT");
+		return ;
+	}
 	if (!wpid)
 		return;
 	// doneCGI = true;
-	delete[] env;
+	cgi_state = 1;
+	std::cout << "stusts: "<< status << "\n"; 
 	if (chechStatus(status))
 		return;
 	extractCgiMetadata();

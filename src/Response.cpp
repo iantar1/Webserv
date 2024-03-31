@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 02:29:32 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 04:59:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		PostResponse();
+		std::cout << "$$$$$$$$$$$$$$\n";
 		// if (isCGI() == true)
 		// {
 		// 	cgi_Handler();

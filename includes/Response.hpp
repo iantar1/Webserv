@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 01:29:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 04:49:24 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,11 +135,13 @@ private:
 	void				parseStoreCgiOutHeader(std::string);
 	std::string			getCgiFileRoot();
 	bool				chechStatus(int status);
-	void	print_CGI_env(char **);// debug
+	void				print_CGI_env(char **);// debug
+	time_t	cgi_timer;
 
 // *************** Getters ***************
 public:
 	const Request*	getRequest() const;
+	
 
 // ******************* setters ********************
 	void	setURI();

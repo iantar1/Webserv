@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 00:40:44 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 04:56:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void Server::DropCleint(int ClientFd)
 
 	if (epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL) == -1)
 	{
-		std::cerr << "Failed to remove client FD from epoll instance." << std::endl;
+		throw std::runtime_error("Failed to remove client FD from epoll instance.");
 	}
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
