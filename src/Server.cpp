@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 08:35:49 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 00:40:44 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ void Server::addCleintToEpoll(int index)
 	int fd = accept(Vservers[index].getFdSocket(), NULL, &clientAddrLen);
 	if (fd < 0)
 		throw std::runtime_error("accept\n");
-
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // subject
+		throw std::runtime_error("fcntl failed\n");
 	clients[fd] = new Client(fd, Vservers[index], files);
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
@@ -188,7 +189,7 @@ int Server::ServerCore()
 			{
 				if (NewClient(i)) // add new client
 				{
-					std::cout << YELLOW << "new Cleint connected ,fd: " << events[i].data.fd << "\n"
+					std::cout << YELLOW << "new Cleint connected" << "\n"
 							  << RESET;
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)

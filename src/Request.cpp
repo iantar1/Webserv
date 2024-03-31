@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/29 03:39:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 02:15:54 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -420,13 +420,13 @@ void Request::storeRequestLine(const std::string &line)
 
 void Request::SetNewPath() // ! match location and change this
 {
-	// std::cout << "old: " << oldPath << "\n";
+	std::cout << "old: " << oldPath << "\n";
 	// ! use location.getRootLOcation() instead
 	newPath = Vserver.getRoot();
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
-	// std::cout << "new: " << newPath << "\n";
+	std::cout << "new: " << newPath << "\n";
 }
 
 // ************** Main Methods *******************
@@ -457,10 +457,10 @@ void Request::matchClients()
 
 void Request::timeOutCheching()
 {
-	if (doneHeaderReading)
-		return;
-	if (time(NULL) - startTime > 30)
-		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
+	// if (doneHeaderReading)
+	// 	return;
+	// if (time(NULL) - startTime > 30)
+	// 	setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
 }
 
 bool Request::ReadCheckHeader()
@@ -517,7 +517,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{

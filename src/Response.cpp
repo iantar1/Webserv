@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 10:25:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 02:09:27 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();
+	cgi_state = -1;
 }
 
 Response::~Response(void)
@@ -28,7 +29,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	// output_file.empty() && unlink(output_file.c_str());
+	output_file.empty() && unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -115,7 +116,10 @@ void Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{// ! you need to check is the file exist or not
 		if (isCGI() == true)
+		{
+			// throw std::runtime_error("CGI Error: ####################");
 			cgi_Handler();
+		}
 		else
 			theGetMethod();
 	}

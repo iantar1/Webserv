@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi_Response.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 10:56:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 02:22:31 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ void Response::redirectCgiInput()
 {
 	int fd_in;
 
-	// std::cout << input_file << " ouleww\n";
 	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	if (dup2(fd_in, 0) == -1)
@@ -164,7 +163,7 @@ void Response::redirectCgiOutput()
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	close(fd_out);
 }
-
+// ! NOT FOUNT CGI
 bool Response::isCGI()
 {
 	if (doneCGI == true)
@@ -307,20 +306,31 @@ bool Response::chechStatus(int status)
 void Response::cgi_Handler()
 {
 	char *args[3];
-	char **env;
-	pid_t pid;
-	int status  = 0;
+	char **env = NULL;
+	pid_t pid=-1;
+	int status = 0;
 
 	// if (access())
-	env = setCgiEnvironment();
-	set_args(args);
+	
 
 	output_file = RandomName();
 	if (request->getMethdType() == POST)
 	{
 		input_file = this->uploadedFileName;
 	}
-	pid = fork();
+	if (cgi_state < 0)
+	{
+		env = setCgiEnvironment();
+		set_args(args);
+		pid = fork();
+		if (pid < 0)
+		{
+			// ! set dong 
+			// return
+			std::cerr << "fork error\n";
+		}
+		cgi_state = 0;
+	}
 
 	if (pid == 0)
 	{
@@ -335,16 +345,18 @@ void Response::cgi_Handler()
 		execve(args[0], args, env);
 		exit(EXIT_FAILURE);
 	}
-	waitpid(pid, &status,  WCONTINUED);
-	(void)status;
-	std::cout << "jhsdgjhsdf\n";
-	doneCGI = true;
+	pid_t wpid = waitpid(pid, &status,  WNOHANG);
+	std::cout << "HKJHJHJHJHJ\n";
+	if (!wpid)
+		return;
+	// doneCGI = true;
 	delete[] env;
 	if (chechStatus(status))
 		return;
 	extractCgiMetadata();
 	// request->setPath(output_file);
 	// ! tuimeout
+	
 }
 
 /*

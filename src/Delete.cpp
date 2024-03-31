@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 09:00:49 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 00:18:13 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,11 @@ int Response::DeleteDiractory(const std::string &path)
 	return (rmdir(path.c_str()));
 }
 
-static const std::string filePath[] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm", "defaultPages/404.htm"};
+static const std::string filePath[4] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm", "defaultPages/404.htm"};
+
+// bool	realPathChecker(const std::string* path)
+// {
+// }
 
 void Response::DeleteMethod()
 {
@@ -117,7 +121,10 @@ void Response::DeleteMethod()
 	else
 	{
 		status = DeleteDiractory(request->getNewPath());
+		if (status < 0)
+			status = ERROR;
 	}
+	std::cout << "status:" << status << "\n";
 	this->contentType = "text/html";
 	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);

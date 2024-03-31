@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 08:20:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 00:47:48 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@
 #define LOCATION 6
 #define SET_COOKIE 7
 #define CACHE_CONTROL 8
+# define DID_NOTHINGH -100000
 
 #define NORMAL 1000
 #define CHUNKED 1001
