@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:51:33 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/30 21:12:40 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ std::string	generateNameFile(std::string &str)
 
 	for (int i = 0; i < 5; i++)
 		result += charset[rand() % charsetSize];
+	result += "_" + ToString(nb++);
 	return result;
 }
 

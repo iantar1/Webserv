@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Delete.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 09:00:49 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 21:07:51 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/macros.hpp"
+// #include "../includes/macros.hpp"
+#include "../includes/headers.hpp"
 #include "../includes/Response.hpp"
 #include "../includes/utils.hpp"
 

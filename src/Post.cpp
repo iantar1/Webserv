@@ -6,12 +6,12 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 10:25:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/31 00:46:14 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-
+//CGI Path
 void	Response::PostResponse()
 {
 	if (this->request->location.getUploadEnable()) {
@@ -23,7 +23,12 @@ void	Response::PostResponse()
 				this->mode = NORMAL;
 			this->modeChecked = true;
 		}
-		thePostMethod();
+		if (this->request->getBody().empty()) {
+			errorPage(NOT_IMPLEMENTED);
+			this->request->setDoneServing();
+		}
+		else
+			thePostMethod();
 	}
 	else {
 		if (isCGI())
@@ -166,6 +171,12 @@ void	Response::thePostResponseCreate(void)
 		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
+		if (this->contentTotalSizePosted > this->contentLenght) {
+			this->outFile.close();
+			unlink(this->uploadedFileName.c_str());
+			this->errorPage(REQUEST_TIMEOUT);
+			this->request->setDoneServing();
+		}
 		if (this->contentTotalSizePosted == this->contentLenght) {
 			this->outFile.close();
 			if (!isCGI()) {
@@ -181,8 +192,9 @@ void	Response::thePostResponseCreate(void)
 				*/
 				// std::cout << "UUUU" << std::endl;
 				cgi_Handler();
-				if (this->request->getError())
+				if (this->request->getError()) {
 					errorPage(this->request->getError());
+				}
 				// else
 				// 	thePostResponseCreatedPage(); // Hna khassni nservi dakchi li tayretourni CGI
 			}

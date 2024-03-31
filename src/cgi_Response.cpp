@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 10:56:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/30 23:50:41 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ std::string Response::RandomName()
 	srand(time(0));
 	for (int i = 0; i < 5; i++)
 		result += str[rand() % str.size()];
-	result += ".txt";
+	result += "_" + ToString(nb++) + ".txt";
 	return result;
 }
 
@@ -260,6 +260,8 @@ void Response::extractCgiMetadata()
 		body = data.substr(pos);
 	std::ofstream fi(output_file.c_str());
 	fi << body;
+	std::cout << "============================= DATA =============================\n"
+		<< data << "\n=============================== END ===============================" << std::endl;
 	parseStoreCgiOutHeader(header);
 
 	std::map<std::string, std::string>::iterator	it = this->cgiResponseHeaders.find("STATUS");
@@ -280,8 +282,12 @@ void Response::extractCgiMetadata()
 	}
 
 	this->response += "\r\n" + body;
+	if (this->response.empty())
+		errorPage(BAD_REQUEST);
 	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
 	this->request->setDoneServing();
+	std::cout << "============================ RESPONSE =====================================\n"
+		<<  this->response << "\n=========================== END ===============================" << std::endl;
 	close(fd);
 }
 
@@ -329,7 +335,7 @@ void Response::cgi_Handler()
 			redirectCgiInput();
 		redirectCgiOutput();
 		// The CGI should be run in the correct directory for relative path file access.
-		std::cout << "@@@@@@@@@@@@@@@" << std::endl;
+		// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
 		if (chdir(getCgiFileRoot().c_str()) == -1)
 			exit(EXIT_FAILURE);
 		execve(args[0], args, env);

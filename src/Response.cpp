@@ -6,11 +6,12 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 10:25:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/30 21:07:54 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/macros.hpp"
+// #include "../includes/macros.hpp"
+#include "../includes/headers.hpp"
 #include "../includes/Response.hpp"
 #include "../includes/utils.hpp"
 

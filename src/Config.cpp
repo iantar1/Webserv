@@ -48,6 +48,7 @@ void Config::pushBlock(std::string context)
 	else if (context == "location")
 	{
 		insertLocationRoot();
+		location.checkLocation();
 		server.addLocation(location);
 		location = LocationBlock();
 	}
@@ -56,7 +57,7 @@ void Config::pushBlock(std::string context)
 void Config::parseContextLine(std::vector<std::string> line, std::string context)
 {
 	if (contexts.size() != braces.size())
-		throw std::runtime_error("Config Error: check braces #3");
+		throw std::runtime_error("Config Error: check braces");
 	if (context == "location")
 		location.parseLocationLine(line);
 	else if (context == "server" && server.getLocations().empty())
