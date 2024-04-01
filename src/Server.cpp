@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/01 01:07:03 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/30 00:08:45 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,7 @@ void Server::addCleintToEpoll(int index)
 	int fd = accept(Vservers[index].getFdSocket(), NULL, &clientAddrLen);
 	if (fd < 0)
 		throw std::runtime_error("accept\n");
-	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // subject
-		throw std::runtime_error("fcntl failed\n");
+
 	clients[fd] = new Client(fd, Vservers[index], files);
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
@@ -107,15 +106,9 @@ bool Server::NewClient(int index)
 void Server::DropCleint(int ClientFd)
 {
 
-	// if (clients[ClientFd]->response->pid != 0 && kill(clients[ClientFd]->response->pid, SIGKILL) == 0)
-	// {
-	// 		std::cerr << RED << "child killed\n"
-	// 				  << RESET;
-	// }
-	// waitpid(clients[ClientFd]->response->pid, NULL, 0);
 	if (epoll_ctl(epollFd, EPOLL_CTL_DEL, ClientFd, NULL) == -1)
 	{
-		throw std::runtime_error("Failed to remove client FD from epoll instance.");
+		std::cerr << "Failed to remove client FD from epoll instance." << std::endl;
 	}
 	delete clients.find(ClientFd)->second;
 	clients.erase(ClientFd);
@@ -148,14 +141,12 @@ void Server::ServeClients(int index)
 		}
 		if (clients[events[index].data.fd]->getDoneServing())
 		{
-			if (write(this->clients[events[index].data.fd]->getSocketFd(),
-					  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-					  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1)
-			{
-				DropCleint(events[index].data.fd);
-			}
+			write(this->clients[events[index].data.fd]->getSocketFd(),
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 			tmp = 1;
 		}
+		std::cout << RED << "JGHJHKJK" << RESET;
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
@@ -168,22 +159,13 @@ void Server::ServeClients(int index)
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
-		if (write(this->clients[events[index].data.fd]->getSocketFd(),
-				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
-				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size()) == -1)
-		{
-			DropCleint(events[index].data.fd);
-			return;
-		}
+		write(this->clients[events[index].data.fd]->getSocketFd(),
+			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
+			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 	}
-
-	if (this->clients[events[index].data.fd]->getRequest()->getSystemCallFailed())
+	if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
 	{
-		DropCleint(events[index].data.fd);
-	}
-	else if (tmp == 0 && clients[events[index].data.fd]->getRequest()->getDoneHeaderReading())
-	{
-		clients[events[index].data.fd]->getRequest()->setDoneServing();
+			clients[events[index].data.fd]->getRequest()->setDoneServing();
 	}
 }
 
@@ -199,7 +181,7 @@ int Server::ServerCore()
 		int readyFd;
 		bzero(events, sizeof(events));
 		// std::cout << "***************** wiating for a new connection *******************\n";
-		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, BLOCK_INDEFINITELY)) != 0)
+		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, -1)) != 0)
 		{
 			if (readyFd < 0)
 				throw std::runtime_error("epoll_wait error");
@@ -207,13 +189,12 @@ int Server::ServerCore()
 			{
 				if (NewClient(i)) // add new client
 				{
-					std::cout << YELLOW << "new Cleint connected"
-							  << "\n"
+					std::cout << YELLOW << "new Cleint connected ,fd: " << events[i].data.fd << "\n"
 							  << RESET;
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
-					// std::cout << "Serving client\n";
+					std::cout << "Serving client\n";
 					clients[events[i].data.fd]->getRequest()->timeOutCheching();
 					ServeClients(i);
 				}

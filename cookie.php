@@ -4,5 +4,4 @@ setcookie("user", "ismail antar", time() + 3600, "/");
 
 // Display a message indicating that the cookie has been set
 echo "Cookie 'user' is set!";
-
 ?>

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 05:32:25 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 23:43:39 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ private:
 
     std::map<std::string, std::string>  Header;
     std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
+    LocationBlock                       location;
 
     char buf[BUF_SIZE];
 
@@ -59,7 +60,6 @@ private:
 
     bool    doneServing;
     bool    doneHeaderReading;
-    bool    systemCallFailed;
 
     // *************  static attrebuites **************
     static std::string  Methods[8];
@@ -71,8 +71,7 @@ public:
     Request(int, const ServerBlock &);
     ~Request();
     const ServerBlock &Vserver;
-    LocationBlock     location;
-    std::string       newPath; // ! tmp
+    std::string newPath; // ! tmp
 
 private:
     // ***************** Private Methodes **************
@@ -116,7 +115,6 @@ public:
 
     bool    getDoneServing(void) const;
     bool    getDoneHeaderReading() const;
-    bool    getSystemCallFailed(void) const;
 
     const std::map<std::string, std::string> &getHeaders() const;
 
@@ -138,7 +136,6 @@ public:
     void    setFlagError(int, const std::string &);
     void    setPath(std::string);
     void    setFlagErrorWithoutThrow(int, const std::string &);
-    void    setSystemCallFailed(void);
 
     // ************* Debug ****************
     void    printRequest();

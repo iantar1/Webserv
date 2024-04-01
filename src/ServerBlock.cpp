@@ -208,9 +208,6 @@ std::map<std::string, LocationBlock> const& ServerBlock::getLocations() const
 
 void ServerBlock::addLocation(LocationBlock const& location)
 {
-	std::map<std::string, LocationBlock>::iterator it = locations.find(location.getLocationName());
-	if (it != locations.end())
-		throw std::runtime_error("Error: Duplicated locations");
 	this->locations.insert(std::make_pair(location.getLocationName(), location));
 }
 

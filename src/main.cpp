@@ -3,21 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:44:50 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 21:12:47 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/29 02:21:59 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/* ********************************************************************************* */
+/*                                                                                   */
+/*                                  	     :::   ::::::::   ::::::::  :::::::::::  */
+/*  main.cpp                               :+:+:         :+:        :+: :+:     :+:  */
+/*                                           +:+         +:+        +:+        +:+   */
+/*  By: iantar@student.1337.ma               +#+      +#++:      +#++:        +#+    */
+/*                                           +#+         +#+        +#+      +#+     */
+/* Created: 2024/02/08 09:44:50 by iantar    #+#         #+# #+#    #+#     #+#      */
+/* Updated: 2024/03/25 03:10:50 by iantar  ####### ########   ########     ###.ma    */
+/*           	                                                                     */
+/* ********************************************************************************* */
+
 #include "../includes/headers.hpp"
-// #include "../includes/macros.hpp"
+#include "../includes/macros.hpp"
 #include "../includes/Server.hpp"
 #include "../includes/Config.hpp"
 
 #define DEFAULT_CONFIG "config/default.conf"
-
-int	nb = 0;
 
 void printConfigParsing(const std::vector<ServerBlock> &servers)
 {

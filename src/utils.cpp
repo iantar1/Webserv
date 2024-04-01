@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 21:12:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:12:28 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ std::string	generateNameFile(std::string &str)
 
 	for (int i = 0; i < 5; i++)
 		result += charset[rand() % charsetSize];
-	result += "_" + ToString(nb++);
 	return result;
 }
 
@@ -198,13 +197,6 @@ bool	startsWith(std::string full, std::string start)
 	return false;
 }
 
-bool	endsWith(std::string full, std::string end)
-{
-	if (!full.compare(full.size() - end.size(), end.size(), end))
-		return true;
-	return false;
-}
-
 std::string	replacePath(std::string path, std::string location, std::string root)
 {
 	path = root + path.substr(location.size());
@@ -229,13 +221,4 @@ std::string skipLeadingWhitespace(const std::string &str)
 	{
 	}
 	return (str.substr(index));
-}
-
-bool	isDirectory(const std::string& path) {
-	struct stat fileInfo;
-
-	if (stat(path.c_str(), &fileInfo) != 0)
-		return false;
-
-	return S_ISDIR(fileInfo.st_mode);
 }

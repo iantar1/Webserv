@@ -58,6 +58,7 @@ class LocationBlock
 		std::string const& 							getUploadPath() const;
 		bool const& 								getUploadEnable() const;
 		bool const& 								getCgiEnable() const;
+		long										getMaxBodySize() const;
 
 	// end of getters
 		void initFieldsMap();

@@ -26,7 +26,6 @@ SRC = 	./src/Config.cpp\
 	   	./src/Server.cpp \
 
 
-
 		
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@

@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Content-Type: text/html
+Content-Length: 1059
+Date: 2024-3-23 1:46:59
+Server: Tekshbila
+Location: 
+Set-Cookie: 
+Cache-Control: 
+
+<html><head><title>Index of /</title></head><body><h1>Index of /</h1><hr><ul><li><a href="/.">.</a></li><li><a href="/..">..</a></li><li><a href="/defaultPages">defaultPages</a></li><li><a href="/To_Delete">To_Delete</a></li><li><a href="/test">test</a></li><li><a href="/guides">guides</a></li><li><a href="/main.py">main.py</a></li><li><a href="/config">config</a></li><li><a href="/pytho.py">pytho.py</a></li><li><a href="/DataBase">DataBase</a></li><li><a href="/script.sh">script.sh</a></li><li><a href="/includes">includes</a></li><li><a href="/Uploads">Uploads</a></li><li><a href="/images">images</a></li><li><a href="/Makefile">Makefile</a></li><li><a href="/ph.php">ph.php</a></li><li><a href="/README.md">README.md</a></li><li><a href="/s.sh">s.sh</a></li><li><a href="/webserv">webserv</a></li><li><a href="/.git">.git</a></li><li><a href="/Ressources">Ressources</a></li><li><a href="/.vscode">.vscode</a></li><li><a href="/src">src</a></li><li><a href="/To_Do_List">To_Do_List</a></li><li><a href="/outPut">outPut</a></li></ul><hr></body></html>

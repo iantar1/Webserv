@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/01 00:11:04 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/28 08:20:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,6 @@
 #define LOCATION 6
 #define SET_COOKIE 7
 #define CACHE_CONTROL 8
-#define DID_NOTHINGH -100000
-#define BLOCK_INDEFINITELY -1
-
-// INDEFINITELY : for a period of time with no fixed end
 
 #define NORMAL 1000
 #define CHUNKED 1001
@@ -63,8 +59,9 @@
 // ! check delete Method
 #define SUCCESS 0
 #define PERMISSION_DENIED 1
-#define ERROR 2
-#define NOT_EXIST 3
+# define ERROR 2
+# define NOT_EXIST 3
+
 
 #define MAX_URI_CHAR_SIZE 2048
 
@@ -97,5 +94,3 @@
 #define NOT_IMPLEMENTED 501
 #define BAD_GATEWAY 502
 #define GATEWAY_TIMEOUT 504
-
-extern int nb;

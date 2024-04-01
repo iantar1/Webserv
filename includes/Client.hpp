@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 18:28:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 07:19:13 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/25 04:27:02 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,14 @@
 
 class Client
 {
-
-public:
-	Response	*response;
-	Request		request;
-
 private:
 	int sockeFd;
 	const ServerBlock &Vserver;
 	t_files files;
 	char buf[BUF_SIZE];
 	int MethodType;
+	Request request;
+	Response *response;
 	bool doneReading;
 
 	// AMethod*			method;

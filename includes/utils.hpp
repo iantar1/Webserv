@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:51:44 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/03/26 01:17:18 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,3 @@ bool isBrace(std::string line);
 
 
 std::string skipLeadingWhitespace(const std::string&);
-
-bool	isDirectory(const std::string& path);
-bool	endsWith(std::string full, std::string end);

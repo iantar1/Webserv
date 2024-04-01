@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 23:06:26 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/29 03:39:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0),
-														doneServing(false), doneHeaderReading(false), systemCallFailed(false),
-														Vserver(_Vserver)
+Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0), 
+				doneServing(false), doneHeaderReading(false), Vserver(_Vserver)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
@@ -126,11 +125,6 @@ bool Request::getDoneHeaderReading() const
 	return (this->doneHeaderReading);
 }
 
-bool Request::getSystemCallFailed(void) const
-{
-	return this->systemCallFailed;
-}
-
 const std::map<std::string, std::string> &Request::getHeaders() const
 {
 	return (this->Header);
@@ -172,11 +166,6 @@ void Request::setFlagErrorWithoutThrow(int error_flag, const std::string &mes)
 {
 	ErrorFlag = error_flag;
 	std::cerr << mes << std::endl;
-}
-
-void Request::setSystemCallFailed(void)
-{
-	this->systemCallFailed = true;
 }
 
 // std::string skipLeadingWhitespace(const std::string &str)
@@ -468,10 +457,10 @@ void Request::matchClients()
 
 void Request::timeOutCheching()
 {
-	// if (doneHeaderReading)
-	// 	return;
-	// if (time(NULL) - startTime > 30)
-	// 	setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
+	if (doneHeaderReading)
+		return;
+	if (time(NULL) - startTime > 30)
+		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
 }
 
 bool Request::ReadCheckHeader()
