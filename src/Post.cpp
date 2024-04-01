@@ -6,15 +6,18 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 05:53:51 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/01 12:02:42 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-//CGI Path
-void	Response::PostResponse()
+// CGI Path
+void Response::PostResponse()
 {
-	if (this->request->location.getUploadEnable()) {
+	if (this->request->location.getUploadEnable())
+	{
+		std::cout << RED << "Post\n"
+				  << RESET;
 		if (!this->modeChecked)
 		{
 			if (this->request->getHeaders().find("transfer-encoding") != this->request->getHeaders().end())
@@ -23,43 +26,40 @@ void	Response::PostResponse()
 				this->mode = NORMAL;
 			this->modeChecked = true;
 		}
-		if (this->request->getBody().empty()) {
+		if (this->request->getBody().empty())
+		{
 			errorPage(NOT_IMPLEMENTED);
 			this->request->setDoneServing();
 		}
 		else
 			thePostMethod();
 	}
-	else {
+	else
+	{
 		if (isCGI())
 			cgi_Handler();
+		std::cout << "hello\n";
 		theGetMethod();
 	}
 }
 
-bool	Response::prePostMethod(void)
+bool Response::prePostMethod(void)
 {
-	std::string										extension;
-	std::string										uploadPath;
-	std::map<std::string, std::string>				mime;
-	std::map<std::string, std::string>::iterator	mime_it;
+	std::string extension;
+	std::string uploadPath;
+	std::map<std::string, std::string> mime;
+	std::map<std::string, std::string>::iterator mime_it;
 
 	if (!this->gotTime)
 	{
-		tm												*local_time;
-		time_t											now;
+		tm *local_time;
+		time_t now;
 
 		now = time(0);
 		srand(now);
 		local_time = localtime(&now);
-		this->strTime = ToString(local_time->tm_year + 1900) + "-"
-			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
-				+ " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
-					+ ":" + ToString(local_time->tm_sec);
-		this->strTime2 = ToString(local_time->tm_year + 1900) + "-"
-			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
-				+ "_" + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
-					+ ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+		this->strTime2 = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + "_" + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 	}
 
 	if (!this->dataCopy)
@@ -68,7 +68,8 @@ bool	Response::prePostMethod(void)
 		{
 			this->postType = NORMAL_POST;
 			this->contentLenght = std::atoi((this->request->getHeaders().find("content-length")->second).c_str());
-			if (this->contentLenght > this->request->Vserver.getMaxBodySize()) {
+			if (this->contentLenght > this->request->Vserver.getMaxBodySize())
+			{
 				errorPage(LARGE_REQ);
 				this->request->setDoneServing();
 				return false;
@@ -78,14 +79,16 @@ bool	Response::prePostMethod(void)
 			this->postType = CHUNKED_POST;
 		this->dataCopy = true;
 
-		if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
+		if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end())
+		{
 			this->contentType = this->request->getHeaders().find("content-type")->second;
 			extension = getContentExtension(this->files.mime, this->contentType);
 		}
 		else
 			extension = "";
 
-		if (!isDirectory(this->request->location.getUploadPath().c_str()) && !isCGI()) {
+		if (!isDirectory(this->request->location.getUploadPath().c_str()) && !isCGI())
+		{
 			theGetErrorForbidden();
 			this->request->setDoneServing();
 			return false;
@@ -102,12 +105,13 @@ bool	Response::prePostMethod(void)
 	return true;
 }
 
-void	Response::thePostMethod(void)
+void Response::thePostMethod(void)
 {
 	if (!prePostMethod())
 		return;
 
-	if (!this->outOpened) {
+	if (!this->outOpened)
+	{
 		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
 	}
@@ -117,7 +121,7 @@ void	Response::thePostMethod(void)
 		thePostResponseCreate();
 }
 
-void		Response::thePostHeaderResponse(int code, int transferType)
+void Response::thePostHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
 
@@ -139,15 +143,14 @@ void		Response::thePostHeaderResponse(int code, int transferType)
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
-			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 			this->response += header_it->second + "\r\n";
 		header_it++;
 	}
 	this->response += "\r\n";
 }
 
-void	Response::thePostInternalServerError(void)
+void Response::thePostInternalServerError(void)
 {
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/500.htm") + "\r\n\r\n";
@@ -155,7 +158,7 @@ void	Response::thePostInternalServerError(void)
 	this->response += this->body;
 }
 
-void	Response::thePostResponseCreatedPage(void)
+void Response::thePostResponseCreatedPage(void)
 {
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/201.htm") + "\r\n\r\n";
@@ -163,12 +166,13 @@ void	Response::thePostResponseCreatedPage(void)
 	this->response += this->body;
 }
 
-void	Response::thePostResponseCreate(void)
+void Response::thePostResponseCreate(void)
 {
 	if (this->postType == NORMAL_POST)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
-		if (!this->outFile.good()) {
+		if (!this->outFile.good())
+		{
 			this->outFile.close();
 			unlink(this->uploadedFileName.c_str());
 			errorPage(INTERNAL_ERR);
@@ -177,20 +181,24 @@ void	Response::thePostResponseCreate(void)
 		this->outFile << std::flush;
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
-		if (this->contentTotalSizePosted > this->contentLenght) {
+		if (this->contentTotalSizePosted > this->contentLenght)
+		{
 			this->outFile.close();
 			unlink(this->uploadedFileName.c_str());
 			this->errorPage(REQUEST_TIMEOUT);
 			this->request->setDoneServing();
 		}
-		if (this->contentTotalSizePosted == this->contentLenght) {
+		if (this->contentTotalSizePosted == this->contentLenght)
+		{
 			this->outFile.close();
-			if (!isCGI()) {
+			if (!isCGI())
+			{
 				this->request->setDoneServing();
 				thePostResponseCreatedPage();
 				// std::cout << "AAAA" << std::endl;
 			}
-			else if (isCGI()) {
+			else if (isCGI())
+			{
 				/*
 					====================================================
 					Fine tate7ete l output d CGI ? bach n9ede nservihe !
@@ -198,7 +206,8 @@ void	Response::thePostResponseCreate(void)
 				*/
 				// std::cout << "UUUU" << std::endl;
 				cgi_Handler();
-				if (this->request->getError()) {
+				if (this->request->getError())
+				{
 					errorPage(this->request->getError());
 				}
 				// else
@@ -209,28 +218,34 @@ void	Response::thePostResponseCreate(void)
 	else if (this->postType == CHUNKED_POST)
 	{
 		this->appendedRequest.append(this->request->getBody());
-		if (this->chunkStart == false) {
-			size_t	eol = this->appendedRequest.find("\r\n");
-			if (eol != std::string::npos) {
+		if (this->chunkStart == false)
+		{
+			size_t eol = this->appendedRequest.find("\r\n");
+			if (eol != std::string::npos)
+			{
 				this->chunkSize = hexStringToInt(this->appendedRequest);
 
-				if (this->chunkSize == 0) {
+				if (this->chunkSize == 0)
+				{
 					this->outFile.close();
 					this->appendedRequest.clear();
-					if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize()) {
+					if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize())
+					{
 						errorPage(LARGE_REQ);
 						unlink(this->uploadedFileName.c_str());
 					}
 					else if (!isCGI())
 						thePostResponseCreatedPage();
-					else if (isCGI()) {
+					else if (isCGI())
+					{
 						/*
 							====================================================
 							Fine tate7ete l output d CGI ? bach n9ede nservihe !
 							====================================================
 						*/
 						cgi_Handler();
-						if (this->request->getError()) {
+						if (this->request->getError())
+						{
 							errorPage(this->request->getError());
 							unlink(this->uploadedFileName.c_str());
 						}
@@ -250,11 +265,13 @@ void	Response::thePostResponseCreate(void)
 		}
 		else
 			this->appendedSize = this->appendedRequest.size();
-		if (this->appendedSize >= this->chunkSize + 2) {
-			std::string	toWrite = this->appendedRequest.substr(0, this->chunkSize);
+		if (this->appendedSize >= this->chunkSize + 2)
+		{
+			std::string toWrite = this->appendedRequest.substr(0, this->chunkSize);
 			this->appendedRequest = this->appendedRequest.substr(this->chunkSize + 2);
 			this->outFile.write(toWrite.data(), this->chunkSize);
-			if (!this->outFile.good()) {
+			if (!this->outFile.good())
+			{
 				this->outFile.close();
 				unlink(this->uploadedFileName.c_str());
 				errorPage(INTERNAL_ERR);
@@ -265,16 +282,19 @@ void	Response::thePostResponseCreate(void)
 			this->appendedSize = this->appendedRequest.size();
 			this->chunkStart = false;
 
-			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
+			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos)
+			{
 				this->outFile.close();
 				this->appendedRequest.clear();
-				if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize()) {
+				if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize())
+				{
 					errorPage(LARGE_REQ);
 					unlink(this->uploadedFileName.c_str());
 				}
 				else if (!isCGI())
 					thePostResponseCreatedPage();
-				else if (isCGI()) {
+				else if (isCGI())
+				{
 					/*
 						====================================================
 						Fine tate7ete l output d CGI ? bach n9ede nservihe !

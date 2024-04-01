@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 06:02:22 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 23:06:07 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void Response::regularFileGet(void)
 
 	if (this->request->getDoneServing())
 	{
-		std::cout << "CLOSE\n";
+		// std::cout << "CLOSE\n";
 		this->inFile.close();
 	}
 }

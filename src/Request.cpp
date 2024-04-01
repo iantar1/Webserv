@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 07:27:42 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 23:06:26 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -431,13 +431,13 @@ void Request::storeRequestLine(const std::string &line)
 
 void Request::SetNewPath() // ! match location and change this
 {
-	std::cout << "old: " << oldPath << "\n";
+	// std::cout << "old: " << oldPath << "\n";
 	// ! use location.getRootLOcation() instead
 	newPath = Vserver.getRoot();
 	if (newPath[newPath.size() - 1] == '/')
 		newPath.resize(newPath.size() - 1);
 	newPath += oldPath; // * u need to handle when there is / at last of the root
-	std::cout << "new: " << newPath << "\n";
+	// std::cout << "new: " << newPath << "\n";
 }
 
 // ************** Main Methods *******************
@@ -528,7 +528,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		printRequest();
+		// printRequest();
 	}
 	catch (const std::exception &e)
 	{

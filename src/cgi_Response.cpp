@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 10:54:07 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/01 11:18:31 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,9 @@ std::string Response::getScriptName()
 
 void Response::print_CGI_env(char **env)
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; env[i]; i++)
 	{
-		std::cout << env[i] << std::endl;
+		std::cerr << env[i] << std::endl;
 	}
 }
 
@@ -104,7 +104,7 @@ char **Response::setCgiEnvironment()
 	CgiEnvironment.push_back("SERVER_PROTOCOL=HTTP/1.1");
 	CgiEnvironment.push_back("REDIRECT_STATUS=CGI");
 	CgiEnvironment.push_back("REQUEST_METHOD=" + request->getMethod());
-	CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
+	// CgiEnvironment.push_back("REQUEST_URI=" + request->getURI());
 	CgiEnvironment.push_back("QUERY_STRING=" + request->getQueryString()); // !start mn ?
 	CgiEnvironment.push_back("SCRIPT_NAME=" + request->getURI());		   // * The name of the CGI script
 	CgiEnvironment.push_back("SCRIPT_FILENAME=" + request->getNewPath());  // * The full path to the CGI script
@@ -112,11 +112,15 @@ char **Response::setCgiEnvironment()
 
 	const std::map<std::string, std::string> &headers = request->getHeaders();
 	std::map<std::string, std::string>::const_iterator it = headers.begin();
-
-	for (; it != headers.end(); ++it)
+	if ((it = headers.find("cookie")) != headers.end())
 	{
 		CgiEnvironment.push_back(buildCgiMetaVariables(it->first, it->second));
 	}
+	// ! check this later
+	// for (; it != headers.end(); ++it)
+	// {
+	// 	CgiEnvironment.push_back(buildCgiMetaVariables(it->first, it->second));
+	// }
 
 	env = new char *[CgiEnvironment.size() + 1];
 	for (size_t i = 0; i < CgiEnvironment.size(); i++)
@@ -131,48 +135,32 @@ std::string Response::RandomName()
 {
 	std::string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	std::string result = request->getLocation().getRoot();
-	std::cout << "getRoot: " << request->getLocation().getRoot() << "\n";
+	// std::cout << "getRoot: " << request->getLocation().getRoot() << "\n";
 
 	if (result[result.size() - 1] != '/')
 		result += '/';
 	srand(time(0));
 	for (int i = 0; i < 5; i++)
 		result += str[rand() % str.size()];
-	result += "_" + ToString(nb++) + ".txt";
-	std::cout << "result: " << result << "\n";
+	result += ".txt";
+	// std::cout << "result: " << result << "\n";
 	return result;
 }
 
 void Response::redirectCgiInput()
 {
-	int fd_in;
-
-	// std::cerr << input_file << " ouleww\n";
-	if ((fd_in = open(input_file.c_str(), O_RDONLY | O_CREAT, 0666)) == -1)
+	if (freopen(input_file.c_str(), "r", stdin) == NULL)
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
-	if (dup2(fd_in, 0) == -1)
-		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
-	close(fd_in);
 }
 
 void Response::redirectCgiOutput()
 {
-	int fd_out;
 
-	std::cerr << "output file in chile: " << output_file << " \n";
-	if ((fd_out = open(output_file.c_str(), O_WRONLY | O_CREAT, 0666)) == -1)
+	if (freopen(output_file.c_str(), "w", stdout) == NULL)
 	{
-		std::cerr << "child: can't open file\n"
-				  << std::endl;
+		std::cerr << "freopen faild\n";
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 	}
-
-	if (dup2(fd_out, 1) == -1)
-	{
-		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
-		close(fd_out);
-	}
-	close(fd_out);
 }
 // ! NOT FOUNT CGI
 bool Response::isCGI()
@@ -233,6 +221,10 @@ void Response::parseStoreCgiOutHeader(std::string header)
 }
 
 // parse the cgi output, and extract the header from it.
+// void Response::extractCgiMetadata()
+// {
+
+// }
 void Response::extractCgiMetadata()
 {
 	char buf[1024];
@@ -269,11 +261,9 @@ void Response::extractCgiMetadata()
 		pos = 0;
 	if (pos < data.size())
 		body = data.substr(pos);
+
 	std::ofstream fi(output_file.c_str());
 	fi << body;
-	std::cout << "body: " << body << "\n";
-	std::cout << "============================= DATA =============================\n"
-			  << data << "\n=============================== END ===============================" << std::endl;
 	parseStoreCgiOutHeader(header);
 
 	std::map<std::string, std::string>::iterator it = this->cgiResponseHeaders.find("STATUS");
@@ -299,10 +289,7 @@ void Response::extractCgiMetadata()
 	this->response += "\r\n" + body;
 	if (this->response.empty())
 		errorPage(BAD_REQUEST);
-	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
 	this->request->setDoneServing();
-	std::cout << "============================ RESPONSE =====================================\n"
-			  << this->response << "\n=========================== END ===============================" << std::endl;
 	close(fd);
 }
 
@@ -323,6 +310,55 @@ bool Response::chechStatus(int status)
 	if (status)
 		request->setFlagErrorWithoutThrow(BAD_GATEWAY, "bad _gateway");
 	return (status);
+}
+void Response::cgi_Handler()
+{
+	char *args[3];
+	char **env;
+	pid_t pid;
+	int status = 0;
+
+	// if (access())
+	env = setCgiEnvironment();
+	set_args(args);
+
+	output_file = RandomName();
+	std::cout << "body: " << request->getBody() << "\n";
+	if (request->getMethdType() == POST)
+	{
+
+		input_file = this->uploadedFileName;
+		std::cout << "uploadedFileName: " << uploadedFileName << "\n";
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		alarm(2);
+		if (request->getMethdType() == POST)
+			redirectCgiInput();
+		redirectCgiOutput();
+		// The CGI should be run in the correct directory for relative path file access.
+		if (chdir(getCgiFileRoot().c_str()) == -1)
+			exit(EXIT_FAILURE);
+		print_CGI_env(env);
+		execve(args[0], args, env);
+		exit(EXIT_FAILURE);
+	}
+	waitpid(pid, &status, 0);
+	doneCGI = true;
+	delete[] env;
+	if (chechStatus(status))
+		return;
+	extractCgiMetadata();
+	if (request->getMethdType() == GET)
+		request->setPath(output_file);
+}
+
+// ************ Getters *********************
+
+const Request *Response::getRequest() const
+{
+	return (request);
 }
 
 // void	timeHandler()
@@ -419,51 +455,6 @@ bool Response::chechStatus(int status)
 /*
  */
 
-void Response::cgi_Handler()
-{
-	char *args[3];
-	char **env;
-	pid_t pid;
-	int status = 0;
-
-	// if (access())
-	env = setCgiEnvironment();
-	set_args(args);
-
-	output_file = RandomName();
-	if (request->getMethdType() == POST)
-	{
-		input_file = this->uploadedFileName;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		alarm(2);
-		if (request->getMethdType() == POST)
-			redirectCgiInput();
-		redirectCgiOutput();
-		// The CGI should be run in the correct directory for relative path file access.
-		if (chdir(getCgiFileRoot().c_str()) == -1)
-			exit(EXIT_FAILURE);
-		execve(args[0], args, env);
-		exit(EXIT_FAILURE);
-	}
-	waitpid(pid, &status, 0);
-	doneCGI = true;
-	delete[] env;
-	if (chechStatus(status))
-		return;
-	extractCgiMetadata();
-	request->setPath(output_file);
-	// ! tuimeout
-}
-
-// ************ Getters *********************
-
-const Request *Response::getRequest() const
-{
-	return (request);
-}
 // read the subject
 // cgi for post
 // he CGI should be run in the correct directory for relative path file access

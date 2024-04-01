@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/31 02:41:47 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/31 23:06:01 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void Response::DeleteMethod()
 		if (status < 0)
 			status = ERROR;
 	}
-	std::cout << "status:" << status << "\n";
+	// std::cout << "status:" << status << "\n";
 	this->contentType = "text/html";
 	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);

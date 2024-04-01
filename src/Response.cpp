@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/31 09:49:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/01 10:47:59 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Response::cgiResponse(void)
 		this->cgiResponseHeaders["STATUS"] = "201 CREATED";
 	else if (this->request->getMethdType() == GET)
 		this->cgiResponseHeaders["STATUS"] = "200 OK";
-	else if (this->request->getMethdType() == DELETE)
+	else if (this->request->getMethdType() == DELETE) // what the heck is this ?? there is no cgi f DELETE
 		this->cgiResponseHeaders["STATUS"] = "204 NO CONTENT";
 	this->cgiResponseHeaders["CONTENT-TYPE"] = "text/html";
 	this->cgiResponseHeaders["CONTENT-LENGHT"] = "";
@@ -109,7 +109,6 @@ void Response::cgiResponse(void)
 void Response::StartResponse()
 {
 	cgiResponse();
-	// std::cout << RED << "Ana houna" << RESET << std::endl;
 	if (request->getError() != 0)
 	{
 		errorPage(request->getError());
