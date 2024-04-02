@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi_Response.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 10:56:19 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 02:30:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ void Response::extractCgiMetadata()
 	}
 
 	this->response += "\r\n" + body;
-	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
+	std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
 	this->request->setDoneServing();
 	close(fd);
 }
@@ -329,7 +329,7 @@ void Response::cgi_Handler()
 			redirectCgiInput();
 		redirectCgiOutput();
 		// The CGI should be run in the correct directory for relative path file access.
-		std::cout << "@@@@@@@@@@@@@@@" << std::endl;
+		// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
 		if (chdir(getCgiFileRoot().c_str()) == -1)
 			exit(EXIT_FAILURE);
 		execve(args[0], args, env);
