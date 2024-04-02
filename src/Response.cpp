@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 00:52:14 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:59:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,34 @@ Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0)
 // 	if (time(NULL) - startTime > 30)
 // 		setFlagErrorWithoutThrow(REQUEST_TIMEOUT, "request timeout");
 // }
+void Response::servPage(std::string page)
+{
+	std::map<int, std::string>::iterator header_it;
+
+	// std::cout << "===> " << this->request->location.getIndex().at(0) << std::endl;
+
+	header_it = this->files.headers.find(RESPONSE_STATUS);
+	header_it->second += this->files.status.find(OK)->second;
+
+	header_it = this->files.headers.find(CONTENT_TYPE);
+	header_it->second += "text/html";
+
+	header_it = this->files.headers.find(CONTENT_LENGHT);
+	this->responseBody = getPageContent(page) + "\r\n\r\n";
+	header_it->second += ToString(responseBody.size());
+
+	header_it = this->files.headers.find(DATE);
+	header_it->second += this->strTime;
+
+	header_it = this->files.headers.begin();
+	while (header_it != this->files.headers.end())
+	{
+		if (header_it->first != TRANSFER_ENCODING)
+			this->response += header_it->second + "\r\n";
+		header_it++;
+	}
+	this->response += "\r\n" + this->responseBody;
+}
 
 Response::~Response(void)
 {
@@ -94,6 +122,7 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		// ! add everythg in 
+		
 		if (isCGI(uri) == true)
 		{
 			std::cout << "body: " << request->getBody() << std::endl;

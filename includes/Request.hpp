@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 18:30:58 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 23:43:39 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:46:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ private:
     Request();
     Request(const Request &);
     Request &operator=(const Request &);
-
+public:
+    LocationBlock                       location;
 private:
 
     std::map<std::string, std::string>  Header;
     std::vector<std::string>            RequestLine; // this line: GET /hello.htm HTTP/1.1
-    LocationBlock                       location;
 
     char buf[BUF_SIZE];
 

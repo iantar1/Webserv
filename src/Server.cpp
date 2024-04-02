@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 00:08:45 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:50:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,6 @@ void Server::ServeClients(int index)
 				  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
 			tmp = 1;
 		}
-		std::cout << RED << "JGHJHKJK" << RESET;
 	}
 	else if (events[index].events & EPOLLOUT)
 	{

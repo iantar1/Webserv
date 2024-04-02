@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/01 23:51:11 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:47:16 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ private:
 	std::string appendedRequest;
 	std::string uri;
 	std::string uploadedFileName;
+	
 
 	// cgi inpit/output
 	std::string	input_cgi;
@@ -82,6 +83,8 @@ public:
 	std::string getPageContent(std::string page);
 	void theDeleteMethod(void);
 	void StartResponse();
+	bool	checkPreGetMethod(void);
+	void	servPage(std::string page);
 
 	void theGetHeaderResponse(int code, int transferType);
 	void theGetRedirectionRequest(void);

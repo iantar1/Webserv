@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 00:02:23 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 02:30:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ void	Response::thePostMethod()
 			this->postType = CHUNKED_POST;
 		this->dataCopy = true;
 
-		if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
+		if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end())
+		{
 			this->contentType = this->request->getHeaders().find("content-type")->second;
 			extension = getContentExtension(this->files.mime, this->contentType);
 		}
@@ -71,7 +72,8 @@ void	Response::thePostMethod()
 		this->response = "";
 	}
 
-	if (!this->outOpened) {
+	if (!this->outOpened)
+	{
 		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
 	}
@@ -79,6 +81,8 @@ void	Response::thePostMethod()
 		thePostInternalServerError();
 	else
 	{
+		//! here CGI 
+		
 		thePostResponseCreate();
 	}
 }

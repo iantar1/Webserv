@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 00:24:05 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 01:42:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 
 // 1 RESPONSE_STATUS = success
 // 2 date = 20:44:0444
-// 3 content_type =
+// 3 content_type = 
+
 
 void Response::theGetHeaderResponse(int code, int transferType)
 {
@@ -28,17 +29,13 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it->second += this->strTime;
 
 	header_it = this->files.headers.find(CONTENT_TYPE);
-
-	this->contentType = "text/html; charset=UTF-8";
-
 	// if (this->contentType_cgi.empty())
-	header_it->second += this->contentType;
+	// 	header_it->second += this->contentType;
 	// else
 	// 	header_it->second += this->contentType_cgi;
-	std::cout << "{\n";
-	std::cout << "\tcontentType: " << this->contentType << "\n";
-	std::cout << "\tcontentType_cgi: " << this->contentType_cgi << "\n";
-	// set cookies
+	//! if (set_cookies())
+	
+	header_it->second += this->contentType;
 	header_it = this->files.headers.find(SET_COOKIE);
 	header_it->second += this->cookie;
 
@@ -54,10 +51,13 @@ void Response::theGetHeaderResponse(int code, int transferType)
 		header_it->second += ToString(this->body.size());
 	}
 
+	//  override your map here
+	
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
+			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 		{
 			this->response += header_it->second + "\r\n";
 		}
@@ -179,23 +179,20 @@ void Response::regularFileGet(void)
 
 	if (this->request->getDoneServing())
 	{
+		std::cout << "CLOSE\n";
 		this->inFile.close();
 	}
 }
 
-// std::string	getStrTime()
-// {
-
-// }
-
-void Response::theGetMethod(void)
+bool	Response::checkPreGetMethod(void)
 {
 	if (request->getError() != 0)
 	{
 		errorPage(request->getError());
 		request->setDoneServing();
-		return;
+		return false;
 	}
+
 	if (!this->gotTime)
 	{
 		tm *local_time;
@@ -204,7 +201,12 @@ void Response::theGetMethod(void)
 		now = time(0);
 		local_time = localtime(&now);
 
-		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900)
+						+ "-" + ToString(local_time->tm_mon + 1)
+						+ "-" + ToString(local_time->tm_mday)
+						+ " " + ToString(local_time->tm_hour)
+						+ ":" + ToString(local_time->tm_min)
+						+ ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
 
@@ -214,8 +216,15 @@ void Response::theGetMethod(void)
 		this->oldPath = this->request->getOldPath();
 		this->dataCopy = true;
 	}
+	return true;
+}
 
+void Response::theGetMethod(void)
+{
 	struct stat buffer;
+
+	if (!checkPreGetMethod())
+		return;
 
 	this->response.clear();
 	this->redirection.clear();
@@ -229,13 +238,38 @@ void Response::theGetMethod(void)
 	{
 		if (S_ISDIR(buffer.st_mode))
 		{
-			if (this->path[this->path.size() - 1] != '/')
+			if (this->path[this->path.size() - 1] != '/') {
 				theGetRedirectionRequest();
+				this->request->setDoneServing();
+				return;
+			}
 			else
-				directoryListing();
+			{
+				if (!this->request->location.getIndex().empty())
+				{
+					for (size_t i = 0; i < this->request->location.getIndex().size(); i++)
+					{
+						if (!access(this->request->location.getIndex().at(i).c_str(), R_OK)) 
+						{
+							/*
+								==============================================
+								ISMAIL WORKS : CGI !!!
+								==============================================
+							*/
+							servPage(this->request->location.getIndex().at(i));
+							this->request->setDoneServing();
+							return;
+						}
+					}
+				}
+				if (this->request->location.getAutoIndex())
+					directoryListing();
+				else
+					theGetErrorForbidden();
+			}
 			this->request->setDoneServing();
 		}
-		else if (!(buffer.st_mode & S_IRUSR))
+		if (!(buffer.st_mode & S_IRUSR))
 		{
 			theGetErrorForbidden();
 			this->request->setDoneServing();
