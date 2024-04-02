@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:01:19 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 04:02:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 00:02:23 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,9 @@ void	Response::thePostMethod()
 	if (!this->outFile.is_open())
 		thePostInternalServerError();
 	else
+	{
 		thePostResponseCreate();
+	}
 }
 
 void		Response::thePostHeaderResponse(int code, int transferType)
@@ -140,7 +142,7 @@ void	Response::thePostResponseCreate(void)
 		this->contentTotalSizePosted += this->request->getBody().size();
 		if (this->contentTotalSizePosted > this->contentLenght) {
 			this->outFile.close();
-			unlink(this->uploadedFileName.c_str());
+			unlink(this->uploadedFileName.c_str());//! it's better to do this in the destructor
 			this->errorPage(REQUEST_TIMEOUT);
 			this->request->setDoneServing();
 		}
@@ -190,7 +192,7 @@ void	Response::thePostResponseCreate(void)
 			if (this->appendedRequest.find("0\r\n\r\n") != std::string::npos) {
 				this->outFile.close();
 				this->appendedRequest.clear();
-				if (!isCGI(uri)) {
+				if (!isCGI(uri)) {// !ax hadxi
 					thePostResponseCreatedPage();
 					this->request->setDoneServing();
 				}

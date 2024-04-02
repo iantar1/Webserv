@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 03:54:24 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/01 23:51:11 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ private:
 	std::string uploadedFileName;
 
 	// cgi inpit/output
-	std::string input_file;
-	std::string output_file;
+	std::string	input_cgi;
+	std::string	output_cgi;
 	// std::map<std::string, std::string>	cgiKeyValue;
 	// Cgi header
 	std::string cookie;

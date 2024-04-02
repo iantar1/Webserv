@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/01 12:25:16 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/02 00:52:14 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@ Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0)
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	startTime = time(NULL);
 	this->socket = request->getFdSocket();
+
+
+
+	
 }
 
 // void Request::timeOutCheching()
@@ -35,7 +39,7 @@ Response::~Response(void)
 
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	// output_file.empty() && unlink(output_file.c_str());
+	unlink(output_cgi.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -75,6 +79,10 @@ void Response::StartResponse()
 		request->setDoneServing();
 		return;
 	}
+	// if (doneCGI == true)// ! when you will use WNOHUMG
+	// {
+	// 	return (false);
+	// }
 	if (request->getMethdType() == GET)
 	{
 		if (isCGI(uri) == true)
@@ -85,9 +93,10 @@ void Response::StartResponse()
 	}
 	else if (request->getMethdType() == POST)
 	{
-		PostResponse();
+		// ! add everythg in 
 		if (isCGI(uri) == true)
 		{
+			std::cout << "body: " << request->getBody() << std::endl;
 			cgi_Handler(uri);
 			if (this->request->getError())
 				errorPage(this->request->getError());
@@ -95,6 +104,9 @@ void Response::StartResponse()
 				thePostResponseCreatedPage();
 			this->request->setDoneServing();
 		}
+		PostResponse();
+		// if (post_done)
+			// return ;
 	}
 	else if (request->getMethdType() == DELETE)
 	{

@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/01 12:41:09 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/01 23:50:22 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,13 @@ std::string Response::RandomName()
 
 void Response::redirectCgiInput()
 {
-	if (freopen(input_file.c_str(), "r", stdin) == NULL)
+	if (freopen(input_cgi.c_str(), "r", stdin) == NULL)
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
 }
 
 void Response::redirectCgiOutput()
 {
-	if (freopen(output_file.c_str(), "w", stdout) == NULL)
+	if (freopen(output_cgi.c_str(), "w", stdout) == NULL)
 	{
 		std::cerr << "freopen faild\n";
 		exit(EXIT_FAILURE); // ! INTERNAL_SERVER_ERROR
@@ -156,10 +156,6 @@ void Response::redirectCgiOutput()
 
 bool Response::isCGI(const std::string &_uri)
 {
-	if (doneCGI == true)
-	{
-		return (false);
-	}
 	for (size_t i = 0; i < cgiExtention->size(); i++)
 	{
 		if (_uri.find(cgiExtention[i]) == _uri.size() - cgiExtention[i].size())
@@ -224,7 +220,7 @@ void Response::extractCgiMetadata()
 	ssize_t readByte;
 	size_t pos;
 
-	int fd = open(output_file.c_str(), O_RDWR, 0666);
+	int fd = open(output_cgi.c_str(), O_RDWR, 0666);
 	if (fd < 0)
 	{
 		std::cerr << "file can't open\n";
@@ -249,7 +245,7 @@ void Response::extractCgiMetadata()
 		pos = 0;
 	if (pos < data.size())
 		body = data.substr(pos);
-	std::ofstream fi(output_file.c_str());
+	std::ofstream fi(output_cgi.c_str());
 	fi << body;
 	// parse header, and store it
 	parseStoreCgiOutHeader(header);
@@ -285,10 +281,10 @@ void Response::cgi_Handler(const std::string &_uri)
 	env = setCgiEnvironment(_uri);
 	set_args(args, _uri);
 	// print_CGI_env(env);
-	output_file = RandomName();
+	output_cgi = RandomName();
 	if (request->getMethdType() == POST)
 	{
-		input_file = this->uploadedFileName;
+		input_cgi = this->uploadedFileName;
 	}
 	pid = fork();
 	if (pid == 0)
@@ -309,7 +305,7 @@ void Response::cgi_Handler(const std::string &_uri)
 	if (chechStatus(status))
 		return;
 	extractCgiMetadata();
-	request->setPath(output_file);
+	request->setPath(output_cgi);
 	// ! tuimeout
 }
 
