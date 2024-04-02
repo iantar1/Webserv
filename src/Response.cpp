@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 10:25:40 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 05:30:13 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,16 +121,15 @@ void Response::StartResponse()
 	}
 	else if (request->getMethdType() == POST)
 	{
-		PostResponse();
-		// if (isCGI() == true)
-		// {
-		// 	cgi_Handler();
-		// 	if (this->request->getError())
-		// 		errorPage(this->request->getError());
-		// 	else
-		// 		thePostResponseCreatedPage();
-		// 	this->request->setDoneServing();
-		// }
+		// PostResponse();
+		posting();
+		if (isCGI() && this->postingDone)
+		{
+			cgi_Handler();
+			// if (cgi && this->postingDone)
+			// 	return;
+		}
+		fillResponse();
 	}
 	else if (request->getMethdType() == DELETE)
 	{

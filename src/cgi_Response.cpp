@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/02 02:30:10 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 05:26:59 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,26 +262,6 @@ void Response::extractCgiMetadata()
 	fi << body;
 	parseStoreCgiOutHeader(header);
 
-	std::map<std::string, std::string>::iterator	it = this->cgiResponseHeaders.find("STATUS");
-	if (it != this->cgiResponseHeaders.end())
-		this->response += "HTTP/1.1 " + it->second + "\r\n";
-	it = this->cgiResponseHeaders.begin();
-	while (it != this->cgiResponseHeaders.end()) {
-		if (it->first == "STATUS") {
-			it++;
-			continue;
-		}
-		else if (it->first == "CONTENT-LENGHT")
-			this->response += it->first + ": " + ToString(body.size()) + "\r\n";
-		else {
-			this->response += it->first + ": " + it->second + "\r\n";
-		}
-		it++;
-	}
-
-	this->response += "\r\n" + body;
-	std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
-	this->request->setDoneServing();
 	close(fd);
 }
 

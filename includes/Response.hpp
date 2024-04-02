@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 07:31:05 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 04:40:35 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ private:
 // Cgi header
 	std::string	cookie;
 	std::string contentType_cgi;
+
+	std::string	cgiBody;
 	
 
 	bool 	chunkStart;
@@ -71,6 +73,8 @@ private:
 	bool 	dataCopy;
 	bool 	startedTheChunk;
 	bool	doneCGI;
+
+	bool	postingDone;
 
 	std::vector<std::string> CgiEnvironment;
 	std::map<std::string, std::string>	cgiResponseHeaders;
@@ -107,6 +111,11 @@ public:
 	void	PostResponse(void);
 
 	void	cgiResponse(void);
+
+	// ******************** Design Post **************
+
+	void posting(void);
+	void fillResponse(void);
 
 	// ******************** DelteMethod **************
 private:

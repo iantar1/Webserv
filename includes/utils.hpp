@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:51:44 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 05:00:21 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,3 +95,4 @@ std::string skipLeadingWhitespace(const std::string&);
 
 bool	isDirectory(const std::string& path);
 bool	endsWith(std::string full, std::string end);
+std::map<int, std::string>	readFileIntoString(const std::string& filename);

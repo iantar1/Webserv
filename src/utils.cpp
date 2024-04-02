@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 02:51:33 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 05:05:08 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,4 +237,20 @@ bool	isDirectory(const std::string& path) {
 		return false;
 
 	return S_ISDIR(fileInfo.st_mode);
+}
+
+std::map<int, std::string>	readFileIntoString(const std::string& filename)
+{
+	std::map<int, std::string>	stringMap;
+	std::ifstream file(filename.c_str());
+	if (!file.is_open()) {
+		stringMap[0] = "Error";
+		return stringMap;
+	}
+
+	stringMap[0] = "Success";
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	stringMap[1] = buffer.str();
+	return stringMap;
 }

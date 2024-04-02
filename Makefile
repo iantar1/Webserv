@@ -21,11 +21,10 @@ SRC = 	./src/Config.cpp\
  		./src/request_Utils.cpp \
  		./src/cgi_Response.cpp \
  		./src/Get.cpp \
- 		./src/Post.cpp \
 		./src/Client.cpp \
 	   	./src/Server.cpp \
-
-
+		./src/Desinged_Post.cpp \
+		# ./src/Post.cpp
 		
 %.o : %.cpp
 	${CXX} ${CXXFLAGS} -c $< -o $@
