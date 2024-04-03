@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/02 05:26:59 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/03 05:53:50 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,41 +286,47 @@ bool Response::chechStatus(int status)
 
 void Response::cgi_Handler()
 {
-	char *args[3];
-	char **env;
-	pid_t pid;
-	int status  = 0;
-
-	// if (access())
-	env = setCgiEnvironment();
-	set_args(args);
-
-	output_file = RandomName();
-	if (request->getMethdType() == POST)
+	if (!this->preCGI)
 	{
-		input_file = this->uploadedFileName;
-	}
-	pid = fork();
+		char *args[3];
 
-	if (pid == 0)
-	{
-		alarm(2);
+		// if (access())
+		this->status = 0;
+		this->env = setCgiEnvironment();
+		set_args(args);
+
+		output_file = RandomName();
 		if (request->getMethdType() == POST)
-			redirectCgiInput();
-		redirectCgiOutput();
-		// The CGI should be run in the correct directory for relative path file access.
-		// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
-		if (chdir(getCgiFileRoot().c_str()) == -1)
+		{
+			input_file = this->uploadedFileName;
+			std::cout << RED << "9RA A ISMAIL\nL OUTPUT FILE : " << input_file << RESET << std::endl;
+		}
+		this->pid = fork();
+
+		if (this->pid == 0)
+		{
+			alarm(10);
+			std::cout << "?" << std::endl;
+			if (request->getMethdType() == POST)
+				redirectCgiInput();
+			redirectCgiOutput();
+			// The CGI should be run in the correct directory for relative path file access.
+			// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
+			if (chdir(getCgiFileRoot().c_str()) == -1)
+				exit(EXIT_FAILURE);
+			execve(args[0], args, this->env);
 			exit(EXIT_FAILURE);
-		execve(args[0], args, env);
-		exit(EXIT_FAILURE);
+		}
+		this->preCGI = true;
 	}
-	waitpid(pid, &status,  WCONTINUED);
-	(void)status;
+	std::cout << "WaitPID : " << waitpid(this->pid, &this->status, WNOHANG) << std::endl;
+	if (waitpid(this->pid, &this->status, WNOHANG) == 0)
+		return;
+	(void)this->status;
 	std::cout << "jhsdgjhsdf\n";
-	doneCGI = true;
-	delete[] env;
-	if (chechStatus(status))
+	this->doneCGI = true;
+	delete[] this->env;
+	if (chechStatus(this->status))
 		return;
 	extractCgiMetadata();
 	// request->setPath(output_file);

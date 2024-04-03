@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 04:40:35 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/03 05:13:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,11 @@ private:
 	bool 	startedTheChunk;
 	bool	doneCGI;
 
-	bool	postingDone;
+	bool	preCGI;
+	pid_t pid;
+	int status;
+	char **env;
+
 
 	std::vector<std::string> CgiEnvironment;
 	std::map<std::string, std::string>	cgiResponseHeaders;
@@ -83,6 +87,8 @@ private:
 public:
 	Response(Request *request, t_files &files);
 	virtual ~Response(void);
+
+	bool	postingDone;
 
 	void errorPage(int errorCode);
 	std::string	getPageContent(std::string page);

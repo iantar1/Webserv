@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 05:30:13 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/03 06:02:55 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0),
 													   request(request), files(files), chunkStart(false), streamStart(false),
 													   outOpened(false), gotTime(false), modeChecked(false), dataCopy(false),
-													   startedTheChunk(false), doneCGI(false)
+													   startedTheChunk(false), doneCGI(false), preCGI(false)
 {
 	std::cout << GREEN << "RESPONSE CONSTRUCTOR\n";
 	this->socket = request->getFdSocket();
@@ -91,6 +91,7 @@ void Response::servPage(std::string page)
 
 void	Response::cgiResponse(void)
 {
+	std::cout << YELLOW << "###" << RESET << std::endl;
 	if (this->request->getMethdType() == POST)
 		this->cgiResponseHeaders["STATUS"] = "201 CREATED";
 	else if (this->request->getMethdType() == GET)
@@ -104,8 +105,9 @@ void	Response::cgiResponse(void)
 
 void Response::StartResponse()
 {
-	cgiResponse();
-	// std::cout << RED << "Ana houna" << RESET << std::endl;
+	if (isCGI())
+		cgiResponse();
+	std::cout << RED << "Ana houna" << RESET << std::endl;
 	if (request->getError() != 0)
 	{
 		errorPage(request->getError());
@@ -114,6 +116,7 @@ void Response::StartResponse()
 	}
 	if (request->getMethdType() == GET)
 	{// ! you need to check is the file exist or not
+		// std::cout << "Response : " << this->response << std::endl;
 		if (isCGI() == true)
 			cgi_Handler();
 		else
@@ -122,14 +125,15 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		// PostResponse();
-		posting();
+		if (!this->postingDone)
+			posting();
 		if (isCGI() && this->postingDone)
 		{
 			cgi_Handler();
-			// if (cgi && this->postingDone)
-			// 	return;
+			std::cout << "doneCGI : " << this->doneCGI << std::endl;
+			if (this->doneCGI)
+				fillResponse();
 		}
-		fillResponse();
 	}
 	else if (request->getMethdType() == DELETE)
 	{

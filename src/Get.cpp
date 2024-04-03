@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/03/30 06:45:27 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/03 01:58:56 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,9 @@ void Response::theGetMethod(void)
 
 	if (!checkPreGetMethod())
 		return;
+
+	std::cout << "PATH : " << this->path << std::endl;
+	std::cout << "OLD PATH : " << this->oldPath << std::endl;
 
 	this->response.clear();
 	this->redirection.clear();

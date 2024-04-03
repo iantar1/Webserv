@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/30 08:35:49 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/03 06:00:31 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ void Server::ServeClients(int index)
 	}
 	if (events[index].events & EPOLLIN)
 	{
+		// std::cout << "IN" << std::endl;
 		if (clients[events[index].data.fd]->getRequest()->getDoneHeaderReading() == false)
 			tmp = 1;
 		clients[events[index].data.fd]->ReadParseReqHeader();
@@ -149,6 +150,7 @@ void Server::ServeClients(int index)
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
+		// std::cout << "OUT" << std::endl;
 		tmp = 1;
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == DELETE)
 		{
@@ -158,6 +160,8 @@ void Server::ServeClients(int index)
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
+		if ((clients[events[index].data.fd]->getRequest()->getMethdType() == POST) && clients[events[index].data.fd]->getResponseClass()->postingDone)
+			clients[events[index].data.fd]->ServingClient();
 		write(this->clients[events[index].data.fd]->getSocketFd(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().c_str(),
 			  this->clients[events[index].data.fd]->getResponseClass()->getResponse().size());
@@ -193,7 +197,7 @@ int Server::ServerCore()
 				}
 				else if (clients[events[i].data.fd]->getDoneServing() == false)
 				{
-					std::cout << "Serving client\n";
+					// std::cout << "Serving client\n";
 					clients[events[i].data.fd]->getRequest()->timeOutCheching();
 					ServeClients(i);
 				}

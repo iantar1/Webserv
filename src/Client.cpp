@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 11:22:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/27 03:43:41 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/03 05:01:55 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	Client::ServingClient()
     // allwoed Method , so you need to constuct Respose with Vserver
     response->setURI();
     response->StartResponse();
-    
+    std::cout << "!!" << std::endl;
 }
 
 // ************** Gettter *********************

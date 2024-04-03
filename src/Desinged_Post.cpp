@@ -6,7 +6,7 @@
 /*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 03:18:28 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 05:36:55 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/02 06:23:46 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ void	Response::fillResponse(void)
 	
 	std::map<int, std::string>	mappedString = readFileIntoString(this->output_file);
 
-	if (mappedString[0] == "Error")
+	if (mappedString[0] == "Error") {
+		std::cout << "1" << std::endl;
 		thePostInternalServerError();
+	}
 	else {
 		this->cgiBody = mappedString[1];
 		std::map<std::string, std::string>::iterator	it = this->cgiResponseHeaders.find("STATUS");
@@ -173,8 +175,10 @@ void	Response::thePostMethod(void)
 		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
 	}
-	if (!this->outFile.is_open() && !isCGI())
+	if (!this->outFile.is_open()) {
+		std::cout << "2" << std::endl;
 		thePostInternalServerError();
+	}
 	else
 		thePostResponseCreate();
 }
@@ -243,9 +247,9 @@ void	Response::thePostResponseCreate(void)
 
 			// ! ila maghaddkhoulche asslane 3endek f CGI tanrespondi nichane...
 			if (!isCGI()) {
-				this->request->setDoneServing();
 				thePostResponseCreatedPage();
-				// std::cout << "AAAA" << std::endl;
+				this->request->setDoneServing();
+				std::cout << "AAAA" << std::endl;
 			}
 
 		}
