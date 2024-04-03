@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:46:38 by iantar            #+#    #+#             */
-/*   Updated: 2024/02/15 10:29:19 by iantar           ###   ########.fr       */
+/*   Updated: 2024/03/16 03:59:47 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,19 @@
 # include <fcntl.h>
 # include <sys/select.h>
 # include <sys/stat.h>
+# include <sys/epoll.h>
+# include <netdb.h>
+# include <sys/types.h>
+# include <string.h>
+# include <sys/wait.h>
 
-# include "../src/parseRequest.hpp"
+// # include "macros.hpp"
+
+// # include "Server.hpp"
+
+// # include "Location.hpp"
+
+// # include "Response.hpp"
+// # include "VirtualServer.hpp"
+
+//# include "../src/parseRequest.hpp"

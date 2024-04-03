@@ -26,14 +26,17 @@ TCP and IP protocols are normally part of the protocol stack within the kernel.
 -> In Transport Layer, we mainly use Transmission Control Protocol (TCP) to
     implement HTTP server.
 
-** step to follow **
-<ul>
-  <li>read data</li>
-  <li>parse and store the header</li>
-  <li>if the method is POST, store the body</li>
-</ul>
+
 
 <a href="www.google.com" style="background-color: #1f25; padding: 2px">google</a>
 
 * <h3> Multiplexing:</h3>
+
+* why epoll not select() ? :
+  
+
+  * socket():
+
+
+-> CGI : Common Gateway Interface 
   
