@@ -50,7 +50,7 @@ typedef struct	s_files
 
 std::map<std::string, std::string>	mimeTypes(void);
 size_t	find_last_of(const std::string& str, char ch);
-std::string	generateNameFile(std::string &str);
+std::string	generateFileName(std::string const &ext);
 
 std::string	dec_to_hex(int decimal);
 int	hexStringToInt(const std::string& hexStr);

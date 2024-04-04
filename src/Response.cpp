@@ -26,6 +26,14 @@ Response::Response(Request *request, t_files &files) : request(request), files(f
 }
 
 
+Response::~Response()
+{
+	if (this->inFile.is_open())
+		this->inFile.close();
+	if (this->postOutFile.is_open())
+		this->postOutFile.close();
+}
+
 std::string Response::getPageContent(std::string page)
 {
 	std::string pgNbStr = (split(page, '/').back());

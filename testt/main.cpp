@@ -13,6 +13,7 @@
 #include <cctype>
 #include <set>
 #include <string>
+#include <ctime>
 #define SPACE 32
 
 std::string removeExtraSpaces(std::string const& line)
@@ -75,9 +76,24 @@ void print_map(std::map<std::string, std::string> &out)
 	}
 }
 
-int main(void)
-{
-	std::map<std::string, std::string> out;
-	out = mimeTypes();
-	print_map(out);
+std::string getCurrentDateAsString() {
+    std::time_t currentTime = std::time(NULL);
+    char buffer[80];
+    std::strftime(buffer, 80, "%Y-%m-%d_%H:%M:%S", std::localtime(&currentTime));
+    return std::string(buffer);
 }
+
+int main() {
+    std::string result = "world";
+	std::string prefix = "hello_";
+	result = prefix + result;
+	std::cout << result << std::endl;
+    return 0;
+}
+
+// int main(void)
+// {
+// 	std::map<std::string, std::string> out;
+// 	out = mimeTypes();
+// 	print_map(out);
+// }

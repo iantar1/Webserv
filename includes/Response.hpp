@@ -39,7 +39,8 @@ class Response
 		t_files &files;
 
 		std::ifstream inFile;
-		std::ofstream outFile;
+		std::ofstream postOutFile;
+		std::string postOutFileName;
 
 		std::string responseBody;
 		std::string header;
@@ -70,12 +71,12 @@ class Response
 
 	public:
 		Response(Request *request, t_files &files);
-		virtual ~Response(void);
+		~Response(void);
 
 		void errorPage(int errorCode);
 		std::string getPageContent(std::string page);
 		void theDeleteMethod(void);
-		void StartResponse();
+		// void StartResponse();
 		bool	checkPreGetMethod(void);
 		void	servPage(std::string page);
 
@@ -92,13 +93,15 @@ class Response
 		void Delete();
 
 		const std::string &getResponse() const;
-		void PostResponse();
 
-		void thePostHeaderResponse(int code, int transferType);
-		void thePostResponseCreate(void);
-		void thePostInternalServerError(void);
-		void thePostResponseCreatedPage(void);
-		void thePostMethod(void);
+		// *************** POST ****************
+		void				post();
+		void				PostResponse();
+		void				chunkedPost(void);
+		void				normalPost(void);
+		void				openPostOutFile(void);
+		std::string			contentTypeExt() const;
+		bool				readyToPost();
 
 		// ******************** DelteMethod **************
 	private:

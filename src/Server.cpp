@@ -81,7 +81,11 @@ bool Server::addCleintToEpoll(int index)
 		return 0;
 	event.data.fd = fd;
 	event.events = EPOLLIN | EPOLLOUT;
-
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // subject
+	{
+		close(fd);
+		return 0;
+	}
 	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
 	{
 		close(fd);
@@ -117,21 +121,10 @@ void Server::DropCleint(int ClientFd)
 }
 
 // ! Desing Timeget.getResponse()
-void Server::ServeClients(int index)
-{
-	
-	if (events[index].events & EPOLLIN)
-	{
-		
-	}
-	else if (events[index].events & EPOLLOUT)
-	{
-
-	}
-}
 
 int Server::ServerCore()
 {
+	signal(SIGPIPE, SIG_IGN);
 	int index = 0;
 
 	epollFd = epoll_create1(0);
@@ -163,14 +156,20 @@ int Server::ServerCore()
 					{
 						clients[events[i].data.fd]->request.ReadRequest();
 						if (clients[events[i].data.fd]->request.getMethdType() == POST)
-						{
-							// post();
-						} 	
+							clients[events[i].data.fd]->response->post();
+						// write(events[i].data.fd, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Hi there</h1></body></html>", 81);
 					}
 					else if (events[index].events & EPOLLOUT)
 					{
-
+						std::cerr << "EPOLLOUT" << std::endl;
+						write(events[i].data.fd, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Hi there</h1></body></html>", 81);
+						clients[events[i].data.fd]->setDoneServing();
 					}
+					if (clients[events[i].data.fd]->getDoneServing() == true)
+					{
+						std::cout << "THE CLIENT DONE SERVING\n";
+						DropCleint(events[i].data.fd);
+					}	
 					// std::cout << "Serving client\n";
 					// try
 					// {
@@ -188,7 +187,7 @@ int Server::ServerCore()
 				}
 				else
 				{
-					DropCleint(events[i].data.fd);
+					// DropCleint(events[i].data.fd);
 				}
 			}
 		}

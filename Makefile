@@ -15,13 +15,10 @@ SRC = 	./src/Config.cpp\
 		./src/LocationBlock.cpp\
 		./src/utilFunctions.cpp\
  		./src/Response.cpp \
- 		./src/Delete.cpp \
  		./src/Request.cpp \
  		./src/utils.cpp \
  		./src/request_Utils.cpp \
- 		./src/cgi_Response.cpp \
- 		./src/Get.cpp \
- 		./src/Post.cpp \
+ 		./src/POST_ibel.cpp \
 		./src/Client.cpp \
 	   	./src/Server.cpp \
 

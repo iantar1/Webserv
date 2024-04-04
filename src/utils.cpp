@@ -114,7 +114,6 @@ std::map<std::string, std::string> mimeTypes(void)
 	std::ifstream inFile("DataBase/MIME.type");
 	std::string line;
 	std::vector<std::string> splitLine;
-	int i;
 
 	if (!inFile.is_open()) {
 		std::cerr << "Couldn't open MIME.type file!" << std::endl;
@@ -148,20 +147,30 @@ std::string	getContentExtension(std::map<std::string, std::string> mime, std::st
 	return "";
 }
 
-std::string	generateNameFile(std::string &str)
-{
-	std::string result = "file_" + str + "_";
-	const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+std::string getCurrentDateStr() {
+    char		buffer[80];
+    std::time_t	currentTime;
 
+	currentTime = std::time(NULL);
+    std::strftime(buffer, 80, "%Y-%m-%d_%H:%M:%S", std::localtime(&currentTime));
+    return std::string(buffer);
+}
+
+std::string	generateFileName(std::string const &ext)
+{
+	std::string result = getCurrentDateStr() + "_";
+	const char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	srand(time(0));
 	const int charsetSize = sizeof(charset) - 1;
 
 	for (int i = 0; i < 5; i++)
 		result += charset[rand() % charsetSize];
+	result += ext;
 	return result;
 }
 
 
-bool	isAllowed(std::string &str)
+bool	isAllowed(std::string const &str)
 {
 	std::string	allowedChars("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%");
 
@@ -173,14 +182,14 @@ bool	isAllowed(std::string &str)
 	return true;
 }
 
-bool	isLongReq(std::string &str)
+bool	isLongReq(std::string const &str)
 {
 	if (str.size() > 2048)
 		return true;
 	return false;
 }
 
-bool	startsWith(std::string full, std::string start)
+bool	startsWith(std::string const &full, std::string const &start)
 {
 	if (!full.compare(0, start.size(), start))
 		return true;

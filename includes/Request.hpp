@@ -112,7 +112,7 @@ public:
     int getFdSocket() const;
     int getError() const;
     int getTransferMode();
-    std::size_t GetContentLength() const;
+    std::size_t getContentLength() const;
 
     bool    getDoneServing(void) const;
     bool    getDoneHeaderReading() const;

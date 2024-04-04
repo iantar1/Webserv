@@ -94,9 +94,11 @@ int Request::getTransferMode()
 	return (NORMAL_POST);
 }
 
-std::size_t Request::GetContentLength() const
+std::size_t Request::getContentLength() const
 {
 	std::map<std::string, std::string>::const_iterator it = Header.find("content-length");
+	// std::cout << RED << 
+	std::cout << RED << "geter content-length: " << RESET << it->second << std::endl;
 	if (it != Header.end())
 	{
 		return stringToPosInt(it->second);
@@ -513,7 +515,10 @@ void Request::ReadRequest()
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 		if (bytesRead < 0)
+		{
 			setFlagError(INTERNAL_ERR, "read system call failed");
+			setDoneServing();
+		}
 		if (bytesRead == 0 && !doneHeaderReading)
 		{
 			setFlagError(BAD_REQ, "bad request7");
@@ -531,7 +536,7 @@ void Request::ReadRequest()
 				storeBody();
 			}
 		}
-		// printRequest();
+		printRequest();
 	}
 	catch (const std::exception &e)
 	{
@@ -548,9 +553,9 @@ void Request::printRequest()
 	std::cout << "URI: " << URI << "\n";
 	// std::cout << "URI: " << URI << "\n";
 
-	for (std::map<std::string, std::string>::iterator it = Header.begin(); it != Header.end(); ++it)
+	for (std::map<std::string, std::string>::const_iterator it = Header.begin(); it != Header.end(); ++it)
 	{
-		std::cout << it->first << ":" << it->second << "\n";
+		std::cout << it->first << ", "<< it->first.length() << ":" << it->second << "\n";
 	}
 	std::cout << "query sting: " << getQueryString() << "\n";
 	std::cout << "||************REQUEST Body************||\n";
