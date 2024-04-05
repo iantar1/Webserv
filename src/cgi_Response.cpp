@@ -306,7 +306,7 @@ void Response::cgi_Handler()
 		if (this->pid == 0)
 		{
 			alarm(10);
-			std::cout << "?" << std::endl;
+			// std::cout << "?" << std::endl;
 			if (request->getMethdType() == POST)
 				redirectCgiInput();
 			redirectCgiOutput();
@@ -319,7 +319,7 @@ void Response::cgi_Handler()
 		}
 		this->preCGI = true;
 	}
-	std::cout << "WaitPID : " << waitpid(this->pid, &this->status, WNOHANG) << std::endl;
+	// std::cout << "WaitPID : " << waitpid(this->pid, &this->status, WNOHANG) << std::endl;
 	if (waitpid(this->pid, &this->status, WNOHANG) == 0)
 		return;
 	(void)this->status;

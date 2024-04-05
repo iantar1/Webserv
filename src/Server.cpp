@@ -183,7 +183,7 @@ int Server::ServerCore()
 	{
 		int readyFd;
 		bzero(events, sizeof(events));
-		// std::cout << "***************** wiating for a new connection *******************\n";
+		std::cout << "***************** wiating for a new connection *******************\n";
 		if ((readyFd = epoll_wait(epollFd, events, MAX_EVENTS, -1)) != 0)
 		{
 			if (readyFd < 0)

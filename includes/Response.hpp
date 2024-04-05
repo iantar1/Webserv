@@ -79,6 +79,8 @@ private:
 	int status;
 	char **env;
 
+	// time_t	start;
+
 
 	std::vector<std::string> CgiEnvironment;
 	std::map<std::string, std::string>	cgiResponseHeaders;

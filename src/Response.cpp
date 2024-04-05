@@ -107,7 +107,7 @@ void Response::StartResponse()
 {
 	if (isCGI())
 		cgiResponse();
-	std::cout << RED << "Ana houna" << RESET << std::endl;
+	std::cout << RED << "XXX" << RESET << std::endl;
 	if (request->getError() != 0)
 	{
 		errorPage(request->getError());
@@ -117,8 +117,11 @@ void Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{// ! you need to check is the file exist or not
 		// std::cout << "Response : " << this->response << std::endl;
-		if (isCGI() == true)
+		if (isCGI() == true) {
 			cgi_Handler();
+			if (this->doneCGI)
+				fillResponse();
+		}
 		else
 			theGetMethod();
 	}
@@ -140,6 +143,7 @@ void Response::StartResponse()
 		DeleteMethod();
 		this->request->setDoneServing();
 	}
+	std::cout << RED << "YYY" << RESET << std::endl;
 }
 
 const std::string &Response::getResponse() const

@@ -102,6 +102,10 @@ void	Response::thePostMethod(void)
 	if (!prePostMethod())
 		return;
 
+	// if (this->request->getBody().empty())
+	// {
+	// 	this->start
+	// }
 	if (!this->outOpened) {
 		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
 		this->outOpened = true;
