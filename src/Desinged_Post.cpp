@@ -32,13 +32,13 @@ void	Response::fillResponse(void)
 {
 	if (this->request->getDoneServing())
 		return;
-	
+
 	if (this->request->getError()) {
 		errorPage(this->request->getError());
 		this->request->setDoneServing();
 		return;
 	}
-	
+
 	std::map<int, std::string>	mappedString = readFileIntoString(this->output_file);
 
 	if (mappedString[0] == "Error") {
@@ -78,7 +78,29 @@ void	Response::fillResponse(void)
 
 void	Response::posting(void)
 {
-	PostResponse();
+	if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
+		this->contentType = this->request->getHeaders().find("content-type")->second;
+		if (startsWith(this->contentType, "multipart/form-data")) {
+			errorPage(NOT_IMPLEMENTED);
+			this->request->setDoneServing();
+			return;
+		}
+	}
+	if (!this->startedPostTime) {
+		time(&this->start);
+		this->startedPostTime = true;
+	}
+	if (this->request->getBody().empty()) {
+		time(&this->now);
+		double	deltaT = difftime(this->now, this->start);
+		if (deltaT > TIMEOUT) {
+			errorPage(GATEWAY_TIMEOUT);
+			this->request->setDoneServing();
+			unlink(this->uploadedFileName.c_str());
+		}
+	}
+	else
+		PostResponse();
 }
 
 void	Response::PostResponse()
@@ -237,6 +259,7 @@ void	Response::thePostResponseCreate(void)
 	{
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
 		this->outFile << std::flush;
+		time(&this->start);
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
 		if (this->contentTotalSizePosted == this->contentLenght) {
@@ -269,6 +292,7 @@ void	Response::thePostResponseCreate(void)
 					if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize()) {
 						errorPage(LARGE_REQ);
 						unlink(this->uploadedFileName.c_str());
+						this->request->setDoneServing();
 						return;
 					}
 
@@ -293,6 +317,7 @@ void	Response::thePostResponseCreate(void)
 			std::string	toWrite = this->appendedRequest.substr(0, this->chunkSize);
 			this->appendedRequest = this->appendedRequest.substr(this->chunkSize + 2);
 			this->outFile.write(toWrite.data(), this->chunkSize);
+			time(&this->start);
 			this->contentTotalSizePosted += toWrite.size();
 			this->outFile << std::flush;
 			this->appendedSize = this->appendedRequest.size();
@@ -305,6 +330,7 @@ void	Response::thePostResponseCreate(void)
 				if (this->contentTotalSizePosted > this->request->Vserver.getMaxBodySize()) {
 					errorPage(LARGE_REQ);
 					unlink(this->uploadedFileName.c_str());
+					this->request->setDoneServing();
 					return;
 				}
 

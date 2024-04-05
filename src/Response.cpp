@@ -25,10 +25,9 @@ Response::Response(Request *request, t_files &files) : contentTotalSizePosted(0)
 
 Response::~Response(void)
 {
-
 	std::cout << GREEN << "RESPONCE DESTRUCTOR\n"
 			  << RESET;
-	// output_file.empty() && unlink(output_file.c_str());
+	unlink(output_file.c_str());
 }
 
 void Response::errorPage(int errorCode)
@@ -128,6 +127,7 @@ void Response::StartResponse()
 	else if (request->getMethdType() == POST)
 	{
 		// PostResponse();
+		std::cout << RED << "YYY" << RESET << std::endl;
 		if (!this->postingDone)
 			posting();
 		if (isCGI() && this->postingDone)
@@ -137,13 +137,15 @@ void Response::StartResponse()
 			if (this->doneCGI)
 				fillResponse();
 		}
+		std::cout << "*****************" << std::endl;
+		std::cout << this->response << std::endl;
 	}
 	else if (request->getMethdType() == DELETE)
 	{
 		DeleteMethod();
 		this->request->setDoneServing();
 	}
-	std::cout << RED << "YYY" << RESET << std::endl;
+	std::cout << RED << "ZZZ" << RESET << std::endl;
 }
 
 const std::string &Response::getResponse() const

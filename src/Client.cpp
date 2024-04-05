@@ -41,7 +41,6 @@ void	Client::ServingClient()
     // allwoed Method , so you need to constuct Respose with Vserver
     response->setURI();
     response->StartResponse();
-    std::cout << "!!" << std::endl;
 }
 
 // ************** Gettter *********************

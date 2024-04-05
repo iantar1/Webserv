@@ -193,6 +193,13 @@ bool	Response::checkPreGetMethod(void)
 		return false;
 	}
 
+	if (!this->request->getBody().empty())
+	{
+		errorPage(BAD_REQUEST);
+		request->setDoneServing();
+		return false;
+	}
+
 	if (!this->gotTime)
 	{
 		tm *local_time;

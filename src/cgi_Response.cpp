@@ -299,13 +299,13 @@ void Response::cgi_Handler()
 		if (request->getMethdType() == POST)
 		{
 			input_file = this->uploadedFileName;
-			std::cout << RED << "9RA A ISMAIL\nL OUTPUT FILE : " << input_file << RESET << std::endl;
+			// std::cout << RED << "9RA A ISMAIL\nL OUTPUT FILE : " << input_file << RESET << std::endl;
 		}
 		this->pid = fork();
 
 		if (this->pid == 0)
 		{
-			alarm(10);
+			alarm(TIMEOUT);
 			// std::cout << "?" << std::endl;
 			if (request->getMethdType() == POST)
 				redirectCgiInput();
@@ -323,8 +323,9 @@ void Response::cgi_Handler()
 	if (waitpid(this->pid, &this->status, WNOHANG) == 0)
 		return;
 	(void)this->status;
-	std::cout << "jhsdgjhsdf\n";
+	// std::cout << "jhsdgjhsdf\n";
 	this->doneCGI = true;
+	// std::cout << "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\\n" << GREEN << readFileIntoString(this->output_file)[1] << RESET << std::endl;
 	delete[] this->env;
 	if (chechStatus(this->status))
 		return;

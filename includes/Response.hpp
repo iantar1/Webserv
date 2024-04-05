@@ -73,14 +73,15 @@ private:
 	bool 	dataCopy;
 	bool 	startedTheChunk;
 	bool	doneCGI;
+	bool	startedPostTime;
 
 	bool	preCGI;
 	pid_t pid;
 	int status;
 	char **env;
 
-	// time_t	start;
-
+	time_t	start;
+	time_t	now;
 
 	std::vector<std::string> CgiEnvironment;
 	std::map<std::string, std::string>	cgiResponseHeaders;

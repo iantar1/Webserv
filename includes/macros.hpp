@@ -56,6 +56,8 @@
 #define CHUNKED_POST 101
 #define BOUNDRIES_POST 102
 
+#define TIMEOUT 10
+
 // ! check delete Method
 #define SUCCESS 0
 #define PERMISSION_DENIED 1
