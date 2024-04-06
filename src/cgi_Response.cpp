@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 14:33:37 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/06 15:09:41 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,22 +310,19 @@ void Response::cgi_Handler()
 			if (chdir(getCgiFileRoot().c_str()) == -1)
 				exit(EXIT_FAILURE);
 			execve(args[0], args, this->env);
+			delete[] this->env;
 			exit(EXIT_FAILURE);
 		}
 		this->preCGI = true;
+		delete[] this->env;
 	}
 	if (waitpid(this->pid, &this->status, WNOHANG) == 0)
 		return;
 	(void)this->status;
-	// std::cout << "jhsdgjhsdf\n";
 	this->doneCGI = true;
-	// std::cout << "/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\\n" << GREEN << readFileIntoString(this->output_file)[1] << RESET << std::endl;
-	delete[] this->env;
 	if (chechStatus(this->status))
 		return;
 	extractCgiMetadata();
-	// request->setPath(output_file);
-	// ! tuimeout
 }
 
 /*

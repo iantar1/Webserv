@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 14:08:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/06 15:11:58 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@
 #define CHUNKED_POST 101
 #define BOUNDRIES_POST 102
 
-#define TIMEOUT 3
+#define TIMEOUT 30
 
 // ! check delete Method
 #define SUCCESS 0
