@@ -238,6 +238,11 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
+std::string const& LocationBlock::getReturnPath() const
+{
+	return this->returnPath;
+}
+
 // long	LocationBlock::getMaxBodySize() const
 // {
 // 	return (this->)
@@ -261,6 +266,7 @@ std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationB
 		outstream << it->first << " " << it->second << std::endl;
 	outstream << "upload_path: " << locationBlock.getUploadPath() << std::endl;
 	outstream << "upload_enable: " << locationBlock.getUploadEnable() << std::endl;
+	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
 	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
 	return outstream;
 }
