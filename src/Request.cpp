@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/29 15:03:11 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 06:01:16 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:38:29 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 std::string Request::Methods[] = {"POST", "GET", "DELETE", "HEAD", "PUT", "CONNECT", "OPTIONS", "TRACE"};
 std::string Request::validChars = "-._~:/?#[]@!$&'()*+,;=%";
 
-Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0), 
-				doneServing(false), doneHeaderReading(false), Vserver(_Vserver)
+Request::Request(int fd, const ServerBlock &_Vserver) : SocketFd(fd), ErrorFlag(0),
+														doneServing(false), doneHeaderReading(false), Vserver(_Vserver)
 {
 	std::cout << YELLOW << "REQUEST CONSTRUCTOR\n";
 	MethodType = 0;
@@ -375,7 +375,10 @@ void Request::WhichMethod(const std::string &method) // ! add other methods
 		if (Methods[i].compare(method) == 0)
 		{
 			if (i > 2)
-				setFlagError(NOT_IMPLEMENTED, "NOT IMPLEMENTED");
+			{
+				MethodType = i + 1;
+				setFlagError(NOT_IMPLEMENTED, "NOT IMPLEMENTED"); // TODO jkdkvcjhfdkvjdf
+			}
 			MethodType = i + 1;
 			return;
 		}
@@ -500,7 +503,10 @@ void Request::ReadRequest()
 	{
 		bytesRead = read(SocketFd, buf, BUF_SIZE);
 		if (bytesRead < 0)
+		{
+
 			setFlagError(INTERNAL_ERR, "read system call failed");
+		}
 		if (bytesRead == 0 && !doneHeaderReading)
 		{
 			setFlagError(BAD_REQ, "bad request7");
@@ -513,10 +519,10 @@ void Request::ReadRequest()
 		if (doneHeaderReading)
 		{
 			// * save the first chunck body
-			if (MethodType == POST)
-			{
-				storeBody();
-			}
+			storeBody();
+			// if (MethodType == POST)
+			// {
+			// }
 		}
 		// printRequest();
 	}

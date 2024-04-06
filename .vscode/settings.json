@@ -6,7 +6,8 @@
         "iosfwd": "cpp",
         "fstream": "cpp",
         "new": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "istream": "cpp"
     },
     "editor.codeActionsOnSave": {
         

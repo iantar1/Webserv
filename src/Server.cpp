@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 07:57:15 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:54:40 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void Server::ServeClients(int index)
 	}
 	else if (events[index].events & EPOLLOUT)
 	{
-		// std::cout << "OUT" << std::endl;
+		std::cout << "HHHHHHHHHHHHHHHHHHHH\n";
 		tmp = 1;
 		if (clients[events[index].data.fd]->getRequest()->getMethdType() == DELETE)
 		{
@@ -160,7 +160,8 @@ void Server::ServeClients(int index)
 		{
 			clients[events[index].data.fd]->ServingClient();
 		}
-		if ((clients[events[index].data.fd]->getRequest()->getMethdType() == POST)) {
+		if ((clients[events[index].data.fd]->getRequest()->getMethdType() == POST))
+		{
 			if (clients[events[index].data.fd]->getResponseClass()->postingDone)
 				clients[events[index].data.fd]->ServingClient();
 			else

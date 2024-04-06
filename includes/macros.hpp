@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   macros.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/08 09:47:43 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 06:50:34 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:08:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #define POST 1
 #define GET 2
 #define DELETE 3
+#define HEAD 4 
 
 // Reset
 #define RESET "\033[0m" // Reset color to default

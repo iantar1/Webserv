@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/06 13:50:06 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:41:10 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	else
 		header_it->second += this->contentType_cgi;
 
-	if (!this->cookie.empty()) {
+	if (!this->cookie.empty())
+	{
 		header_it = this->files.headers.find(SET_COOKIE);
 		header_it->second += this->cookie;
 	}
@@ -50,12 +51,11 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	}
 
 	//  override your map here
-	
+
 	header_it = this->files.headers.begin();
 	while (header_it != this->files.headers.end())
 	{
-		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT)
-			|| (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
+		if ((transferType == TRANSFER_ENCODING && header_it->first != CONTENT_LENGHT) || (transferType == CONTENT_LENGHT && header_it->first != TRANSFER_ENCODING))
 		{
 			this->response += header_it->second + "\r\n";
 		}
@@ -117,11 +117,11 @@ void Response::theGetResponseOk(void)
 	else
 	{
 		this->body.clear();
-		char buf[1025];
+		char buf[BUF_SIZE];
 		std::streamsize byteRead;
 
 		signal(SIGPIPE, SIG_IGN);
-		this->inFile.read(buf, 1024);
+		this->inFile.read(buf, BUF_SIZE);
 		byteRead = this->inFile.gcount();
 		if (byteRead <= 0)
 		{
@@ -191,7 +191,7 @@ void Response::regularFileGet(void)
 	}
 }
 
-bool	Response::checkPreGetMethod(void)
+bool Response::checkPreGetMethod(void)
 {
 	if (request->getError() != 0)
 	{
@@ -200,6 +200,7 @@ bool	Response::checkPreGetMethod(void)
 		return false;
 	}
 
+		
 	if (!this->request->getBody().empty())
 	{
 		errorPage(BAD_REQUEST);
@@ -215,12 +216,7 @@ bool	Response::checkPreGetMethod(void)
 		now = time(0);
 		local_time = localtime(&now);
 
-		this->strTime = ToString(local_time->tm_year + 1900)
-						+ "-" + ToString(local_time->tm_mon + 1)
-						+ "-" + ToString(local_time->tm_mday)
-						+ " " + ToString(local_time->tm_hour)
-						+ ":" + ToString(local_time->tm_min)
-						+ ":" + ToString(local_time->tm_sec);
+		this->strTime = ToString(local_time->tm_year + 1900) + "-" + ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday) + " " + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min) + ":" + ToString(local_time->tm_sec);
 		this->gotTime = true;
 	}
 
@@ -250,7 +246,8 @@ void Response::theGetMethod(void)
 
 	if (S_ISDIR(this->buffer.st_mode))
 	{
-		if (this->path[this->path.size() - 1] != '/') {
+		if (this->path[this->path.size() - 1] != '/')
+		{
 			theGetRedirectionRequest();
 			this->request->setDoneServing();
 			return;
@@ -268,9 +265,9 @@ void Response::theGetMethod(void)
 						else
 							servPage(this->request->location.getIndex().at(i));
 						this->request->setDoneServing();
-						return ;
+						return;
 					}
-					// if (!access(this->request->location.getIndex().at(i).c_str(), R_OK)) 
+					// if (!access(this->request->location.getIndex().at(i).c_str(), R_OK))
 					// {
 					// 	/*
 					// 		==============================================
@@ -296,5 +293,5 @@ void Response::theGetMethod(void)
 		this->request->setDoneServing();
 	}
 	else
-			regularFileGet();
+		regularFileGet();
 }

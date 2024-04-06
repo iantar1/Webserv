@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/06 10:41:59 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:43:03 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,9 @@ void Response::errorPage(int errorCode)
 			this->response += header_it->second + "\r\n";
 		header_it++;
 	}
-	this->response += "\r\n" + this->responseBody;
-	// write(this->socket, this->response.c_str(), this->response.size());
-	// this->response.clear();
+	this->response += "\r\n";
+	if (request->getMethod() != "HEAD")
+		this->response += this->responseBody;
 }
 
 void Response::servPage(std::string page)
@@ -88,7 +88,7 @@ void Response::servPage(std::string page)
 	this->response += "\r\n" + this->responseBody;
 }
 
-void	Response::cgiResponse(void)
+void Response::cgiResponse(void)
 {
 	std::cout << YELLOW << "###" << RESET << std::endl;
 	if (this->request->getMethdType() == POST)
@@ -104,9 +104,9 @@ void	Response::cgiResponse(void)
 
 void Response::StartResponse()
 {
+
 	if (isCGI())
 		cgiResponse();
-	std::cout << RED << "XXX" << RESET << std::endl;
 	if (request->getError() != 0)
 	{
 		errorPage(request->getError());
@@ -114,13 +114,14 @@ void Response::StartResponse()
 		return;
 	}
 	if (request->getMethdType() == GET)
-	{// ! you need to check is the file exist or not
+	{ // ! you need to check is the file exist or not
 		// std::cout << "Response : " << this->response << std::endl;
 		std::cout << "Path: " << this->path << std::endl;
 		if (!checkPreGetMethod())
 			return;
 
-		if (isCGI() == true) {
+		if (isCGI() == true)
+		{
 			cgi_Handler();
 			if (this->doneCGI)
 				fillResponse();
@@ -157,19 +158,19 @@ const std::string &Response::getResponse() const
 	return this->response;
 }
 
-std::string	Response::getPageContent(std::string page)
+std::string Response::getPageContent(std::string page)
 {
-	std::string		pgNbStr = (split(page, '/').back());
+	std::string pgNbStr = (split(page, '/').back());
 	std::istringstream pg(pgNbStr);
 	int pgNb;
 	pg >> pgNb;
 	if (request->Vserver.getErrorPages().find(pgNb) != request->Vserver.getErrorPages().end())
 	{
-		page =  request->Vserver.getErrorPages().find(pgNb)->second;
+		page = request->Vserver.getErrorPages().find(pgNb)->second;
 	}
-	std::ifstream	inFile(page.c_str());
-	std::string		line, pageContent = "";
- 
+	std::ifstream inFile(page.c_str());
+	std::string line, pageContent = "";
+
 	if (inFile.is_open())
 	{
 		while (std::getline(inFile, line))

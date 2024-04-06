@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cgi_Response.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 23:03:14 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/03 05:53:50 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:33:37 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,21 +297,16 @@ void Response::cgi_Handler()
 
 		output_file = RandomName();
 		if (request->getMethdType() == POST)
-		{
 			input_file = this->uploadedFileName;
-			// std::cout << RED << "9RA A ISMAIL\nL OUTPUT FILE : " << input_file << RESET << std::endl;
-		}
+
 		this->pid = fork();
 
 		if (this->pid == 0)
 		{
 			alarm(TIMEOUT);
-			// std::cout << "?" << std::endl;
 			if (request->getMethdType() == POST)
 				redirectCgiInput();
 			redirectCgiOutput();
-			// The CGI should be run in the correct directory for relative path file access.
-			// std::cout << "@@@@@@@@@@@@@@@" << std::endl;
 			if (chdir(getCgiFileRoot().c_str()) == -1)
 				exit(EXIT_FAILURE);
 			execve(args[0], args, this->env);
@@ -319,7 +314,6 @@ void Response::cgi_Handler()
 		}
 		this->preCGI = true;
 	}
-	// std::cout << "WaitPID : " << waitpid(this->pid, &this->status, WNOHANG) << std::endl;
 	if (waitpid(this->pid, &this->status, WNOHANG) == 0)
 		return;
 	(void)this->status;
