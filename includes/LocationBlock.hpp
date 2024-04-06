@@ -32,6 +32,7 @@ class LocationBlock
 		std::string							uploadPath;
 		bool 								uploadEnable;
 		bool 								cgiEnable;
+		std::string							returnPath;
 
 	// #######   end of LocationBlock   ########
 		bool	checkLocation(std::vector<std::string> location);
@@ -43,6 +44,7 @@ class LocationBlock
 		bool	checkUploadPath(std::vector<std::string> uploadPath);
 		bool	checkUploadEnable(std::vector<std::string> uploadEnable);
 		bool	checkCgiEnable(std::vector<std::string> cgiEnable);
+		bool	checkReturn(std::vector<std::string> returnPath);
 
 	public:
 		LocationBlock();

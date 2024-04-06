@@ -25,6 +25,7 @@ void LocationBlock::initFieldsMap()
 	Fields["upload_path"] = &LocationBlock::checkUploadPath;
 	Fields["upload_enable"] = &LocationBlock::checkUploadEnable;
 	Fields["cgi_enable"] = &LocationBlock::checkCgiEnable;
+	Fields["return"] = &LocationBlock::checkReturn;
 }
 
 void LocationBlock::initFields()
@@ -175,6 +176,18 @@ bool LocationBlock::checkCgiEnable(std::vector<std::string> cgiEnable)
 	else
 		return false;
 	this->cgiEnable = cgiEnableBool;
+	return true;
+}
+
+bool LocationBlock::checkReturn(std::vector<std::string> returnPath)
+{
+	std::string retPath;
+	if (returnPath.size() != 3 || *(returnPath.end() - 1) != ";")
+		return false;
+	retPath = returnPath[1];
+	if (retPath.empty())
+		return false;
+	this->returnPath = retPath;
 	return true;
 }
 
