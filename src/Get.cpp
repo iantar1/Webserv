@@ -3,25 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Get.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:56:53 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/03 01:58:56 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 13:50:06 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
 
-// you should tell me where can I send to had zmmer Content-type: text/html; charset=UTF-8   from CGI
-
-// 1 RESPONSE_STATUS = success
-// 2 date = 20:44:0444
-// 3 content_type = 
-
-
 void Response::theGetHeaderResponse(int code, int transferType)
 {
 	std::map<int, std::string>::iterator header_it;
+
 	header_it = this->files.headers.find(RESPONSE_STATUS);
 	header_it->second += this->files.status.find(code)->second;
 
@@ -29,21 +23,25 @@ void Response::theGetHeaderResponse(int code, int transferType)
 	header_it->second += this->strTime;
 
 	header_it = this->files.headers.find(CONTENT_TYPE);
-	// if (this->contentType_cgi.empty())
-	// 	header_it->second += this->contentType;
-	// else
-	// 	header_it->second += this->contentType_cgi;
-	//! if (set_cookies())
-	
-	header_it->second += this->contentType;
-	header_it = this->files.headers.find(SET_COOKIE);
-	header_it->second += this->cookie;
+	if (this->contentType_cgi.empty())
+		header_it->second += this->contentType;
+	else
+		header_it->second += this->contentType_cgi;
 
-	if (this->redirection != "")
+	if (!this->cookie.empty()) {
+		header_it = this->files.headers.find(SET_COOKIE);
+		header_it->second += this->cookie;
+	}
+	else
+		this->files.headers.erase(SET_COOKIE);
+
+	if (!this->redirection.empty())
 	{
 		header_it = this->files.headers.find(LOCATION);
 		header_it->second += this->redirection;
 	}
+	else
+		this->files.headers.erase(LOCATION);
 
 	if (transferType == CONTENT_LENGHT)
 	{
@@ -71,6 +69,15 @@ void Response::theGetRedirectionRequest(void)
 	this->contentType = "text/html";
 	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
 	this->redirection = this->oldPath + "/";
+	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
+	this->response += this->body;
+}
+
+void Response::theGetRedirectionIndex(std::string newIndex)
+{
+	this->contentType = "text/html";
+	this->body = getPageContent("defaultPages/301.htm") + "\r\n\r\n";
+	this->redirection = newIndex;
 	theGetHeaderResponse(MOVED_PERMA, CONTENT_LENGHT);
 	this->response += this->body;
 }
@@ -223,68 +230,71 @@ bool	Response::checkPreGetMethod(void)
 		this->oldPath = this->request->getOldPath();
 		this->dataCopy = true;
 	}
+
+	if (stat(this->path.c_str(), &this->buffer) == -1)
+	{
+		theGetErrorNotFound();
+		this->request->setDoneServing();
+		return false;
+	}
 	return true;
 }
 
 void Response::theGetMethod(void)
 {
-	struct stat buffer;
-
-	if (!checkPreGetMethod())
-		return;
-
 	std::cout << "PATH : " << this->path << std::endl;
 	std::cout << "OLD PATH : " << this->oldPath << std::endl;
 
 	this->response.clear();
 	this->redirection.clear();
 
-	if (stat(this->path.c_str(), &buffer))
+	if (S_ISDIR(this->buffer.st_mode))
 	{
-		theGetErrorNotFound();
+		if (this->path[this->path.size() - 1] != '/') {
+			theGetRedirectionRequest();
+			this->request->setDoneServing();
+			return;
+		}
+		else
+		{
+			if (!this->request->location.getIndex().empty())
+			{
+				for (size_t i = 0; i < this->request->location.getIndex().size(); i++)
+				{
+					if (stat(this->request->location.getIndex().at(i).c_str(), &this->buf) == 0)
+					{
+						if (S_ISDIR(this->buf.st_mode))
+							theGetRedirectionIndex(this->request->location.getIndex().at(i));
+						else
+							servPage(this->request->location.getIndex().at(i));
+						this->request->setDoneServing();
+						return ;
+					}
+					// if (!access(this->request->location.getIndex().at(i).c_str(), R_OK)) 
+					// {
+					// 	/*
+					// 		==============================================
+					// 		ISMAIL WORKS : CGI !!!
+					// 		==============================================
+					// 	*/
+					// 	servPage(this->request->location.getIndex().at(i));
+					// 	this->request->setDoneServing();
+					// 	return;
+					// }
+				}
+			}
+			if (this->request->location.getAutoIndex())
+				directoryListing();
+			else
+				theGetErrorForbidden();
+		}
+		this->request->setDoneServing();
+	}
+	if (!(this->buffer.st_mode & S_IRUSR))
+	{
+		theGetErrorForbidden();
 		this->request->setDoneServing();
 	}
 	else
-	{
-		if (S_ISDIR(buffer.st_mode))
-		{
-			if (this->path[this->path.size() - 1] != '/') {
-				theGetRedirectionRequest();
-				this->request->setDoneServing();
-				return;
-			}
-			else
-			{
-				if (!this->request->location.getIndex().empty())
-				{
-					for (size_t i = 0; i < this->request->location.getIndex().size(); i++)
-					{
-						if (!access(this->request->location.getIndex().at(i).c_str(), R_OK)) 
-						{
-							/*
-								==============================================
-								ISMAIL WORKS : CGI !!!
-								==============================================
-							*/
-							servPage(this->request->location.getIndex().at(i));
-							this->request->setDoneServing();
-							return;
-						}
-					}
-				}
-				if (this->request->location.getAutoIndex())
-					directoryListing();
-				else
-					theGetErrorForbidden();
-			}
-			this->request->setDoneServing();
-		}
-		if (!(buffer.st_mode & S_IRUSR))
-		{
-			theGetErrorForbidden();
-			this->request->setDoneServing();
-		}
-		else
 			regularFileGet();
-	}
 }

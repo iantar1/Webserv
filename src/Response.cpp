@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 17:09:09 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/03 06:02:55 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:41:59 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,10 @@ void Response::StartResponse()
 	if (request->getMethdType() == GET)
 	{// ! you need to check is the file exist or not
 		// std::cout << "Response : " << this->response << std::endl;
+		std::cout << "Path: " << this->path << std::endl;
+		if (!checkPreGetMethod())
+			return;
+
 		if (isCGI() == true) {
 			cgi_Handler();
 			if (this->doneCGI)

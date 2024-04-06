@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/06 08:05:44 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 13:08:28 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ private:
 
 	Request *request;
 	t_files &files;
+	struct stat buffer;
+	struct stat buf;
 
 	std::ifstream inFile;
 	std::ofstream outFile;
@@ -53,6 +55,7 @@ private:
 	std::string appendedRequest;
 	std::string	uri;
 	std::string	uploadedFileName;
+
 
 // cgi inpit/output
 	std::string	input_file;
@@ -99,6 +102,7 @@ public:
 
 	void	theGetHeaderResponse(int code, int transferType);
 	void	theGetRedirectionRequest(void);
+	void	theGetRedirectionIndex(std::string newIndex);
 	void	theGetErrorBadRequest(void);
 	void	theGetErrorForbidden(void);
 	void	theGetErrorNotFound(void);

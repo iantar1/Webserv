@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 03:18:28 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/06 08:11:55 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 10:29:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ bool	Response::prePostMethod(void)
 				this->mode = NORMAL;
 			this->modeChecked = true;
 		}
-		
+
 		if (this->mode == NORMAL)
 		{
 			this->postType = NORMAL_POST;
@@ -164,7 +164,6 @@ bool	Response::prePostMethod(void)
 			char *end;
 			this->contentLenght = std::strtoll((this->request->getHeaders().find("content-length")->second).c_str(), &end, 10);
 			if (this->contentLenght < 0) {
-				std::cout << "Hhhhhhh" << std::endl;
 				errorPage(BAD_REQ);
 				this->request->setDoneServing();
 				return false;
@@ -281,7 +280,7 @@ void	Response::thePostResponseCreate(void)
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
 		// if (this->con)
-		if (this->contentTotalSizePosted >= this->contentLenght){
+		if (this->contentTotalSizePosted > this->contentLenght){
 			errorPage(GATEWAY_TIMEOUT);
 			this->request->setDoneServing();
 			unlink(this->uploadedFileName.c_str());
