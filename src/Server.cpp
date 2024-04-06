@@ -6,7 +6,7 @@
 /*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 10:12:09 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/02 01:50:38 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/05 03:20:38 by iantar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ bool Server::addCleintToEpoll(int index)
 		close(fd);
 		return 0;
 	}
-	if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &event) == -1)
+	if (epoll_ctl(fd, EPOLL_CTL_ADD, fd, &event) == -1)
 	{
 		close(fd);
 		return 0;
@@ -121,6 +121,7 @@ void Server::DropCleint(int ClientFd)
 }
 
 // ! Desing Timeget.getResponse()
+// TODO I think doneServin it must be in the client
 
 int Server::ServerCore()
 {
