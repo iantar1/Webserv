@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Delete.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iantar <iantar@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/03/28 09:00:49 by iantar           ###   ########.fr       */
+/*   Updated: 2024/04/06 02:59:07 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ void Response::DeleteMethod()
 		status = DeleteDiractory(request->getNewPath());
 	}
 	this->contentType = "text/html";
+	
 	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
 	this->response += this->body;
