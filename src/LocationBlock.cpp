@@ -25,6 +25,7 @@ void LocationBlock::initFieldsMap()
 	Fields["upload_path"] = &LocationBlock::checkUploadPath;
 	Fields["upload_enable"] = &LocationBlock::checkUploadEnable;
 	Fields["cgi_enable"] = &LocationBlock::checkCgiEnable;
+	Fields["return"] = &LocationBlock::checkReturn;
 }
 
 void LocationBlock::initFields()
@@ -178,6 +179,18 @@ bool LocationBlock::checkCgiEnable(std::vector<std::string> cgiEnable)
 	return true;
 }
 
+bool LocationBlock::checkReturn(std::vector<std::string> returnPath)
+{
+	std::string retPath;
+	if (returnPath.size() != 3 || *(returnPath.end() - 1) != ";")
+		return false;
+	retPath = returnPath[1];
+	if (retPath.empty())
+		return false;
+	this->returnPath = retPath;
+	return true;
+}
+
 // ****************** getters ***********************
 
 std::string const& LocationBlock::getLocationName() const
@@ -225,6 +238,11 @@ bool const& LocationBlock::getCgiEnable() const
 	return this->cgiEnable;
 }
 
+std::string const& LocationBlock::getReturnPath() const
+{
+	return this->returnPath;
+}
+
 // long	LocationBlock::getMaxBodySize() const
 // {
 // 	return (this->)
@@ -248,6 +266,7 @@ std::ostream& operator<<(std::ostream& outstream, LocationBlock const& locationB
 		outstream << it->first << " " << it->second << std::endl;
 	outstream << "upload_path: " << locationBlock.getUploadPath() << std::endl;
 	outstream << "upload_enable: " << locationBlock.getUploadEnable() << std::endl;
+	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
 	outstream << "cgi_enable: " << locationBlock.getCgiEnable() << std::endl;
 	return outstream;
 }
