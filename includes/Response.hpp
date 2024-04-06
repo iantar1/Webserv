@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 00:56:12 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/03 05:13:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 08:05:44 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ private:
 	size_t 	chunkContentTotalSizePosted;
 	size_t chunkSize;
 	int 	mode;
-	int 	contentLenght;
+	long long 	contentLenght;
 	int 	postType;
 	size_t 	ccl;
 	size_t 	appendedSize;
@@ -120,6 +120,7 @@ public:
 	void	PostResponse(void);
 
 	void	cgiResponse(void);
+	void	timedOut(void);
 
 	// ******************** Design Post **************
 

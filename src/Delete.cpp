@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 03:05:10 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 04:32:12 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void Response::DeleteMethod()
 		if (status < 0)
 			status = 1;
 	}
-	if(status_code[status] != 204)
+	if (status_code[status] != 204)
 		this->body = getPageContent(filePath[status]) + "\r\n\r\n";
 	theDeleteHeaderResponse(status_code[status], CONTENT_LENGHT);
 	this->contentType = "text/html";

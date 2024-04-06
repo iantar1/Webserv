@@ -3,30 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Desinged_Post.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 03:18:28 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 06:23:46 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 08:11:55 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Response.hpp"
-
-/*
-
-	if (Methd == POST)
-	{
-		posting()
-		if (cgi && posting_done)
-		{
-			cgi();
-			if (cgi_done == false)
-				return ;
-		}
-		response();
-	}
-
-*/
 
 void	Response::fillResponse(void)
 {
@@ -73,23 +57,26 @@ void	Response::fillResponse(void)
 		this->response += "\r\n" + this->cgiBody;
 	}
 	this->request->setDoneServing();
-	std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
+	// std::cout << "=========================\n" << this->response << "\n=========================" << std::endl;
+}
+
+void	Response::timedOut(void)
+{
+	time(&this->now);
+	double	deltaT = difftime(this->now, this->start);
+	std::cout << "DeltaT = " << deltaT << std::endl;
+	if (deltaT > TIMEOUT) {
+		errorPage(GATEWAY_TIMEOUT);
+		this->request->setDoneServing();
+		unlink(this->uploadedFileName.c_str());
+	}
 }
 
 void	Response::posting(void)
 {
-	if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
-		this->contentType = this->request->getHeaders().find("content-type")->second;
-		if (startsWith(this->contentType, "multipart/form-data")) {
-			errorPage(NOT_IMPLEMENTED);
-			this->request->setDoneServing();
-			return;
-		}
-	}
-	if (!this->startedPostTime) {
-		time(&this->start);
-		this->startedPostTime = true;
-	}
+	if (!prePostMethod())
+		return ;
+
 	if (this->request->getBody().empty()) {
 		time(&this->now);
 		double	deltaT = difftime(this->now, this->start);
@@ -97,6 +84,7 @@ void	Response::posting(void)
 			errorPage(GATEWAY_TIMEOUT);
 			this->request->setDoneServing();
 			unlink(this->uploadedFileName.c_str());
+			return ;
 		}
 	}
 	else
@@ -105,17 +93,8 @@ void	Response::posting(void)
 
 void	Response::PostResponse()
 {
-	if (this->request->location.getUploadEnable()) {
-		if (!this->modeChecked)
-		{
-			if (this->request->getHeaders().find("transfer-encoding") != this->request->getHeaders().end())
-				this->mode = CHUNKED;
-			else
-				this->mode = NORMAL;
-			this->modeChecked = true;
-		}
+	if (this->request->location.getUploadEnable())
 		thePostMethod();
-	}
 	else {
 		if (isCGI())
 			cgi_Handler();
@@ -129,6 +108,20 @@ bool	Response::prePostMethod(void)
 	std::string										uploadPath;
 	std::map<std::string, std::string>				mime;
 	std::map<std::string, std::string>::iterator	mime_it;
+
+	if (this->request->getHeaders().find("content-type") != this->request->getHeaders().end()) {
+		this->contentType = this->request->getHeaders().find("content-type")->second;
+		if (startsWith(this->contentType, "multipart/form-data")) {
+			errorPage(NOT_IMPLEMENTED);
+			this->request->setDoneServing();
+			return false;
+		}
+	}
+
+	if (!this->startedPostTime) {
+		time(&this->start);
+		this->startedPostTime = true;
+	}
 
 	if (!this->gotTime)
 	{
@@ -146,15 +139,37 @@ bool	Response::prePostMethod(void)
 			+ ToString(local_time->tm_mon + 1) + "-" + ToString(local_time->tm_mday)
 				+ "_" + ToString(local_time->tm_hour) + ":" + ToString(local_time->tm_min)
 					+ ":" + ToString(local_time->tm_sec);
+		this->gotTime = true;
 	}
 
 	if (!this->dataCopy)
 	{
+		if (!this->modeChecked)
+		{
+			if (this->request->getHeaders().find("transfer-encoding") != this->request->getHeaders().end())
+				this->mode = CHUNKED;
+			else
+				this->mode = NORMAL;
+			this->modeChecked = true;
+		}
+		
 		if (this->mode == NORMAL)
 		{
 			this->postType = NORMAL_POST;
-			this->contentLenght = std::atoi((this->request->getHeaders().find("content-length")->second).c_str());
-			if (this->contentLenght > this->request->Vserver.getMaxBodySize()) {
+			if (!isNumeric(this->request->getHeaders().find("content-length")->second)) {
+				errorPage(BAD_REQ);
+				this->request->setDoneServing();
+				return false;
+			}
+			char *end;
+			this->contentLenght = std::strtoll((this->request->getHeaders().find("content-length")->second).c_str(), &end, 10);
+			if (this->contentLenght < 0) {
+				std::cout << "Hhhhhhh" << std::endl;
+				errorPage(BAD_REQ);
+				this->request->setDoneServing();
+				return false;
+			}
+			else if (this->contentLenght > this->request->Vserver.getMaxBodySize()) {
 				errorPage(LARGE_REQ);
 				this->request->setDoneServing();
 				return false;
@@ -184,23 +199,25 @@ bool	Response::prePostMethod(void)
 			this->uploadedFileName = uploadPath + generateNameFile(this->strTime2) + extension;
 			this->response = "";
 		}
+
+		if (!this->outOpened) {
+			this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
+			this->outOpened = true;
+		}
+		if (this->contentLenght == 0) {
+			this->outFile.close();
+			errorPage(CREATED);
+			this->request->setDoneServing();
+			return false;
+		}
 	}
 	return true;
 }
 
 void	Response::thePostMethod(void)
 {
-	if (!prePostMethod())
-		return;
-
-	if (!this->outOpened) {
-		this->outFile.open(this->uploadedFileName.c_str(), std::ios::app);
-		this->outOpened = true;
-	}
-	if (!this->outFile.is_open()) {
-		std::cout << "2" << std::endl;
+	if (!this->outFile.is_open())
 		thePostInternalServerError();
-	}
 	else
 		thePostResponseCreate();
 }
@@ -257,12 +274,19 @@ void	Response::thePostResponseCreate(void)
 {
 	if (this->postType == NORMAL_POST)
 	{
+		std::cout << " || " << std::endl;
 		this->outFile.write(this->request->getBody().data(), this->request->getBody().size());
 		this->outFile << std::flush;
 		time(&this->start);
 		this->contentTotalSizePosted += this->request->getBody().size();
 		// std::cout << "ZZZZ" << std::endl;
-		if (this->contentTotalSizePosted == this->contentLenght) {
+		// if (this->con)
+		if (this->contentTotalSizePosted >= this->contentLenght){
+			errorPage(GATEWAY_TIMEOUT);
+			this->request->setDoneServing();
+			unlink(this->uploadedFileName.c_str());
+		}
+		else if (this->contentTotalSizePosted == this->contentLenght) {
 			this->outFile.close();
 			
 			// ! ila salite l posting hani declaritha lik....

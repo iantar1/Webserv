@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 04:06:49 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 05:00:21 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 05:24:30 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,14 @@ std::string toStr(const T& value) {
 
 // parsing utils functions
 
-std::string removeExtraSpaces(std::string const& line);
-std::vector<std::string> split(std::string line, char delim);
-bool isPosNumber(std::string const& str);
-int stringToPosInt(std::string const& str);
-bool checkIp(std::string ip);
-bool checkEnable(std::string enable);
-bool isBrace(std::string line);
-
+std::string					removeExtraSpaces(std::string const& line);
+std::vector<std::string>	split(std::string line, char delim);
+bool 						isPosNumber(std::string const& str);
+int 						stringToPosInt(std::string const& str);
+bool 						checkIp(std::string ip);
+bool 						checkEnable(std::string enable);
+bool 						isBrace(std::string line);
+bool						isNumeric(const std::string& str);
 
 std::string skipLeadingWhitespace(const std::string&);
 

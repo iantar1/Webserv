@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nabboune <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/17 16:58:44 by nabboune          #+#    #+#             */
-/*   Updated: 2024/04/02 05:05:08 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 05:23:40 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,4 +253,14 @@ std::map<int, std::string>	readFileIntoString(const std::string& filename)
 	buffer << file.rdbuf();
 	stringMap[1] = buffer.str();
 	return stringMap;
+}
+
+bool	isNumeric(const std::string& str)
+{
+	for (size_t i = 0; i < str.length(); ++i) {
+		if (!std::isdigit(str[i])) {
+			return false;
+		}
+	}
+	return true;
 }
