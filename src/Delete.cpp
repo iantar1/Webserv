@@ -6,7 +6,7 @@
 /*   By: nabboune <nabboune@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/19 23:58:36 by iantar            #+#    #+#             */
-/*   Updated: 2024/04/06 02:59:07 by nabboune         ###   ########.fr       */
+/*   Updated: 2024/04/06 03:05:10 by nabboune         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,13 @@ int Response::DeleteDiractory(const std::string &path)
 }
 
 static const std::string filePath[] = {"defaultPages/204.htm", "defaultPages/403.htm", "defaultPages/500.htm", "defaultPages/404.htm"};
+static const int status_code[4] = {204, 403, 500, 404};
 
 void Response::DeleteMethod()
 {
 	std::ifstream file;
 	std::stringstream buffer;
-	int status;
+	int status  = 0;
 
 	if (!this->gotTime)
 	{
@@ -109,6 +110,7 @@ void Response::DeleteMethod()
 	if (access(request->getNewPath().c_str(), F_OK))
 	{
 		status = NOT_EXIST;
+		// request->se
 	}
 	else if (isFile(request->getNewPath()))
 	{
@@ -117,11 +119,13 @@ void Response::DeleteMethod()
 	else
 	{
 		status = DeleteDiractory(request->getNewPath());
+		if (status < 0)
+			status = 1;
 	}
+	if(status_code[status] != 204)
+		this->body = getPageContent(filePath[status]) + "\r\n\r\n";
+	theDeleteHeaderResponse(status_code[status], CONTENT_LENGHT);
 	this->contentType = "text/html";
-	
-	this->body = getPageContent(filePath[status]) + "\r\n\r\n";
-	theDeleteHeaderResponse(NO_CONTENT, CONTENT_LENGHT);
 	this->response += this->body;
 }
 
